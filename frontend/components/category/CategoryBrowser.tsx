@@ -10,6 +10,7 @@ import {
   PRICE_MIN,
   PRICE_MAX,
   type CatalogProduct,
+  type CategoryMeta,
 } from "@/lib/catalog-data";
 
 type FilterState = Record<string, string[]>;
@@ -231,7 +232,7 @@ function CatCard({ product, onAdd }: { product: CatalogProduct; onAdd: (p: Catal
   );
 }
 
-export default function CategoryBrowser({ products }: { products: CatalogProduct[] }) {
+export default function CategoryBrowser({ products, category }: { products: CatalogProduct[]; category: CategoryMeta }) {
   const { addItem } = useCart();
 
   // Price slider bounds derived from the actual products (seed range 10–30 was
@@ -247,6 +248,7 @@ export default function CategoryBrowser({ products }: { products: CatalogProduct
   const [sort, setSort] = useState<string>("featured");
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [cols, setCols] = useState(3);
 
   const toggle = (key: string, val: string) => {
     setVisible(PAGE_SIZE);
@@ -349,11 +351,24 @@ export default function CategoryBrowser({ products }: { products: CatalogProduct
                   <strong style={{ color: "#17150F", fontFamily: "var(--font-archivo), sans-serif" }}>{filtered.length}</strong> products
                 </span>
               </div>
-              <select className="cat-sort-select" value={sort} onChange={(e) => setSort(e.target.value)} aria-label="Sort products">
-                {SORTS.map(([v, l]) => (
-                  <option key={v} value={v}>{l}</option>
-                ))}
-              </select>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div className="cat-density-toggle" style={{ display: "flex", gap: 6 }}>
+                  {[3, 4].map((c) => (
+                    <button key={c} className={`cat-density-btn ${cols === c ? "active" : ""}`} onClick={() => setCols(c)} aria-label={`${c} columns`}>
+                      <div style={{ display: "grid", gridTemplateColumns: `repeat(${c},1fr)`, gap: 2, width: 16 }}>
+                        {Array.from({ length: c }).map((_, i) => (
+                          <span key={i} style={{ height: 12, background: "currentColor", borderRadius: 1 }} />
+                        ))}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                <select className="cat-sort-select" value={sort} onChange={(e) => setSort(e.target.value)} aria-label="Sort products">
+                  {SORTS.map(([v, l]) => (
+                    <option key={v} value={v}>{l}</option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             {/* Active chips */}
@@ -383,7 +398,7 @@ export default function CategoryBrowser({ products }: { products: CatalogProduct
                 <div><button onClick={clearAll} style={{ marginTop: 14, background: "none", border: "none", color: "var(--acc)", fontWeight: 600, cursor: "pointer" }}>Clear filters</button></div>
               </div>
             ) : (
-              <div className="v2-product-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0,1fr))", gap: 18 }}>
+              <div className="v2-product-grid" style={{ display: "grid", gridTemplateColumns: `repeat(${cols}, minmax(0,1fr))`, gap: 18 }}>
                 {shown.map((p) => (
                   <CatCard key={p.id} product={p} onAdd={quickAdd} />
                 ))}
@@ -397,6 +412,28 @@ export default function CategoryBrowser({ products }: { products: CatalogProduct
                 </button>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Category description / applications */}
+        <div className="cat-seo-grid" style={{ borderTop: "1px solid var(--line)", marginTop: 64, paddingTop: 44 }}>
+          <div>
+            <h2 style={{ fontSize: "1.5rem", letterSpacing: "-0.02em", marginBottom: 16 }}>About {category.title}</h2>
+            <p style={{ color: "#6E6B64", fontSize: "0.92rem", lineHeight: 1.85, marginBottom: 16 }}>{category.description}</p>
+            <p style={{ color: "#6E6B64", fontSize: "0.92rem", lineHeight: 1.85 }}>
+              All products are supplied ready to use — mix into basecoats, clearcoats, epoxy resin, nail gel or cosmetic bases. Free UK delivery over £50 and fast worldwide shipping.
+            </p>
+          </div>
+          <div>
+            <h3 style={{ fontSize: "1rem", marginBottom: 16 }}>Popular applications</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {[["Automotive", "Custom paint & wraps"], ["Nail art", "Gel & acrylic systems"], ["Resin & art", "Epoxy, tumblers, crafts"], ["Cosmetics", "Cosmetic-grade mixing"]].map(([a, b]) => (
+                <div key={a} style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid var(--line)", paddingBottom: 12 }}>
+                  <span style={{ fontWeight: 600, fontSize: "0.88rem" }}>{a}</span>
+                  <span style={{ color: "#9A968D", fontSize: "0.82rem" }}>{b}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

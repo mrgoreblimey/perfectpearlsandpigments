@@ -57,7 +57,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         </div>
       </section>
 
-      <CategoryBrowser products={products} />
+      <CategoryBrowser products={products} category={category} />
 
       <Footer />
       <CartDrawer />
