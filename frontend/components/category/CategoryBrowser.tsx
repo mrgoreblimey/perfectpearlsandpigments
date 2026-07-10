@@ -195,9 +195,9 @@ function CatCard({ product, onAdd }: { product: CatalogProduct; onAdd: (p: Catal
         </button>
       </div>
       <div style={{ padding: "12px 16px 16px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, marginBottom: 5 }}>
+        <div className="pcard-head" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, marginBottom: 5 }}>
           <h3 style={{ fontSize: "1rem", letterSpacing: "-0.015em" }}>{product.name}</h3>
-          <div style={{ color: "#6E6B64", fontSize: "0.82rem", fontWeight: 500, whiteSpace: "nowrap" }}>From £{product.price.toFixed(2)}</div>
+          <div className="pcard-price" style={{ color: "#6E6B64", fontSize: "0.82rem", fontWeight: 500, whiteSpace: "nowrap" }}>From £{product.price.toFixed(2)}</div>
         </div>
         <div style={{ color: "#8A877F", fontSize: "0.78rem", marginBottom: 12 }}>{product.shift}</div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -211,7 +211,7 @@ function CatCard({ product, onAdd }: { product: CatalogProduct; onAdd: (p: Catal
             <span style={{ color: "#F2B01E" }}>★</span>
             {product.rating}
           </span>
-          <span style={{ marginLeft: "auto", color: "#A5A29A", fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase" }}>{product.effect}</span>
+          <span className="pcard-effect" style={{ marginLeft: "auto", color: "#A5A29A", fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase" }}>{product.effect}</span>
         </div>
       </div>
     </Link>

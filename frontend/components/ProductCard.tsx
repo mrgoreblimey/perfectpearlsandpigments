@@ -35,9 +35,9 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
       </div>
       <div style={{ padding: "12px 16px 16px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, marginBottom: 10 }}>
+        <div className="pcard-head" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, marginBottom: 10 }}>
           <h3 style={{ fontSize: "1rem", lineHeight: 1.25, letterSpacing: "-0.015em" }}>{product.name}</h3>
-          <div style={{ color: "#6E6B64", fontSize: "0.82rem", fontWeight: 500, whiteSpace: "nowrap" }}>{product.price}</div>
+          <div className="pcard-price" style={{ color: "#6E6B64", fontSize: "0.82rem", fontWeight: 500, whiteSpace: "nowrap" }}>{product.price}</div>
         </div>
         <div style={{ display: "flex", gap: 6, marginBottom: 14, alignItems: "center" }}>
           {product.swatches.map((s) => (

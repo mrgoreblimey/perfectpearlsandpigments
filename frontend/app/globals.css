@@ -392,7 +392,22 @@ h3 {
   .v2-wrap {
     padding: 0 20px;
   }
-  .v2-product-grid,
+  /* Products stay two-up on small devices; reviews go single-column. */
+  .v2-product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+  /* Let card name/price wrap and drop the effect tag so nothing clips at 2-up. */
+  .pcard-head {
+    flex-wrap: wrap !important;
+    gap: 2px 8px !important;
+  }
+  .pcard-price {
+    white-space: normal !important;
+  }
+  .pcard-effect {
+    display: none !important;
+  }
   .v2-review-grid {
     grid-template-columns: 1fr !important;
   }
