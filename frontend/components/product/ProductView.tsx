@@ -88,7 +88,7 @@ function Accordion({ title, children, defaultOpen }: { title: string; children: 
 
 export default function ProductView({ product }: { product: ProductDetail }) {
   const { addItem } = useCart();
-  const [sizeIdx, setSizeIdx] = useState(2);
+  const [sizeIdx, setSizeIdx] = useState(() => Math.min(2, Math.max(0, product.sizes.length - 1)));
   const [qty, setQty] = useState(1);
   const [showSticky, setShowSticky] = useState(false);
   const atcRef = useRef<HTMLButtonElement>(null);
@@ -108,6 +108,8 @@ export default function ProductView({ product }: { product: ProductDetail }) {
     addItem({
       id: `${product.slug}-${size.label}`,
       productSlug: product.slug,
+      wooProductId: product.wooProductId,
+      wooVariationId: size.variationId,
       name: product.name,
       size: size.label,
       unitPrice: size.price,
@@ -149,7 +151,9 @@ export default function ProductView({ product }: { product: ProductDetail }) {
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18, flexWrap: "wrap" }}>
                 <span style={{ color: "#F2B01E", letterSpacing: 2, fontSize: "0.92rem" }}>★★★★★</span>
                 <span style={{ fontWeight: 700, fontSize: "0.86rem", fontFamily: "var(--font-archivo), sans-serif" }}>{product.rating}</span>
-                <a href="#reviews" style={{ color: "#8A877F", fontSize: "0.82rem", textDecoration: "none" }}>{product.reviews} reviews</a>
+                {product.reviews > 0 && (
+                  <a href="#reviews" style={{ color: "#8A877F", fontSize: "0.82rem", textDecoration: "none" }}>{product.reviews} reviews</a>
+                )}
                 <span style={{ color: "#DEDBD3" }}>|</span>
                 <span style={{ color: "#1F9B54", fontSize: "0.8rem", fontWeight: 600, display: "flex", alignItems: "center", gap: 5 }}>
                   <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#1F9B54", display: "inline-block" }} />
@@ -160,18 +164,20 @@ export default function ProductView({ product }: { product: ProductDetail }) {
               <p style={{ color: "#6E6B64", fontSize: "0.95rem", lineHeight: 1.75, marginBottom: 26 }}>{product.blurb}</p>
 
               {/* Colour shift */}
-              <div style={{ marginBottom: 26 }}>
-                <div style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9A968D", marginBottom: 12 }}>Colour shift</div>
-                <div style={{ height: 10, borderRadius: 100, background: `linear-gradient(90deg, ${product.shift.map(([c]) => c).join(", ")})`, marginBottom: 12 }} />
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  {product.shift.map(([c, l], i) => (
-                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                      <span style={{ width: 14, height: 14, borderRadius: "50%", background: c, boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.15)" }} />
-                      <span style={{ fontSize: "0.8rem", color: "#55534E" }}>{l}</span>
-                    </div>
-                  ))}
+              {product.shift.length > 0 && (
+                <div style={{ marginBottom: 26 }}>
+                  <div style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9A968D", marginBottom: 12 }}>Colour shift</div>
+                  <div style={{ height: 10, borderRadius: 100, background: `linear-gradient(90deg, ${product.shift.map(([c]) => c).join(", ")})`, marginBottom: 12 }} />
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    {product.shift.map(([c, l], i) => (
+                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                        <span style={{ width: 14, height: 14, borderRadius: "50%", background: c, boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.15)" }} />
+                        <span style={{ fontSize: "0.8rem", color: "#55534E" }}>{l}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Price */}
               <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 22 }}>

@@ -13,15 +13,21 @@ export interface CatalogProduct {
   id: number;
   name: string;
   slug: string;
+  /** Subtitle line (colour-shift for seed chameleons; empty for live products). */
   shift: string;
   price: number;
-  effect: "Standard" | "Premium" | "UltraShift";
-  colour: string;
-  grade: "Fine" | "Medium" | "Coarse";
+  /** Mock facets — present on seed chameleons, absent on live WooCommerce products. */
+  effect?: "Standard" | "Premium" | "UltraShift";
+  colour?: string;
+  grade?: "Fine" | "Medium" | "Coarse";
   stock: "In stock" | "Pre-order";
-  rating: number;
+  rating?: number;
   badge: string;
   sw: string[];
+  /** Real product image (live products); seed chameleons render a gradient tile. */
+  img?: string;
+  /** Live variable products need a size chosen on the product page before adding. */
+  variable?: boolean;
 }
 
 export interface CategoryMeta {
@@ -36,6 +42,8 @@ export interface CategoryMeta {
 export interface ProductSize {
   label: string;
   price: number;
+  /** WooCommerce variation id for this size (live products). */
+  variationId?: number;
 }
 
 export interface GalleryItem {
@@ -51,6 +59,7 @@ export interface ProductDetail {
   name: string;
   category: string;
   categorySlug: string;
+  wooProductId?: number;
   rating: number;
   reviews: number;
   blurb: string;
@@ -192,7 +201,7 @@ function specsFor(p: CatalogProduct): [string, string][] {
     ["Compatibility", "Solvent & water-based, resin, cosmetic"],
     ["Heat resistance", "Up to 300°C"],
     ["Concentration", "1–5% by weight"],
-    ["Grade", p.grade],
+    ["Grade", p.grade ?? "Fine"],
     ["Origin", "United Kingdom"],
   ];
 }
@@ -209,8 +218,8 @@ export function buildProductDetail(p: CatalogProduct): ProductDetail {
     name: `${p.name} Chameleon`,
     category: "Chameleon Pigments",
     categorySlug: "chameleon-pigments",
-    rating: p.rating,
-    reviews: isPersia ? 127 : Math.round(40 + p.rating * 12),
+    rating: p.rating ?? 4.8,
+    reviews: isPersia ? 127 : Math.round(40 + (p.rating ?? 4.8) * 12),
     blurb: `A ${p.shift.toLowerCase()} colour-shift pigment with an ultra-fine particle for silky application and brilliant payoff.`,
     shift: shiftStopsFor(p),
     sizes: DEFAULT_SIZES,

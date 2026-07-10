@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 import {
   FACETS,
@@ -99,17 +100,18 @@ function FacetGroup({
 }
 
 /* ── Dual-range price ── */
-function PriceFacet({ value, onChange }: { value: [number, number]; onChange: (v: [number, number]) => void }) {
+function PriceFacet({ value, min, max, onChange }: { value: [number, number]; min: number; max: number; onChange: (v: [number, number]) => void }) {
   const [lo, hi] = value;
-  const pct = (v: number) => ((v - PRICE_MIN) / (PRICE_MAX - PRICE_MIN)) * 100;
+  const span = Math.max(1, max - min);
+  const pct = (v: number) => ((v - min) / span) * 100;
   return (
     <div style={{ borderTop: "1px solid var(--line)", padding: "18px 0" }}>
       <div style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: "0.8rem", fontWeight: 700, color: "#17150F", marginBottom: 20 }}>Price</div>
       <div style={{ position: "relative", height: 20, marginBottom: 14 }}>
         <div style={{ position: "absolute", top: 8, left: 0, right: 0, height: 4, background: "#E5E2DB", borderRadius: 2 }} />
         <div style={{ position: "absolute", top: 8, height: 4, borderRadius: 2, background: "var(--acc)", left: `${pct(lo)}%`, right: `${100 - pct(hi)}%` }} />
-        <input type="range" min={PRICE_MIN} max={PRICE_MAX} value={lo} aria-label="Minimum price" className="cat-range-input" onChange={(e) => onChange([Math.min(+e.target.value, hi - 1), hi])} />
-        <input type="range" min={PRICE_MIN} max={PRICE_MAX} value={hi} aria-label="Maximum price" className="cat-range-input" onChange={(e) => onChange([lo, Math.max(+e.target.value, lo + 1)])} />
+        <input type="range" min={min} max={max} value={lo} aria-label="Minimum price" className="cat-range-input" onChange={(e) => onChange([Math.min(+e.target.value, hi - 1), hi])} />
+        <input type="range" min={min} max={max} value={hi} aria-label="Maximum price" className="cat-range-input" onChange={(e) => onChange([lo, Math.max(+e.target.value, lo + 1)])} />
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <span className="cat-price-pill">£{lo}</span>
@@ -121,11 +123,13 @@ function PriceFacet({ value, onChange }: { value: [number, number]; onChange: (v
 }
 
 function Sidebar({
-  filters, price, counts, onToggle, onPrice, onClear, activeCount,
+  filters, price, priceBounds, counts, facetHasData, onToggle, onPrice, onClear, activeCount,
 }: {
   filters: FilterState;
   price: [number, number];
+  priceBounds: [number, number];
   counts: Record<string, Record<string, number>>;
+  facetHasData: Record<string, boolean>;
   onToggle: (k: string, v: string) => void;
   onPrice: (v: [number, number]) => void;
   onClear: () => void;
@@ -139,10 +143,10 @@ function Sidebar({
           <button onClick={onClear} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--acc)", fontSize: "0.76rem", fontWeight: 600, padding: 0 }}>Clear all</button>
         )}
       </div>
-      {FACETS.map((f) => (
+      {FACETS.filter((f) => facetHasData[f.key]).map((f) => (
         <FacetGroup key={f.key} facet={f} selected={filters[f.key]} counts={counts[f.key]} onToggle={onToggle} />
       ))}
-      <PriceFacet value={price} onChange={onPrice} />
+      <PriceFacet value={price} min={priceBounds[0]} max={priceBounds[1]} onChange={onPrice} />
     </div>
   );
 }
@@ -152,16 +156,20 @@ function CatCard({ product, onAdd }: { product: CatalogProduct; onAdd: (p: Catal
   const [hov, setHov] = useState(false);
   const [added, setAdded] = useState(false);
   const s = product.sw;
-  const bg = `radial-gradient(circle at 28% 30%, ${s[0]} 0%, transparent 52%),
-              radial-gradient(circle at 74% 34%, ${s[1]} 0%, transparent 52%),
-              radial-gradient(circle at 52% 78%, ${s[2] ?? s[0]} 0%, transparent 56%), #131313`;
-  const add = (e: React.MouseEvent) => {
+  const gradient = `radial-gradient(circle at 28% 30%, ${s[0] ?? "#7B2FFF"} 0%, transparent 52%),
+              radial-gradient(circle at 74% 34%, ${s[1] ?? "#00C2FF"} 0%, transparent 52%),
+              radial-gradient(circle at 52% 78%, ${s[2] ?? s[0] ?? "#FFD700"} 0%, transparent 56%), #131313`;
+
+  const quickAdd = (e: React.MouseEvent) => {
+    // Variable products need a size — let the card's link carry through to the PDP.
+    if (product.variable) return;
     e.preventDefault();
     e.stopPropagation();
     onAdd(product);
     setAdded(true);
     setTimeout(() => setAdded(false), 1600);
   };
+
   return (
     <Link
       href={`/product/${product.slug}`}
@@ -170,37 +178,54 @@ function CatCard({ product, onAdd }: { product: CatalogProduct; onAdd: (p: Catal
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
     >
-      <div style={{ position: "relative", overflow: "hidden", aspectRatio: "1/1", borderRadius: "calc(var(--r) - 4px)", margin: 8, background: bg }}>
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 30%, rgba(255,255,255,0.14), transparent 55%)", transform: hov ? "scale(1.06)" : "scale(1)", transition: "transform 0.5s ease" }} />
+      <div style={{ position: "relative", overflow: "hidden", aspectRatio: "1/1", borderRadius: "calc(var(--r) - 4px)", margin: 8, background: product.img ? "#F1EFEA" : gradient }}>
+        {product.img ? (
+          <Image
+            src={product.img}
+            alt={product.name}
+            fill
+            sizes="(max-width: 600px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            style={{ objectFit: "contain", padding: 10, transform: hov ? "scale(1.05)" : "scale(1)", transition: "transform 0.45s ease" }}
+          />
+        ) : (
+          <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 30%, rgba(255,255,255,0.14), transparent 55%)", transform: hov ? "scale(1.06)" : "scale(1)", transition: "transform 0.5s ease" }} />
+        )}
         {product.badge && (
           <div style={{ position: "absolute", top: 12, left: 12, background: product.badge === "New" ? "var(--acc)" : "#fff", color: "#17150F", fontSize: "0.58rem", fontWeight: 700, letterSpacing: "0.08em", borderRadius: 100, padding: "5px 11px", textTransform: "uppercase" }}>{product.badge}</div>
         )}
         {product.stock === "Pre-order" && (
           <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)", color: "#fff", fontSize: "0.56rem", fontWeight: 600, letterSpacing: "0.06em", borderRadius: 100, padding: "5px 10px", textTransform: "uppercase" }}>Pre-order</div>
         )}
-        <button className="cat-quick-add" onClick={add} style={{ background: added ? "#1F9B54" : "#fff", color: added ? "#fff" : "#17150F", transform: hov || added ? "translateY(0)" : "translateY(120%)", opacity: hov || added ? 1 : 0 }}>
-          {added ? "✓ Added to basket" : "Quick add +"}
-        </button>
+        <span className="cat-quick-add" onClick={quickAdd} style={{ background: added ? "#1F9B54" : "#fff", color: added ? "#fff" : "#17150F", transform: hov || added ? "translateY(0)" : "translateY(120%)", opacity: hov || added ? 1 : 0, textAlign: "center" }}>
+          {added ? "✓ Added to basket" : product.variable ? "Choose options →" : "Quick add +"}
+        </span>
       </div>
       <div style={{ padding: "12px 16px 16px" }}>
         <div className="pcard-head" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, marginBottom: 5 }}>
           <h3 style={{ fontSize: "1rem", letterSpacing: "-0.015em" }}>{product.name}</h3>
           <div className="pcard-price" style={{ color: "#6E6B64", fontSize: "0.82rem", fontWeight: 500, whiteSpace: "nowrap" }}>From £{product.price.toFixed(2)}</div>
         </div>
-        <div style={{ color: "#8A877F", fontSize: "0.78rem", marginBottom: 12 }}>{product.shift}</div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <div style={{ display: "flex", gap: 5 }}>
-            {s.map((c, i) => (
-              <span key={i} style={{ width: 12, height: 12, borderRadius: "50%", background: c, boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.12)" }} />
-            ))}
+        {product.shift && <div style={{ color: "#8A877F", fontSize: "0.78rem", marginBottom: 12 }}>{product.shift}</div>}
+        {(s.length > 0 || product.rating || product.effect) && (
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: product.shift ? 0 : 8 }}>
+            {s.length > 0 && (
+              <div style={{ display: "flex", gap: 5 }}>
+                {s.map((c, i) => (
+                  <span key={i} style={{ width: 12, height: 12, borderRadius: "50%", background: c, boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.12)" }} />
+                ))}
+              </div>
+            )}
+            {product.rating && (
+              <span style={{ color: "#8A877F", fontSize: "0.74rem", display: "flex", alignItems: "center", gap: 3 }}>
+                <span style={{ color: "#F2B01E" }}>★</span>
+                {product.rating}
+              </span>
+            )}
+            {product.effect && (
+              <span className="pcard-effect" style={{ marginLeft: "auto", color: "#A5A29A", fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase" }}>{product.effect}</span>
+            )}
           </div>
-          <span style={{ color: "#C0BDB5", fontSize: "0.72rem" }}>·</span>
-          <span style={{ color: "#8A877F", fontSize: "0.74rem", display: "flex", alignItems: "center", gap: 3 }}>
-            <span style={{ color: "#F2B01E" }}>★</span>
-            {product.rating}
-          </span>
-          <span className="pcard-effect" style={{ marginLeft: "auto", color: "#A5A29A", fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase" }}>{product.effect}</span>
-        </div>
+        )}
       </div>
     </Link>
   );
@@ -208,8 +233,17 @@ function CatCard({ product, onAdd }: { product: CatalogProduct; onAdd: (p: Catal
 
 export default function CategoryBrowser({ products }: { products: CatalogProduct[] }) {
   const { addItem } = useCart();
+
+  // Price slider bounds derived from the actual products (seed range 10–30 was
+  // too narrow for live products spanning ~£3–£200).
+  const priceBounds = useMemo<[number, number]>(() => {
+    const prices = products.map((p) => p.price).filter((p) => p > 0);
+    if (!prices.length) return [PRICE_MIN, PRICE_MAX];
+    return [Math.floor(Math.min(...prices)), Math.ceil(Math.max(...prices))];
+  }, [products]);
+
   const [filters, setFilters] = useState<FilterState>(emptyFilters);
-  const [price, setPrice] = useState<[number, number]>([PRICE_MIN, PRICE_MAX]);
+  const [price, setPrice] = useState<[number, number]>(priceBounds);
   const [sort, setSort] = useState<string>("featured");
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -223,8 +257,21 @@ export default function CategoryBrowser({ products }: { products: CatalogProduct
   };
   const clearAll = () => {
     setFilters(emptyFilters());
-    setPrice([PRICE_MIN, PRICE_MAX]);
+    setPrice(priceBounds);
   };
+
+  // Hide facets that no product in this category has data for (live products
+  // only have availability + price; the mock effect/colour/grade are seed-only).
+  const facetHasData = useMemo(() => {
+    const out: Record<string, boolean> = {};
+    FACETS.forEach((f) => {
+      out[f.key] = f.opts.some((o) => {
+        const val = Array.isArray(o) ? o[0] : o;
+        return products.some((p) => (p as unknown as Record<string, string>)[f.key] === val);
+      });
+    });
+    return out;
+  }, [products]);
 
   // Counts respect the other active facets so numbers stay meaningful.
   const counts = useMemo(() => {
@@ -258,14 +305,14 @@ export default function CategoryBrowser({ products }: { products: CatalogProduct
     switch (sort) {
       case "price-asc": sorted.sort((a, b) => a.price - b.price); break;
       case "price-desc": sorted.sort((a, b) => b.price - a.price); break;
-      case "rating": sorted.sort((a, b) => b.rating - a.rating); break;
+      case "rating": sorted.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0)); break;
       case "name": sorted.sort((a, b) => a.name.localeCompare(b.name)); break;
       default: break;
     }
     return sorted;
   }, [products, filters, price, sort]);
 
-  const activeCount = FACET_KEYS.reduce((n, k) => n + filters[k].length, 0) + (price[0] !== PRICE_MIN || price[1] !== PRICE_MAX ? 1 : 0);
+  const activeCount = FACET_KEYS.reduce((n, k) => n + filters[k].length, 0) + (price[0] !== priceBounds[0] || price[1] !== priceBounds[1] ? 1 : 0);
   const shown = filtered.slice(0, visible);
 
   const quickAdd = (p: CatalogProduct) =>
@@ -280,7 +327,7 @@ export default function CategoryBrowser({ products }: { products: CatalogProduct
 
   const chips: { k: string; v: string }[] = [];
   FACET_KEYS.forEach((k) => filters[k].forEach((v) => chips.push({ k, v })));
-  const priceActive = price[0] !== PRICE_MIN || price[1] !== PRICE_MAX;
+  const priceActive = price[0] !== priceBounds[0] || price[1] !== priceBounds[1];
 
   return (
     <section style={{ padding: "36px 0 72px" }}>
@@ -288,7 +335,7 @@ export default function CategoryBrowser({ products }: { products: CatalogProduct
         <div className="cat-layout">
           {/* Desktop sidebar */}
           <aside className="cat-sidebar-desktop">
-            <Sidebar filters={filters} price={price} counts={counts} onToggle={toggle} onPrice={setPrice} onClear={clearAll} activeCount={activeCount} />
+            <Sidebar filters={filters} price={price} priceBounds={priceBounds} counts={counts} facetHasData={facetHasData} onToggle={toggle} onPrice={setPrice} onClear={clearAll} activeCount={activeCount} />
           </aside>
 
           <div>
@@ -319,7 +366,7 @@ export default function CategoryBrowser({ products }: { products: CatalogProduct
                   </button>
                 ))}
                 {priceActive && (
-                  <button className="cat-active-chip" onClick={() => setPrice([PRICE_MIN, PRICE_MAX])}>
+                  <button className="cat-active-chip" onClick={() => setPrice(priceBounds)}>
                     £{price[0]} – £{price[1]}
                     <span style={{ fontSize: "0.72rem", opacity: 0.55 }}>✕</span>
                   </button>
@@ -369,7 +416,7 @@ export default function CategoryBrowser({ products }: { products: CatalogProduct
         <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginBottom: 4 }}>
           <button onClick={() => setDrawerOpen(false)} aria-label="Close filters" style={{ background: "#F4F2ED", border: "none", width: 32, height: 32, borderRadius: "50%", cursor: "pointer" }}>✕</button>
         </div>
-        <Sidebar filters={filters} price={price} counts={counts} onToggle={toggle} onPrice={setPrice} onClear={clearAll} activeCount={activeCount} />
+        <Sidebar filters={filters} price={price} priceBounds={priceBounds} counts={counts} facetHasData={facetHasData} onToggle={toggle} onPrice={setPrice} onClear={clearAll} activeCount={activeCount} />
         <button className="v2-btn-primary" style={{ width: "100%", justifyContent: "center", marginTop: 20 }} onClick={() => setDrawerOpen(false)}>
           Show {filtered.length} products
         </button>

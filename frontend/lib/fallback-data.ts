@@ -1,24 +1,17 @@
 import type { HomeData, NavItem, Category, Product, Review } from "./types";
 
-const slugify = (s: string) =>
-  s
-    .toLowerCase()
-    .replace(/&/g, "and")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-
-const sub = (items: [string, string][]): NavItem["sub"] =>
-  items.map(([name, color]) => ({
+const sub = (items: [string, string, string][]): NavItem["sub"] =>
+  items.map(([name, color, slug]) => ({
     name,
     color,
-    href: `/product-category/${slugify(name)}`,
+    href: `/product-category/${slug}`,
   }));
 
-/* Real category structure — matches the live site nav (from the design). */
+/* Real category structure with live WooCommerce category slugs. */
 export const nav: NavItem[] = [
   {
     label: "Pigments & Additives",
-    href: "/product-category/pigments-additives",
+    href: "/product-category/pigments-and-additives",
     allLabel: "Shop all pigments & additives",
     featured: {
       name: "UltraShift\nAlchemy",
@@ -28,29 +21,28 @@ export const nav: NavItem[] = [
       href: "/product-category/ultrashift-alchemy-pigments",
     },
     sub: sub([
-      ["Candy Concentrates & Powders", "#FF6600"],
-      ["Candy Pearls", "#FF3D7F"],
-      ["Chameleon Pigments", "#7B2FFF"],
-      ["Colourshift Pearl Pigment", "#00CFA8"],
-      ["Fluorescent Pigment Powder", "#FF00CC"],
-      ["Glow In The Dark Pigments", "#7FFF00"],
-      ["Ice Pearls", "#9BE7FF"],
-      ["Iridescent Pearls", "#C8A0FF"],
-      ["Metallic Effect Pigments", "#C0C0C0"],
-      ["Photochromic Pigments", "#FFB300"],
-      ["Premium Holographic Glitter / Flake", "#00E5FF"],
-      ["Premium Metal Flakes / Glitter", "#FFD700"],
-      ["Thermochromic Pigments", "#FF8800"],
-      ["Ultra Chroma Pearls", "#38E8C6"],
-      ["UltraShift Alchemy Pigments", "#3D00FF"],
-      ["UltraShift Chameleon Flake", "#00B3FF"],
-      ["UltraShift Chameleon Pigments", "#8B00FF"],
-      ["White and Silver Pearls", "#E8E8E8"],
+      ["Candy Concentrates & Powders", "#FF6600", "candy-concentrates-powders"],
+      ["Candy Pearls", "#FF3D7F", "candy-pearls"],
+      ["Chameleon Pigments", "#7B2FFF", "chameleon-pigments"],
+      ["Colourshift Pearl Pigment", "#00CFA8", "colourshift-pearl-pigment"],
+      ["Fluorescent Pigment Powder", "#FF00CC", "fluorescent-pigment-powder"],
+      ["Glow In The Dark Pigments", "#7FFF00", "glow-in-the-dark-pigments"],
+      ["Iridescent Pearls", "#C8A0FF", "iridescent-pearls"],
+      ["Metallic Effect Pigments", "#C0C0C0", "metallic-effect-pigments"],
+      ["Photochromic Pigments", "#FFB300", "photochromic-pigments"],
+      ["Premium Holographic Glitter / Flake", "#00E5FF", "premium-holographic-glitter-flake"],
+      ["Premium Metal Flakes / Glitter", "#FFD700", "premium-metal-flakes-glitter"],
+      ["Thermochromic Pigments", "#FF8800", "thermochromic-pigments"],
+      ["Ultra Chroma Pearls", "#38E8C6", "ultra-chroma-pearls"],
+      ["UltraShift Alchemy Pigments", "#3D00FF", "ultrashift-alchemy-pigments"],
+      ["UltraShift Chameleon Flake", "#00B3FF", "ultrashift-chameleon-flake"],
+      ["UltraShift Chameleon Pigments", "#8B00FF", "ultrashift-chameleon-pigments"],
+      ["White and Silver Pearls", "#E8E8E8", "white-and-silver-pearls"],
     ]),
   },
   {
     label: "Mixed Paints & Aerosols",
-    href: "/product-category/mixed-paints-aerosols",
+    href: "/product-category/mixed-paints-and-aerosols",
     allLabel: "Shop all paints & aerosols",
     featured: {
       name: "Candy Basecoat\nPaints",
@@ -60,20 +52,20 @@ export const nav: NavItem[] = [
       href: "/product-category/candy-basecoat-paints",
     },
     sub: sub([
-      ["Aerosol Essentials", "#B5B2AB"],
-      ["Basecoat Colours", "#4A90D9"],
-      ["Candy Basecoat Paints", "#FF4400"],
-      ["Chameleon Basecoat Paints", "#7B2FFF"],
-      ["Chrome Paint", "#D9DDE2"],
-      ["Clearcoats", "#9AA7B0"],
-      ["Colourshift Pearl Paints", "#00CFA8"],
-      ["Fluorescent Paints", "#FF00CC"],
-      ["Pearl Basecoats", "#C8A0FF"],
-      ["Primers", "#6E6B64"],
-      ["Spectraflair", "#A8C6E8"],
-      ["Thinners And Solvents", "#55534E"],
-      ["Ultrashift Alchemy Paint", "#3D00FF"],
-      ["Ultrashift Chameleon Paint", "#8B00FF"],
+      ["Aerosol Essentials", "#B5B2AB", "aerosol-essentials"],
+      ["Basecoat Colours", "#4A90D9", "basecoat-colours"],
+      ["Candy Basecoat Paints", "#FF4400", "candy-basecoat-paints"],
+      ["Chameleon Basecoat Paints", "#7B2FFF", "chameleon-basecoat-paints"],
+      ["Chrome Paint", "#D9DDE2", "chrome-paint"],
+      ["Clearcoats", "#9AA7B0", "clearcoats"],
+      ["Colourshift Pearl Paints", "#00CFA8", "colourshift-pearl-paints"],
+      ["Fluorescent Paints", "#FF00CC", "fluorescent-paints"],
+      ["Pearl Basecoats", "#C8A0FF", "pearl-basecoats"],
+      ["Primers", "#6E6B64", "primers"],
+      ["Spectraflair", "#A8C6E8", "spectraflair"],
+      ["Thinners And Solvents", "#55534E", "thinners-and-solvents"],
+      ["Ultrashift Alchemy Paint", "#3D00FF", "ultrashift-alchemy-paint"],
+      ["Ultrashift Chameleon Paint", "#8B00FF", "ultrashift-chameleon-paint"],
     ]),
   },
   { label: "Other Products", href: "/product-category/other-products" },
@@ -83,11 +75,11 @@ export const nav: NavItem[] = [
 
 export const cats: Category[] = [
   { name: "Chameleon\nPigments", slug: "chameleon-pigments", c1: "#8B00FF", c2: "#00CFFF", tag: "BEST SELLER" },
-  { name: "Candy\nConcentrates", slug: "candy-concentrates", c1: "#FF3D00", c2: "#FFD100", tag: "" },
-  { name: "Glow In\nThe Dark", slug: "glow-in-the-dark", c1: "#00FF88", c2: "#00BFFF", tag: "TRENDING" },
-  { name: "Fluorescent\nPigments", slug: "fluorescent-pigments", c1: "#FF00CC", c2: "#FFE000", tag: "" },
-  { name: "Metallic\nFlakes", slug: "metallic-flakes", c1: "#707070", c2: "#FFD700", tag: "" },
-  { name: "UltraShift\nAlchemy", slug: "ultrashift-alchemy", c1: "#3D00FF", c2: "#FF00CC", tag: "NEW" },
+  { name: "Candy\nConcentrates", slug: "candy-concentrates-powders", c1: "#FF3D00", c2: "#FFD100", tag: "" },
+  { name: "Glow In\nThe Dark", slug: "glow-in-the-dark-pigments", c1: "#00FF88", c2: "#00BFFF", tag: "TRENDING" },
+  { name: "Fluorescent\nPigments", slug: "fluorescent-pigment-powder", c1: "#FF00CC", c2: "#FFE000", tag: "" },
+  { name: "Metallic\nFlakes", slug: "premium-metal-flakes-glitter", c1: "#707070", c2: "#FFD700", tag: "" },
+  { name: "UltraShift\nAlchemy", slug: "ultrashift-alchemy-pigments", c1: "#3D00FF", c2: "#FF00CC", tag: "NEW" },
 ];
 
 const WP_THUMBS = "https://perfectpearlsandpigments.co.uk/wp-content/uploads/elementor/thumbs";

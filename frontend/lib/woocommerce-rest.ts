@@ -65,7 +65,9 @@ export async function createWooOrder(
     const lineTotal = (it.unitPrice * it.qty).toFixed(2);
     const pid = it.wooProductId ?? (await resolveProductId(cfg.url, cfg.auth, it.productSlug));
     if (pid) {
-      lineItems.push({ product_id: pid, quantity: it.qty, subtotal: lineTotal, total: lineTotal });
+      const li: Record<string, unknown> = { product_id: pid, quantity: it.qty, subtotal: lineTotal, total: lineTotal };
+      if (it.wooVariationId) li.variation_id = it.wooVariationId;
+      lineItems.push(li);
     } else {
       // Unresolved product — record as a named fee so the order still balances.
       feeLines.push({ name: `${it.name}${it.size ? ` (${it.size})` : ""} ×${it.qty}`, total: lineTotal, tax_status: "taxable" });

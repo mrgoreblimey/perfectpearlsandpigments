@@ -50,8 +50,10 @@ export interface CartLine {
   /** Unique per product + size, e.g. "persia-chameleon-25g". */
   id: string;
   productSlug: string;
-  /** Real WooCommerce product id, when the catalog is wired to live products. */
+  /** Real WooCommerce parent product id, when wired to live products. */
   wooProductId?: number;
+  /** Real WooCommerce variation id for the chosen size. */
+  wooVariationId?: number;
   name: string;
   size?: string;
   unitPrice: number;
