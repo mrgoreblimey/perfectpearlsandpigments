@@ -370,8 +370,7 @@ export default function CategoryBrowser({ products }: { products: CatalogProduct
           padding: "22px 24px", overflowY: "auto",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-          <div style={{ fontFamily: "var(--font-archivo), sans-serif", fontSize: "1rem", fontWeight: 700 }}>Filters</div>
+        <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginBottom: 4 }}>
           <button onClick={() => setDrawerOpen(false)} aria-label="Close filters" style={{ background: "#F4F2ED", border: "none", width: 32, height: 32, borderRadius: "50%", cursor: "pointer" }}>✕</button>
         </div>
         <Sidebar filters={filters} price={price} counts={counts} onToggle={toggle} onPrice={setPrice} onClear={clearAll} activeCount={activeCount} />

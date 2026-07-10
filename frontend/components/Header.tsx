@@ -24,6 +24,8 @@ function Announce() {
 export default function Header({ nav }: { nav: NavItem[] }) {
   const { cart, openCart } = useCart();
   const [openIdx, setOpenIdx] = useState<number | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileSub, setMobileSub] = useState<number | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const openMenu = (i: number) => {
@@ -35,6 +37,10 @@ export default function Header({ nav }: { nav: NavItem[] }) {
   };
   const keepOpen = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
+  };
+  const closeMobile = () => {
+    setMobileOpen(false);
+    setMobileSub(null);
   };
 
   return (
@@ -53,7 +59,7 @@ export default function Header({ nav }: { nav: NavItem[] }) {
             />
           </Link>
 
-          {/* Nav */}
+          {/* Desktop nav */}
           <nav className="v2-desktop-nav" style={{ display: "flex", alignItems: "center", gap: 6 }}>
             {nav.map((item, i) => (
               <div
@@ -78,13 +84,13 @@ export default function Header({ nav }: { nav: NavItem[] }) {
 
           {/* Utility */}
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <button className="v2-icon-btn" aria-label="Search">
+            <button className="v2-icon-btn v2-hide-mobile" aria-label="Search">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
             </button>
-            <button className="v2-icon-btn" aria-label="Account">
+            <button className="v2-icon-btn v2-hide-mobile" aria-label="Account">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
@@ -108,10 +114,33 @@ export default function Header({ nav }: { nav: NavItem[] }) {
                 </span>
               )}
             </button>
+
+            {/* Burger — mobile only, top right */}
+            <button
+              className="v2-icon-btn v2-burger"
+              aria-label="Menu"
+              aria-expanded={mobileOpen}
+              onClick={() => setMobileOpen((o) => !o)}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                {mobileOpen ? (
+                  <>
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </>
+                ) : (
+                  <>
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                  </>
+                )}
+              </svg>
+            </button>
           </div>
         </div>
 
-        {/* Mega panel */}
+        {/* Desktop mega panel */}
         {openIdx !== null && nav[openIdx]?.sub && (
           <div
             onMouseEnter={keepOpen}
@@ -119,7 +148,7 @@ export default function Header({ nav }: { nav: NavItem[] }) {
             style={{ position: "absolute", left: 0, right: 0, top: "100%", padding: "0 20px" }}
           >
             <div
-              className="v2-wrap"
+              className="v2-wrap v2-mega-panel"
               style={{
                 background: "#141414", border: "1px solid #262626", borderTop: "none",
                 borderRadius: "0 0 16px 16px", boxShadow: "0 30px 70px rgba(0,0,0,0.4)",
@@ -141,6 +170,55 @@ export default function Header({ nav }: { nav: NavItem[] }) {
           </div>
         )}
       </div>
+
+      {/* Mobile nav drawer (slides from the right) */}
+      <div
+        className="v2-mobile-scrim"
+        onClick={closeMobile}
+        style={{ opacity: mobileOpen ? 1 : 0, pointerEvents: mobileOpen ? "all" : "none" }}
+      />
+      <aside className="v2-mobile-drawer" style={{ transform: mobileOpen ? "translateX(0)" : "translateX(100%)" }} aria-hidden={!mobileOpen}>
+        <nav style={{ display: "flex", flexDirection: "column", padding: "8px 0" }}>
+          {nav.map((item, i) => (
+            <div key={item.label} style={{ borderBottom: "1px solid #1E1E1E" }}>
+              {item.sub ? (
+                <>
+                  <button
+                    className="v2-mobile-link"
+                    onClick={() => setMobileSub((s) => (s === i ? null : i))}
+                    aria-expanded={mobileSub === i}
+                  >
+                    {item.label}
+                    <span style={{ color: "#77746D", fontSize: "0.8rem", transform: mobileSub === i ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>▾</span>
+                  </button>
+                  {mobileSub === i && (
+                    <div style={{ padding: "2px 0 12px" }}>
+                      {item.sub.map((s) => (
+                        <Link key={s.name} href={s.href} className="v2-mobile-sublink" onClick={closeMobile}>
+                          <span style={{ width: 8, height: 8, borderRadius: "50%", background: s.color, flexShrink: 0 }} />
+                          {s.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <Link href={item.href} className="v2-mobile-link" onClick={closeMobile}>
+                  {item.label}
+                </Link>
+              )}
+            </div>
+          ))}
+        </nav>
+        <div style={{ display: "flex", gap: 10, padding: "18px 22px" }}>
+          <Link href="/search" className="v2-btn-ghost" style={{ flex: 1, justifyContent: "center" }} onClick={closeMobile}>
+            Search
+          </Link>
+          <Link href="/account" className="v2-btn-ghost" style={{ flex: 1, justifyContent: "center" }} onClick={closeMobile}>
+            Account
+          </Link>
+        </div>
+      </aside>
     </header>
   );
 }
