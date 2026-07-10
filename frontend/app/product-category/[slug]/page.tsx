@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import CategoryBrowser from "@/components/category/CategoryBrowser";
+import TopCategoryHub from "@/components/category/TopCategoryHub";
 import { getHomeData, getCategory, getCategoryProducts } from "@/lib/wordpress";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -15,13 +16,28 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+const HUB_PREVIEW_COUNT = 8;
+
+export default async function CategoryPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ view?: string }>;
+}) {
   const { slug } = await params;
+  const { view } = await searchParams;
   const [{ nav }, category, products] = await Promise.all([
     getHomeData(),
     getCategory(slug),
     getCategoryProducts(slug),
   ]);
+
+  // Top-level categories (those with sub-categories) get the hub template,
+  // unless the visitor asked to shop all products (?view=all).
+  const isTopLevel = (category.children?.length ?? 0) > 0;
+  const showHub = isTopLevel && view !== "all";
+  const headerCount = category.productCount ?? products.length;
 
   return (
     <div>
@@ -50,14 +66,18 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
               <p style={{ color: "#77746D", fontSize: "0.95rem", lineHeight: 1.75, fontWeight: 300, maxWidth: 560 }}>{category.description}</p>
             </div>
             <div style={{ textAlign: "right", flexShrink: 0 }}>
-              <div style={{ fontSize: "2.6rem", fontWeight: 700, fontFamily: "var(--font-archivo), sans-serif", letterSpacing: "-0.04em", lineHeight: 1 }}>{products.length}</div>
+              <div style={{ fontSize: "2.6rem", fontWeight: 700, fontFamily: "var(--font-archivo), sans-serif", letterSpacing: "-0.04em", lineHeight: 1 }}>{headerCount}</div>
               <div style={{ color: "#9A968D", fontSize: "0.72rem", fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase", marginTop: 4 }}>Products</div>
             </div>
           </div>
         </div>
       </section>
 
-      <CategoryBrowser products={products} category={category} />
+      {showHub ? (
+        <TopCategoryHub category={category} previewProducts={products.slice(0, HUB_PREVIEW_COUNT)} />
+      ) : (
+        <CategoryBrowser products={products} category={category} />
+      )}
 
       <Footer />
       <CartDrawer />

@@ -82,6 +82,7 @@ export async function wpGetCategory(slug: string): Promise<CategoryMeta | null> 
       description?: string;
       count?: number;
       parent?: { node: { name: string; slug: string } };
+      children?: { nodes: { name: string; slug: string; count?: number }[] };
       categoryContent?: { footerContent?: string | null } | null;
     } | null;
   }>(
@@ -91,6 +92,7 @@ export async function wpGetCategory(slug: string): Promise<CategoryMeta | null> 
         description
         count
         parent { node { name slug } }
+        children(first: 40) { nodes { name slug count } }
         categoryContent { footerContent }
       }
     }`,
@@ -99,6 +101,9 @@ export async function wpGetCategory(slug: string): Promise<CategoryMeta | null> 
   const c = data?.productCategory;
   if (!c) return null;
   const parentName = c.parent?.node.name;
+  const children = (c.children?.nodes ?? [])
+    .filter((n) => (n.count ?? 0) > 0)
+    .map((n) => ({ name: n.name, slug: n.slug, count: n.count ?? 0 }));
   return {
     slug,
     parent: parentName ?? "Shop",
@@ -106,6 +111,8 @@ export async function wpGetCategory(slug: string): Promise<CategoryMeta | null> 
     title: c.name,
     description: stripHtml(c.description) || "Explore our specialty range — professional-grade pigments and effects.",
     breadcrumb: ["Home", ...(parentName ? [parentName] : []), c.name],
+    productCount: c.count ?? undefined,
+    children: children.length ? children : undefined,
     footerContent: c.categoryContent?.footerContent ?? undefined,
   };
 }

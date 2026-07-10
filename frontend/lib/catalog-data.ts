@@ -30,6 +30,12 @@ export interface CatalogProduct {
   variable?: boolean;
 }
 
+export interface CategoryChild {
+  name: string;
+  slug: string;
+  count: number;
+}
+
 export interface CategoryMeta {
   slug: string;
   parent: string;
@@ -37,6 +43,10 @@ export interface CategoryMeta {
   title: string;
   description: string;
   breadcrumb: string[];
+  /** Total products in this category (incl. descendants); from WooCommerce. */
+  productCount?: number;
+  /** Sub-categories — present on top-level categories, drives the hub template. */
+  children?: CategoryChild[];
   /** ACF `footer_content` (rich HTML) shown at the bottom of the category page. */
   footerContent?: string;
 }

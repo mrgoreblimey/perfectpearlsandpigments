@@ -1,9 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { useCart } from "@/context/CartContext";
+import CatCard from "./CatCard";
+import CategoryFooter from "./CategoryFooter";
 import {
   FACETS,
   FACET_KEYS,
@@ -152,89 +151,7 @@ function Sidebar({
   );
 }
 
-/* ── Product card ── */
-function CatCard({ product, onAdd }: { product: CatalogProduct; onAdd: (p: CatalogProduct) => void }) {
-  const [hov, setHov] = useState(false);
-  const [added, setAdded] = useState(false);
-  const s = product.sw;
-  const gradient = `radial-gradient(circle at 28% 30%, ${s[0] ?? "#7B2FFF"} 0%, transparent 52%),
-              radial-gradient(circle at 74% 34%, ${s[1] ?? "#00C2FF"} 0%, transparent 52%),
-              radial-gradient(circle at 52% 78%, ${s[2] ?? s[0] ?? "#FFD700"} 0%, transparent 56%), #131313`;
-
-  const quickAdd = (e: React.MouseEvent) => {
-    // Variable products need a size — let the card's link carry through to the PDP.
-    if (product.variable) return;
-    e.preventDefault();
-    e.stopPropagation();
-    onAdd(product);
-    setAdded(true);
-    setTimeout(() => setAdded(false), 1600);
-  };
-
-  return (
-    <Link
-      href={`/product/${product.slug}`}
-      className="v2-card"
-      style={{ textDecoration: "none", color: "inherit", display: "block" }}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-    >
-      <div style={{ position: "relative", overflow: "hidden", aspectRatio: "1/1", borderRadius: "calc(var(--r) - 4px)", margin: 8, background: product.img ? "#F1EFEA" : gradient }}>
-        {product.img ? (
-          <Image
-            src={product.img}
-            alt={product.name}
-            fill
-            sizes="(max-width: 600px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            style={{ objectFit: "contain", padding: 10, transform: hov ? "scale(1.05)" : "scale(1)", transition: "transform 0.45s ease" }}
-          />
-        ) : (
-          <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 50% 30%, rgba(255,255,255,0.14), transparent 55%)", transform: hov ? "scale(1.06)" : "scale(1)", transition: "transform 0.5s ease" }} />
-        )}
-        {product.badge && (
-          <div style={{ position: "absolute", top: 12, left: 12, background: product.badge === "New" ? "var(--acc)" : "#fff", color: "#17150F", fontSize: "0.58rem", fontWeight: 700, letterSpacing: "0.08em", borderRadius: 100, padding: "5px 11px", textTransform: "uppercase" }}>{product.badge}</div>
-        )}
-        {product.stock === "Pre-order" && (
-          <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)", color: "#fff", fontSize: "0.56rem", fontWeight: 600, letterSpacing: "0.06em", borderRadius: 100, padding: "5px 10px", textTransform: "uppercase" }}>Pre-order</div>
-        )}
-        <span className="cat-quick-add" onClick={quickAdd} style={{ background: added ? "#1F9B54" : "#fff", color: added ? "#fff" : "#17150F", transform: hov || added ? "translateY(0)" : "translateY(120%)", opacity: hov || added ? 1 : 0, textAlign: "center" }}>
-          {added ? "✓ Added to basket" : product.variable ? "Choose options →" : "Quick add +"}
-        </span>
-      </div>
-      <div style={{ padding: "12px 16px 16px" }}>
-        <div className="pcard-head" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, marginBottom: 5 }}>
-          <h3 style={{ fontSize: "1rem", letterSpacing: "-0.015em" }}>{product.name}</h3>
-          <div className="pcard-price" style={{ color: "#6E6B64", fontSize: "0.82rem", fontWeight: 500, whiteSpace: "nowrap" }}>From £{product.price.toFixed(2)}</div>
-        </div>
-        {product.shift && <div style={{ color: "#8A877F", fontSize: "0.78rem", marginBottom: 12 }}>{product.shift}</div>}
-        {(s.length > 0 || product.rating || product.effect) && (
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: product.shift ? 0 : 8 }}>
-            {s.length > 0 && (
-              <div style={{ display: "flex", gap: 5 }}>
-                {s.map((c, i) => (
-                  <span key={i} style={{ width: 12, height: 12, borderRadius: "50%", background: c, boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.12)" }} />
-                ))}
-              </div>
-            )}
-            {product.rating && (
-              <span style={{ color: "#8A877F", fontSize: "0.74rem", display: "flex", alignItems: "center", gap: 3 }}>
-                <span style={{ color: "#F2B01E" }}>★</span>
-                {product.rating}
-              </span>
-            )}
-            {product.effect && (
-              <span className="pcard-effect" style={{ marginLeft: "auto", color: "#A5A29A", fontSize: "0.68rem", fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase" }}>{product.effect}</span>
-            )}
-          </div>
-        )}
-      </div>
-    </Link>
-  );
-}
-
 export default function CategoryBrowser({ products, category }: { products: CatalogProduct[]; category: CategoryMeta }) {
-  const { addItem } = useCart();
-
   // Price slider bounds derived from the actual products (seed range 10–30 was
   // too narrow for live products spanning ~£3–£200).
   const priceBounds = useMemo<[number, number]>(() => {
@@ -317,16 +234,6 @@ export default function CategoryBrowser({ products, category }: { products: Cata
   const activeCount = FACET_KEYS.reduce((n, k) => n + filters[k].length, 0) + (price[0] !== priceBounds[0] || price[1] !== priceBounds[1] ? 1 : 0);
   const shown = filtered.slice(0, visible);
 
-  const quickAdd = (p: CatalogProduct) =>
-    addItem({
-      id: p.slug,
-      productSlug: p.slug,
-      name: `${p.name} Chameleon`,
-      unitPrice: p.price,
-      img: "",
-      swatches: p.sw,
-    });
-
   const chips: { k: string; v: string }[] = [];
   FACET_KEYS.forEach((k) => filters[k].forEach((v) => chips.push({ k, v })));
   const priceActive = price[0] !== priceBounds[0] || price[1] !== priceBounds[1];
@@ -400,7 +307,7 @@ export default function CategoryBrowser({ products, category }: { products: Cata
             ) : (
               <div className="v2-product-grid" style={{ display: "grid", gridTemplateColumns: `repeat(${cols}, minmax(0,1fr))`, gap: 18 }}>
                 {shown.map((p) => (
-                  <CatCard key={p.id} product={p} onAdd={quickAdd} />
+                  <CatCard key={p.id} product={p} />
                 ))}
               </div>
             )}
@@ -415,35 +322,7 @@ export default function CategoryBrowser({ products, category }: { products: Cata
           </div>
         </div>
 
-        {/* Category footer — ACF `footer_content` (rich HTML) when present */}
-        {category.footerContent ? (
-          <div style={{ borderTop: "1px solid var(--line)", marginTop: 64, paddingTop: 44 }}>
-            <h2 style={{ fontSize: "1.5rem", letterSpacing: "-0.02em", marginBottom: 18 }}>About {category.title}</h2>
-            {/* Content authored in WordPress (ACF) — trusted CMS HTML. */}
-            <div className="prose cat-footer-prose" dangerouslySetInnerHTML={{ __html: category.footerContent }} />
-          </div>
-        ) : (
-          <div className="cat-seo-grid" style={{ borderTop: "1px solid var(--line)", marginTop: 64, paddingTop: 44 }}>
-            <div>
-              <h2 style={{ fontSize: "1.5rem", letterSpacing: "-0.02em", marginBottom: 16 }}>About {category.title}</h2>
-              <p style={{ color: "#6E6B64", fontSize: "0.92rem", lineHeight: 1.85, marginBottom: 16 }}>{category.description}</p>
-              <p style={{ color: "#6E6B64", fontSize: "0.92rem", lineHeight: 1.85 }}>
-                All products are supplied ready to use — mix into basecoats, clearcoats, epoxy resin, nail gel or cosmetic bases. Free UK delivery over £50 and fast worldwide shipping.
-              </p>
-            </div>
-            <div>
-              <h3 style={{ fontSize: "1rem", marginBottom: 16 }}>Popular applications</h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                {[["Automotive", "Custom paint & wraps"], ["Nail art", "Gel & acrylic systems"], ["Resin & art", "Epoxy, tumblers, crafts"], ["Cosmetics", "Cosmetic-grade mixing"]].map(([a, b]) => (
-                  <div key={a} style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid var(--line)", paddingBottom: 12 }}>
-                    <span style={{ fontWeight: 600, fontSize: "0.88rem" }}>{a}</span>
-                    <span style={{ color: "#9A968D", fontSize: "0.82rem" }}>{b}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+        <CategoryFooter category={category} />
       </div>
 
       {/* Mobile filter drawer */}
