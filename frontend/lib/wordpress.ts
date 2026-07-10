@@ -21,7 +21,10 @@ import { wpGetCategory, wpGetCategoryProducts, wpGetProduct } from "./woo-catalo
  * refreshed in the background — no per-request WordPress round trips.
  */
 
-const WP_GRAPHQL_URL = process.env.WORDPRESS_GRAPHQL_URL;
+// Defaults to the staging endpoint so a fresh clone shows real data without
+// needing a local .env.local. Override via WORDPRESS_GRAPHQL_URL (e.g. point at
+// production when going live).
+const WP_GRAPHQL_URL = process.env.WORDPRESS_GRAPHQL_URL || "https://staging.perfectpearlsandpigments.co.uk/graphql";
 const REVALIDATE_SECONDS = 300;
 
 async function wpQuery<T>(query: string, variables?: Record<string, unknown>): Promise<T | null> {

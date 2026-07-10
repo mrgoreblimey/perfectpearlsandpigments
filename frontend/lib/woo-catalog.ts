@@ -6,7 +6,9 @@ import type { CatalogProduct, CategoryMeta, ProductDetail, ProductSize, GalleryI
  * seed data. All fetches use ISR.
  */
 
-const WP = process.env.WORDPRESS_GRAPHQL_URL;
+// Defaults to staging so a fresh clone works without a local .env.local.
+// Override with WORDPRESS_GRAPHQL_URL (e.g. production when going live).
+const WP = process.env.WORDPRESS_GRAPHQL_URL || "https://staging.perfectpearlsandpigments.co.uk/graphql";
 const REVALIDATE = 300;
 
 async function q<T>(query: string, variables?: Record<string, unknown>): Promise<T | null> {
