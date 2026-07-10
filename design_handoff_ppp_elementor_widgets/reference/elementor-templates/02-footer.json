@@ -1,0 +1,393 @@
+{
+  "version": "0.4",
+  "title": "PPP — Footer",
+  "type": "footer",
+  "page_settings": {
+    "hide_title": "yes"
+  },
+  "metadata": [],
+  "content": [
+    {
+      "id": "690e9a0",
+      "elType": "container",
+      "settings": {
+        "content_width": "full",
+        "padding": {
+          "unit": "px",
+          "top": "80",
+          "right": "64",
+          "bottom": "48",
+          "left": "64",
+          "isLinked": false
+        },
+        "background_background": "classic",
+        "background_color": "#0A0A0A"
+      },
+      "elements": [
+        {
+          "id": "47fdd20",
+          "elType": "container",
+          "settings": {
+            "content_width": "boxed",
+            "boxed_width": {
+              "unit": "px",
+              "size": 1280,
+              "sizes": []
+            },
+            "flex_direction": "row",
+            "flex_gap": {
+              "unit": "px",
+              "size": 56,
+              "sizes": [],
+              "column": 56,
+              "row": 56,
+              "isLinked": true
+            },
+            "flex_wrap": "wrap"
+          },
+          "elements": [
+            {
+              "id": "7382b40",
+              "elType": "container",
+              "settings": {
+                "width": {
+                  "unit": "%",
+                  "size": 30,
+                  "sizes": []
+                },
+                "flex_direction": "column",
+                "flex_gap": {
+                  "unit": "px",
+                  "size": 20,
+                  "sizes": [],
+                  "column": 20,
+                  "row": 20,
+                  "isLinked": true
+                }
+              },
+              "elements": [
+                {
+                  "id": "659da18",
+                  "elType": "widget",
+                  "widgetType": "image",
+                  "settings": {
+                    "image": {
+                      "url": "https://perfectpearlsandpigments.co.uk/wp-content/uploads/2021/03/PPP-Logo.png",
+                      "id": ""
+                    },
+                    "width": {
+                      "unit": "px",
+                      "size": 160,
+                      "sizes": []
+                    }
+                  },
+                  "elements": []
+                },
+                {
+                  "id": "3452f40",
+                  "elType": "widget",
+                  "widgetType": "text-editor",
+                  "settings": {
+                    "editor": "<p style=\"color:#666;font-size:14px;line-height:1.8;\">The UK's most complete specialty pigment range — chameleon, candy, glow &amp; metallic effects for professionals and creators.</p>"
+                  },
+                  "elements": []
+                },
+                {
+                  "id": "45aa140",
+                  "elType": "widget",
+                  "widgetType": "social-icons",
+                  "settings": {
+                    "social_icon_list": [
+                      {
+                        "social_icon": {
+                          "value": "fab fa-facebook-f",
+                          "library": "fa-brands"
+                        },
+                        "link": {
+                          "url": "#"
+                        }
+                      },
+                      {
+                        "social_icon": {
+                          "value": "fab fa-instagram",
+                          "library": "fa-brands"
+                        },
+                        "link": {
+                          "url": "#"
+                        }
+                      },
+                      {
+                        "social_icon": {
+                          "value": "fab fa-youtube",
+                          "library": "fa-brands"
+                        },
+                        "link": {
+                          "url": "#"
+                        }
+                      },
+                      {
+                        "social_icon": {
+                          "value": "fab fa-tiktok",
+                          "library": "fa-brands"
+                        },
+                        "link": {
+                          "url": "#"
+                        }
+                      }
+                    ],
+                    "shape": "square",
+                    "icon_color": "custom",
+                    "icon_primary_color": "#444444",
+                    "icon_secondary_color": "transparent",
+                    "icon_size": {
+                      "unit": "px",
+                      "size": 14,
+                      "sizes": []
+                    },
+                    "icon_padding": {
+                      "unit": "px",
+                      "size": 10,
+                      "sizes": []
+                    },
+                    "border_radius": {
+                      "unit": "px",
+                      "size": 0,
+                      "sizes": []
+                    },
+                    "icon_color_hover": "#F69311"
+                  },
+                  "elements": []
+                }
+              ],
+              "isInner": true
+            },
+            {
+              "id": "3741944",
+              "elType": "container",
+              "settings": {
+                "width": {
+                  "unit": "%",
+                  "size": 20,
+                  "sizes": []
+                },
+                "flex_direction": "column",
+                "flex_gap": {
+                  "unit": "px",
+                  "size": 14,
+                  "sizes": [],
+                  "column": 14,
+                  "row": 14,
+                  "isLinked": true
+                }
+              },
+              "elements": [
+                {
+                  "id": "397ed40",
+                  "elType": "widget",
+                  "widgetType": "heading",
+                  "settings": {
+                    "title": "Shop",
+                    "header_size": "h6",
+                    "title_color": "#FFFFFF",
+                    "typography_typography": "custom",
+                    "typography_font_family": "Lexend",
+                    "typography_font_weight": "700",
+                    "typography_font_size": {
+                      "unit": "rem",
+                      "size": 0.78,
+                      "sizes": []
+                    },
+                    "typography_letter_spacing": {
+                      "unit": "em",
+                      "size": 0.18,
+                      "sizes": []
+                    },
+                    "typography_text_transform": "uppercase"
+                  },
+                  "elements": []
+                },
+                {
+                  "id": "1798740",
+                  "elType": "widget",
+                  "widgetType": "text-editor",
+                  "settings": {
+                    "editor": "<ul style=\"list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;\">\n<li><a href=\"/product-category/chameleon-pigments/\" style=\"color:#888;text-decoration:none;font-size:13px;\">Chameleon Pigments</a></li>\n<li><a href=\"/product-category/candy-concentrates/\" style=\"color:#888;text-decoration:none;font-size:13px;\">Candy Concentrates</a></li>\n<li><a href=\"/product-category/glow-in-dark/\" style=\"color:#888;text-decoration:none;font-size:13px;\">Glow in the Dark</a></li>\n<li><a href=\"/product-category/fluorescent/\" style=\"color:#888;text-decoration:none;font-size:13px;\">Fluorescent</a></li>\n<li><a href=\"/product-category/metallic/\" style=\"color:#888;text-decoration:none;font-size:13px;\">Metallic Flakes</a></li>\n<li><a href=\"/product-category/ultrashift/\" style=\"color:#888;text-decoration:none;font-size:13px;\">UltraShift Alchemy</a></li>\n</ul>"
+                  },
+                  "elements": []
+                }
+              ],
+              "isInner": true
+            },
+            {
+              "id": "207e870",
+              "elType": "container",
+              "settings": {
+                "width": {
+                  "unit": "%",
+                  "size": 20,
+                  "sizes": []
+                },
+                "flex_direction": "column",
+                "flex_gap": {
+                  "unit": "px",
+                  "size": 14,
+                  "sizes": [],
+                  "column": 14,
+                  "row": 14,
+                  "isLinked": true
+                }
+              },
+              "elements": [
+                {
+                  "id": "6b97cf0",
+                  "elType": "widget",
+                  "widgetType": "heading",
+                  "settings": {
+                    "title": "Support",
+                    "header_size": "h6",
+                    "title_color": "#FFFFFF",
+                    "typography_typography": "custom",
+                    "typography_font_family": "Lexend",
+                    "typography_font_weight": "700",
+                    "typography_font_size": {
+                      "unit": "rem",
+                      "size": 0.78,
+                      "sizes": []
+                    },
+                    "typography_letter_spacing": {
+                      "unit": "em",
+                      "size": 0.18,
+                      "sizes": []
+                    },
+                    "typography_text_transform": "uppercase"
+                  },
+                  "elements": []
+                },
+                {
+                  "id": "2ab5530",
+                  "elType": "widget",
+                  "widgetType": "text-editor",
+                  "settings": {
+                    "editor": "<ul style=\"list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;\">\n<li><a href=\"/contact/\" style=\"color:#888;text-decoration:none;font-size:13px;\">Contact Us</a></li>\n<li><a href=\"/shipping/\" style=\"color:#888;text-decoration:none;font-size:13px;\">Shipping &amp; Delivery</a></li>\n<li><a href=\"/returns/\" style=\"color:#888;text-decoration:none;font-size:13px;\">Returns</a></li>\n<li><a href=\"/faq/\" style=\"color:#888;text-decoration:none;font-size:13px;\">FAQ</a></li>\n<li><a href=\"/how-to-use/\" style=\"color:#888;text-decoration:none;font-size:13px;\">How to Use</a></li>\n</ul>"
+                  },
+                  "elements": []
+                }
+              ],
+              "isInner": true
+            },
+            {
+              "id": "7b41c34",
+              "elType": "container",
+              "settings": {
+                "width": {
+                  "unit": "%",
+                  "size": 20,
+                  "sizes": []
+                },
+                "flex_direction": "column",
+                "flex_gap": {
+                  "unit": "px",
+                  "size": 14,
+                  "sizes": [],
+                  "column": 14,
+                  "row": 14,
+                  "isLinked": true
+                }
+              },
+              "elements": [
+                {
+                  "id": "4d01ab0",
+                  "elType": "widget",
+                  "widgetType": "heading",
+                  "settings": {
+                    "title": "Company",
+                    "header_size": "h6",
+                    "title_color": "#FFFFFF",
+                    "typography_typography": "custom",
+                    "typography_font_family": "Lexend",
+                    "typography_font_weight": "700",
+                    "typography_font_size": {
+                      "unit": "rem",
+                      "size": 0.78,
+                      "sizes": []
+                    },
+                    "typography_letter_spacing": {
+                      "unit": "em",
+                      "size": 0.18,
+                      "sizes": []
+                    },
+                    "typography_text_transform": "uppercase"
+                  },
+                  "elements": []
+                },
+                {
+                  "id": "dcfff00",
+                  "elType": "widget",
+                  "widgetType": "text-editor",
+                  "settings": {
+                    "editor": "<ul style=\"list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;\">\n<li><a href=\"/about/\" style=\"color:#888;text-decoration:none;font-size:13px;\">About PPP</a></li>\n<li><a href=\"/blog/\" style=\"color:#888;text-decoration:none;font-size:13px;\">Blog</a></li>\n<li><a href=\"/trade/\" style=\"color:#888;text-decoration:none;font-size:13px;\">Trade Accounts</a></li>\n<li><a href=\"/wholesale/\" style=\"color:#888;text-decoration:none;font-size:13px;\">Wholesale</a></li>\n<li><a href=\"/affiliates/\" style=\"color:#888;text-decoration:none;font-size:13px;\">Affiliates</a></li>\n</ul>"
+                  },
+                  "elements": []
+                }
+              ],
+              "isInner": true
+            }
+          ],
+          "isInner": true
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "5e13323",
+      "elType": "container",
+      "settings": {
+        "content_width": "full",
+        "flex_direction": "row",
+        "flex_justify_content": "space-between",
+        "flex_align_items": "center",
+        "padding": {
+          "unit": "px",
+          "top": "20",
+          "right": "64",
+          "bottom": "20",
+          "left": "64",
+          "isLinked": false
+        },
+        "background_background": "classic",
+        "background_color": "#060606",
+        "border_border": "solid",
+        "border_width": {
+          "unit": "px",
+          "top": "1",
+          "right": "0",
+          "bottom": "0",
+          "left": "0",
+          "isLinked": false
+        },
+        "border_color": "#1a1a1a"
+      },
+      "elements": [
+        {
+          "id": "4a23c20",
+          "elType": "widget",
+          "widgetType": "text-editor",
+          "settings": {
+            "editor": "<p style=\"color:#444;font-size:12px;margin:0;\">© 2026 Perfect Pearls &amp; Pigments. All rights reserved.</p>"
+          },
+          "elements": []
+        },
+        {
+          "id": "255ca00",
+          "elType": "widget",
+          "widgetType": "text-editor",
+          "settings": {
+            "editor": "<p style=\"color:#444;font-size:12px;margin:0;\"><a href=\"/privacy/\" style=\"color:#444;text-decoration:none;margin-right:18px;\">Privacy</a><a href=\"/terms/\" style=\"color:#444;text-decoration:none;margin-right:18px;\">Terms</a><a href=\"/cookies/\" style=\"color:#444;text-decoration:none;\">Cookies</a></p>"
+          },
+          "elements": []
+        }
+      ],
+      "isInner": false
+    }
+  ]
+}

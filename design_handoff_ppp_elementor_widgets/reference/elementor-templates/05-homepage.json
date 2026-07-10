@@ -1,0 +1,1358 @@
+{
+  "version": "0.4",
+  "title": "PPP — Homepage",
+  "type": "wp-page",
+  "page_settings": {
+    "hide_title": "yes",
+    "template": "elementor_canvas"
+  },
+  "metadata": [],
+  "content": [
+    {
+      "id": "405dba0",
+      "elType": "container",
+      "settings": {
+        "content_width": "full",
+        "min_height": {
+          "unit": "vh",
+          "size": 88,
+          "sizes": []
+        },
+        "flex_direction": "row",
+        "flex_align_items": "center",
+        "padding": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "0",
+          "left": "80",
+          "isLinked": false
+        },
+        "background_background": "classic",
+        "background_color": "#0A0A0A",
+        "background_image": {
+          "url": "https://placehold.co/1920x1080/0A0A0A/333?text=Hero+BG+Image",
+          "id": ""
+        },
+        "background_position": "center center",
+        "background_size": "cover",
+        "background_overlay_background": "gradient",
+        "background_overlay_color": "#0A0A0A",
+        "background_overlay_color_b": "rgba(10,10,10,0)",
+        "background_overlay_gradient_type": "linear",
+        "background_overlay_gradient_angle": {
+          "unit": "deg",
+          "size": 90,
+          "sizes": []
+        },
+        "background_overlay_color_stop": {
+          "unit": "%",
+          "size": 38,
+          "sizes": []
+        },
+        "background_overlay_color_b_stop": {
+          "unit": "%",
+          "size": 80,
+          "sizes": []
+        },
+        "_element_id": "ppp-hero"
+      },
+      "elements": [
+        {
+          "id": "7c95720",
+          "elType": "container",
+          "settings": {
+            "width": {
+              "unit": "%",
+              "size": 50,
+              "sizes": []
+            },
+            "flex_direction": "column",
+            "flex_gap": {
+              "unit": "px",
+              "size": 28,
+              "sizes": [],
+              "column": 28,
+              "row": 28,
+              "isLinked": true
+            },
+            "padding": {
+              "unit": "px",
+              "top": "60",
+              "right": "40",
+              "bottom": "60",
+              "left": "0",
+              "isLinked": false
+            }
+          },
+          "elements": [
+            {
+              "id": "76c9a20",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "— Colour Specialists Since 2010",
+                "header_size": "h6",
+                "title_color": "#F69311",
+                "typography_typography": "custom",
+                "typography_font_family": "Lexend",
+                "typography_font_weight": "700",
+                "typography_font_size": {
+                  "unit": "rem",
+                  "size": 0.72,
+                  "sizes": []
+                },
+                "typography_letter_spacing": {
+                  "unit": "em",
+                  "size": 0.22,
+                  "sizes": []
+                },
+                "typography_text_transform": "uppercase",
+                "_css_classes": "ppp-fade-up"
+              },
+              "elements": []
+            },
+            {
+              "id": "4f362a0",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "COLOUR WITHOUT LIMITS",
+                "header_size": "h1",
+                "title_color": "#FFFFFF",
+                "typography_typography": "custom",
+                "typography_font_family": "Staatliches",
+                "typography_font_weight": "400",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 104,
+                  "sizes": []
+                },
+                "typography_font_size_mobile": {
+                  "unit": "px",
+                  "size": 56,
+                  "sizes": []
+                },
+                "typography_font_size_tablet": {
+                  "unit": "px",
+                  "size": 80,
+                  "sizes": []
+                },
+                "typography_line_height": {
+                  "unit": "em",
+                  "size": 0.93,
+                  "sizes": []
+                },
+                "typography_letter_spacing": {
+                  "unit": "em",
+                  "size": -0.025,
+                  "sizes": []
+                },
+                "typography_text_transform": "uppercase"
+              },
+              "elements": []
+            },
+            {
+              "id": "36dc120",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"color:#aaa;font-size:17px;line-height:1.75;max-width:460px;\">Chameleon pigments, candy concentrates, glow &amp; metallic effects — the UK's most complete specialty pigment range.</p>"
+              },
+              "elements": []
+            },
+            {
+              "id": "5c790a0",
+              "elType": "container",
+              "settings": {
+                "flex_direction": "row",
+                "flex_gap": {
+                  "unit": "px",
+                  "size": 14,
+                  "sizes": [],
+                  "column": 14,
+                  "row": 14,
+                  "isLinked": true
+                },
+                "flex_wrap": "wrap"
+              },
+              "elements": [
+                {
+                  "id": "552fda0",
+                  "elType": "widget",
+                  "widgetType": "button",
+                  "settings": {
+                    "text": "Shop the Collection",
+                    "link": {
+                      "url": "/shop/",
+                      "is_external": "",
+                      "nofollow": ""
+                    },
+                    "selected_icon": {
+                      "value": "fas fa-arrow-right",
+                      "library": "fa-solid"
+                    },
+                    "icon_align": "right",
+                    "icon_indent": {
+                      "unit": "px",
+                      "size": 10,
+                      "sizes": []
+                    },
+                    "background_color": "#F69311",
+                    "button_text_color": "#000000",
+                    "hover_background_color": "#F69311",
+                    "hover_color": "#000000",
+                    "hover_animation": "shrink",
+                    "typography_typography": "custom",
+                    "typography_font_family": "Lexend",
+                    "typography_font_weight": "700",
+                    "typography_font_size": {
+                      "unit": "rem",
+                      "size": 0.82,
+                      "sizes": []
+                    },
+                    "typography_letter_spacing": {
+                      "unit": "em",
+                      "size": 0.12,
+                      "sizes": []
+                    },
+                    "typography_text_transform": "uppercase",
+                    "text_padding": {
+                      "unit": "px",
+                      "top": "16",
+                      "right": "32",
+                      "bottom": "16",
+                      "left": "32",
+                      "isLinked": false
+                    },
+                    "border_radius": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    }
+                  },
+                  "elements": []
+                },
+                {
+                  "id": "75cc020",
+                  "elType": "widget",
+                  "widgetType": "button",
+                  "settings": {
+                    "text": "Browse Categories",
+                    "link": {
+                      "url": "/categories/",
+                      "is_external": "",
+                      "nofollow": ""
+                    },
+                    "background_color": "transparent",
+                    "button_text_color": "#FFFFFF",
+                    "border_border": "solid",
+                    "border_width": {
+                      "unit": "px",
+                      "top": "1",
+                      "right": "1",
+                      "bottom": "1",
+                      "left": "1",
+                      "isLinked": true
+                    },
+                    "border_color": "rgba(255,255,255,0.25)",
+                    "hover_color": "#F69311",
+                    "border_hover_color": "#F69311",
+                    "typography_typography": "custom",
+                    "typography_font_family": "Lexend",
+                    "typography_font_weight": "600",
+                    "typography_font_size": {
+                      "unit": "rem",
+                      "size": 0.78,
+                      "sizes": []
+                    },
+                    "typography_letter_spacing": {
+                      "unit": "em",
+                      "size": 0.1,
+                      "sizes": []
+                    },
+                    "typography_text_transform": "uppercase",
+                    "text_padding": {
+                      "unit": "px",
+                      "top": "15",
+                      "right": "32",
+                      "bottom": "15",
+                      "left": "32",
+                      "isLinked": false
+                    },
+                    "border_radius": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    }
+                  },
+                  "elements": []
+                }
+              ],
+              "isInner": true
+            }
+          ],
+          "isInner": true
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "2b09ea0",
+      "elType": "container",
+      "settings": {
+        "content_width": "full",
+        "padding": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "0",
+          "left": "0",
+          "isLinked": true
+        },
+        "background_background": "classic",
+        "background_color": "#F69311"
+      },
+      "elements": [
+        {
+          "id": "5294620",
+          "elType": "widget",
+          "widgetType": "html",
+          "settings": {
+            "html": "<div style=\"overflow:hidden;border-top:1px solid rgba(0,0,0,0.1);border-bottom:1px solid rgba(0,0,0,0.1);\">\n<div class=\"ppp-marquee\">\n<div style=\"display:flex;align-items:center;gap:10px;padding:16px 44px;white-space:nowrap;border-right:1px solid rgba(0,0,0,0.12);\"><span style=\"color:#0A0A0A;font-size:10px;\">✦</span><span style=\"color:#0A0A0A;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;font-family:Lexend,sans-serif;\">Free UK Delivery Over £50</span></div><div style=\"display:flex;align-items:center;gap:10px;padding:16px 44px;white-space:nowrap;border-right:1px solid rgba(0,0,0,0.12);\"><span style=\"color:#0A0A0A;font-size:10px;\">✦</span><span style=\"color:#0A0A0A;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;font-family:Lexend,sans-serif;\">4.9★ Customer Rating</span></div><div style=\"display:flex;align-items:center;gap:10px;padding:16px 44px;white-space:nowrap;border-right:1px solid rgba(0,0,0,0.12);\"><span style=\"color:#0A0A0A;font-size:10px;\">✦</span><span style=\"color:#0A0A0A;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;font-family:Lexend,sans-serif;\">Ships Worldwide</span></div><div style=\"display:flex;align-items:center;gap:10px;padding:16px 44px;white-space:nowrap;border-right:1px solid rgba(0,0,0,0.12);\"><span style=\"color:#0A0A0A;font-size:10px;\">✦</span><span style=\"color:#0A0A0A;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;font-family:Lexend,sans-serif;\">15+ Years Experience</span></div><div style=\"display:flex;align-items:center;gap:10px;padding:16px 44px;white-space:nowrap;border-right:1px solid rgba(0,0,0,0.12);\"><span style=\"color:#0A0A0A;font-size:10px;\">✦</span><span style=\"color:#0A0A0A;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;font-family:Lexend,sans-serif;\">500+ Pigment Varieties</span></div><div style=\"display:flex;align-items:center;gap:10px;padding:16px 44px;white-space:nowrap;border-right:1px solid rgba(0,0,0,0.12);\"><span style=\"color:#0A0A0A;font-size:10px;\">✦</span><span style=\"color:#0A0A0A;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;font-family:Lexend,sans-serif;\">Trusted By Professionals</span></div><div style=\"display:flex;align-items:center;gap:10px;padding:16px 44px;white-space:nowrap;border-right:1px solid rgba(0,0,0,0.12);\"><span style=\"color:#0A0A0A;font-size:10px;\">✦</span><span style=\"color:#0A0A0A;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;font-family:Lexend,sans-serif;\">Free UK Delivery Over £50</span></div><div style=\"display:flex;align-items:center;gap:10px;padding:16px 44px;white-space:nowrap;border-right:1px solid rgba(0,0,0,0.12);\"><span style=\"color:#0A0A0A;font-size:10px;\">✦</span><span style=\"color:#0A0A0A;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;font-family:Lexend,sans-serif;\">4.9★ Customer Rating</span></div><div style=\"display:flex;align-items:center;gap:10px;padding:16px 44px;white-space:nowrap;border-right:1px solid rgba(0,0,0,0.12);\"><span style=\"color:#0A0A0A;font-size:10px;\">✦</span><span style=\"color:#0A0A0A;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;font-family:Lexend,sans-serif;\">Ships Worldwide</span></div><div style=\"display:flex;align-items:center;gap:10px;padding:16px 44px;white-space:nowrap;border-right:1px solid rgba(0,0,0,0.12);\"><span style=\"color:#0A0A0A;font-size:10px;\">✦</span><span style=\"color:#0A0A0A;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;font-family:Lexend,sans-serif;\">15+ Years Experience</span></div><div style=\"display:flex;align-items:center;gap:10px;padding:16px 44px;white-space:nowrap;border-right:1px solid rgba(0,0,0,0.12);\"><span style=\"color:#0A0A0A;font-size:10px;\">✦</span><span style=\"color:#0A0A0A;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;font-family:Lexend,sans-serif;\">500+ Pigment Varieties</span></div><div style=\"display:flex;align-items:center;gap:10px;padding:16px 44px;white-space:nowrap;border-right:1px solid rgba(0,0,0,0.12);\"><span style=\"color:#0A0A0A;font-size:10px;\">✦</span><span style=\"color:#0A0A0A;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;font-family:Lexend,sans-serif;\">Trusted By Professionals</span></div>\n</div></div>"
+          },
+          "elements": []
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "2c0a323",
+      "elType": "container",
+      "settings": {
+        "content_width": "full",
+        "padding": {
+          "unit": "px",
+          "top": "44",
+          "right": "40",
+          "bottom": "44",
+          "left": "40",
+          "isLinked": false
+        },
+        "background_background": "classic",
+        "background_color": "#FFFFFF"
+      },
+      "elements": [
+        {
+          "id": "1c8ca00",
+          "elType": "container",
+          "settings": {
+            "content_width": "boxed",
+            "boxed_width": {
+              "unit": "px",
+              "size": 1280,
+              "sizes": []
+            },
+            "flex_direction": "column",
+            "flex_gap": {
+              "unit": "px",
+              "size": 20,
+              "sizes": [],
+              "column": 20,
+              "row": 20,
+              "isLinked": true
+            }
+          },
+          "elements": [
+            {
+              "id": "60899a0",
+              "elType": "container",
+              "settings": {
+                "flex_direction": "row",
+                "flex_justify_content": "space-between",
+                "flex_align_items": "center"
+              },
+              "elements": [
+                {
+                  "id": "5484d20",
+                  "elType": "widget",
+                  "widgetType": "heading",
+                  "settings": {
+                    "title": "EXPLORE / SHOP BY CATEGORY",
+                    "header_size": "h6",
+                    "title_color": "#0A0A0A",
+                    "typography_typography": "custom",
+                    "typography_font_family": "Lexend",
+                    "typography_font_weight": "700",
+                    "typography_font_size": {
+                      "unit": "rem",
+                      "size": 0.95,
+                      "sizes": []
+                    },
+                    "typography_letter_spacing": {
+                      "unit": "em",
+                      "size": 0.04,
+                      "sizes": []
+                    },
+                    "typography_text_transform": "uppercase"
+                  },
+                  "elements": []
+                }
+              ],
+              "isInner": true
+            },
+            {
+              "id": "2382c20",
+              "elType": "widget",
+              "widgetType": "wc-categories",
+              "settings": {
+                "number": 6,
+                "orderby": "name",
+                "order": "ASC",
+                "hide_empty": "yes",
+                "columns": 6,
+                "columns_tablet": 3,
+                "columns_mobile": 2,
+                "column_gap": {
+                  "unit": "px",
+                  "size": 10,
+                  "sizes": []
+                },
+                "row_gap": {
+                  "unit": "px",
+                  "size": 10,
+                  "sizes": []
+                }
+              },
+              "elements": []
+            }
+          ],
+          "isInner": true
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "7031ef0",
+      "elType": "container",
+      "settings": {
+        "content_width": "full",
+        "padding": {
+          "unit": "px",
+          "top": "80",
+          "right": "40",
+          "bottom": "80",
+          "left": "40",
+          "isLinked": false
+        },
+        "background_background": "classic",
+        "background_color": "#F6F6F6"
+      },
+      "elements": [
+        {
+          "id": "2370344",
+          "elType": "container",
+          "settings": {
+            "content_width": "boxed",
+            "boxed_width": {
+              "unit": "px",
+              "size": 1280,
+              "sizes": []
+            },
+            "flex_direction": "column",
+            "flex_gap": {
+              "unit": "px",
+              "size": 32,
+              "sizes": [],
+              "column": 32,
+              "row": 32,
+              "isLinked": true
+            }
+          },
+          "elements": [
+            {
+              "id": "1a70240",
+              "elType": "container",
+              "settings": {
+                "flex_direction": "row",
+                "flex_justify_content": "space-between",
+                "flex_align_items": "flex-end",
+                "flex_wrap": "wrap"
+              },
+              "elements": [
+                {
+                  "id": "3a7f120",
+                  "elType": "container",
+                  "settings": {
+                    "flex_direction": "column",
+                    "flex_gap": {
+                      "unit": "px",
+                      "size": 8,
+                      "sizes": [],
+                      "column": 8,
+                      "row": 8,
+                      "isLinked": true
+                    }
+                  },
+                  "elements": [
+                    {
+                      "id": "6af4a20",
+                      "elType": "widget",
+                      "widgetType": "heading",
+                      "settings": {
+                        "title": "BEST SELLING",
+                        "header_size": "h6",
+                        "title_color": "#F69311",
+                        "typography_typography": "custom",
+                        "typography_font_family": "Lexend",
+                        "typography_font_weight": "700",
+                        "typography_font_size": {
+                          "unit": "rem",
+                          "size": 0.72,
+                          "sizes": []
+                        },
+                        "typography_letter_spacing": {
+                          "unit": "em",
+                          "size": 0.22,
+                          "sizes": []
+                        },
+                        "typography_text_transform": "uppercase"
+                      },
+                      "elements": []
+                    },
+                    {
+                      "id": "5f852a0",
+                      "elType": "widget",
+                      "widgetType": "heading",
+                      "settings": {
+                        "title": "Featured Pigments",
+                        "header_size": "h2",
+                        "title_color": "#0A0A0A",
+                        "typography_typography": "custom",
+                        "typography_font_family": "Staatliches",
+                        "typography_font_weight": "400",
+                        "typography_font_size": {
+                          "unit": "px",
+                          "size": 56,
+                          "sizes": []
+                        },
+                        "typography_line_height": {
+                          "unit": "em",
+                          "size": 1,
+                          "sizes": []
+                        }
+                      },
+                      "elements": []
+                    }
+                  ],
+                  "isInner": true
+                },
+                {
+                  "id": "b96da00",
+                  "elType": "widget",
+                  "widgetType": "button",
+                  "settings": {
+                    "text": "View All Products",
+                    "link": {
+                      "url": "/shop/",
+                      "is_external": "",
+                      "nofollow": ""
+                    },
+                    "background_color": "transparent",
+                    "button_text_color": "#0A0A0A",
+                    "border_border": "solid",
+                    "border_width": {
+                      "unit": "px",
+                      "top": "1",
+                      "right": "1",
+                      "bottom": "1",
+                      "left": "1",
+                      "isLinked": true
+                    },
+                    "border_color": "#0A0A0A",
+                    "hover_background_color": "#0A0A0A",
+                    "hover_color": "#FFFFFF",
+                    "typography_typography": "custom",
+                    "typography_font_family": "Lexend",
+                    "typography_font_weight": "700",
+                    "typography_font_size": {
+                      "unit": "rem",
+                      "size": 0.78,
+                      "sizes": []
+                    },
+                    "typography_letter_spacing": {
+                      "unit": "em",
+                      "size": 0.12,
+                      "sizes": []
+                    },
+                    "typography_text_transform": "uppercase",
+                    "text_padding": {
+                      "unit": "px",
+                      "top": "12",
+                      "right": "24",
+                      "bottom": "12",
+                      "left": "24",
+                      "isLinked": false
+                    },
+                    "border_radius": {
+                      "unit": "px",
+                      "top": "0",
+                      "right": "0",
+                      "bottom": "0",
+                      "left": "0",
+                      "isLinked": true
+                    }
+                  },
+                  "elements": []
+                }
+              ],
+              "isInner": true
+            },
+            {
+              "id": "144ba57",
+              "elType": "widget",
+              "widgetType": "woocommerce-products",
+              "settings": {
+                "columns": 4,
+                "columns_tablet": 2,
+                "columns_mobile": 2,
+                "rows": 2,
+                "paginate": "no",
+                "orderby": "popularity",
+                "order": "desc",
+                "column_gap": {
+                  "unit": "px",
+                  "size": 20,
+                  "sizes": []
+                },
+                "row_gap": {
+                  "unit": "px",
+                  "size": 32,
+                  "sizes": []
+                }
+              },
+              "elements": []
+            }
+          ],
+          "isInner": true
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "cfb6340",
+      "elType": "container",
+      "settings": {
+        "content_width": "full",
+        "padding": {
+          "unit": "px",
+          "top": "120",
+          "right": "40",
+          "bottom": "120",
+          "left": "40",
+          "isLinked": false
+        },
+        "background_background": "classic",
+        "background_color": "#0A0A0A"
+      },
+      "elements": [
+        {
+          "id": "11ec1f0",
+          "elType": "container",
+          "settings": {
+            "content_width": "boxed",
+            "boxed_width": {
+              "unit": "px",
+              "size": 1100,
+              "sizes": []
+            },
+            "flex_direction": "column",
+            "flex_align_items": "center",
+            "flex_gap": {
+              "unit": "px",
+              "size": 28,
+              "sizes": [],
+              "column": 28,
+              "row": 28,
+              "isLinked": true
+            }
+          },
+          "elements": [
+            {
+              "id": "5614f30",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "— OUR MANIFESTO",
+                "header_size": "h6",
+                "title_color": "#F69311",
+                "align": "center",
+                "typography_typography": "custom",
+                "typography_font_family": "Lexend",
+                "typography_font_weight": "700",
+                "typography_font_size": {
+                  "unit": "rem",
+                  "size": 0.72,
+                  "sizes": []
+                },
+                "typography_letter_spacing": {
+                  "unit": "em",
+                  "size": 0.22,
+                  "sizes": []
+                },
+                "typography_text_transform": "uppercase"
+              },
+              "elements": []
+            },
+            {
+              "id": "7af5a70",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "Colour is identity. We refuse the ordinary.",
+                "header_size": "h2",
+                "title_color": "#FFFFFF",
+                "align": "center",
+                "typography_typography": "custom",
+                "typography_font_family": "Staatliches",
+                "typography_font_weight": "400",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 64,
+                  "sizes": []
+                },
+                "typography_font_size_mobile": {
+                  "unit": "px",
+                  "size": 36,
+                  "sizes": []
+                },
+                "typography_line_height": {
+                  "unit": "em",
+                  "size": 1.05,
+                  "sizes": []
+                },
+                "typography_letter_spacing": {
+                  "unit": "em",
+                  "size": 0.01,
+                  "sizes": []
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "5d7a4b0",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"color:#888;font-size:17px;line-height:1.8;text-align:center;max-width:760px;margin:0 auto;\">Every pigment in our catalogue is hand-tested for intensity, shift, and consistency. We work with professional finishers, artists, and brands who refuse to compromise on colour.</p>",
+                "align": "center"
+              },
+              "elements": []
+            }
+          ],
+          "isInner": true
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "327bc60",
+      "elType": "container",
+      "settings": {
+        "content_width": "full",
+        "padding": {
+          "unit": "px",
+          "top": "80",
+          "right": "40",
+          "bottom": "80",
+          "left": "40",
+          "isLinked": false
+        },
+        "background_background": "classic",
+        "background_color": "#FFFFFF"
+      },
+      "elements": [
+        {
+          "id": "43742e0",
+          "elType": "container",
+          "settings": {
+            "content_width": "boxed",
+            "boxed_width": {
+              "unit": "px",
+              "size": 1280,
+              "sizes": []
+            },
+            "flex_direction": "column",
+            "flex_gap": {
+              "unit": "px",
+              "size": 40,
+              "sizes": [],
+              "column": 40,
+              "row": 40,
+              "isLinked": true
+            }
+          },
+          "elements": [
+            {
+              "id": "152f160",
+              "elType": "container",
+              "settings": {
+                "flex_direction": "column",
+                "flex_align_items": "center",
+                "flex_gap": {
+                  "unit": "px",
+                  "size": 10,
+                  "sizes": [],
+                  "column": 10,
+                  "row": 10,
+                  "isLinked": true
+                }
+              },
+              "elements": [
+                {
+                  "id": "22c6f28",
+                  "elType": "widget",
+                  "widgetType": "heading",
+                  "settings": {
+                    "title": "WHAT CUSTOMERS SAY",
+                    "header_size": "h6",
+                    "title_color": "#F69311",
+                    "align": "center",
+                    "typography_typography": "custom",
+                    "typography_font_family": "Lexend",
+                    "typography_font_weight": "700",
+                    "typography_font_size": {
+                      "unit": "rem",
+                      "size": 0.72,
+                      "sizes": []
+                    },
+                    "typography_letter_spacing": {
+                      "unit": "em",
+                      "size": 0.22,
+                      "sizes": []
+                    },
+                    "typography_text_transform": "uppercase"
+                  },
+                  "elements": []
+                },
+                {
+                  "id": "7b98708",
+                  "elType": "widget",
+                  "widgetType": "heading",
+                  "settings": {
+                    "title": "Trusted by Professionals",
+                    "header_size": "h2",
+                    "title_color": "#0A0A0A",
+                    "align": "center",
+                    "typography_typography": "custom",
+                    "typography_font_family": "Staatliches",
+                    "typography_font_weight": "400",
+                    "typography_font_size": {
+                      "unit": "px",
+                      "size": 56,
+                      "sizes": []
+                    },
+                    "typography_line_height": {
+                      "unit": "em",
+                      "size": 1,
+                      "sizes": []
+                    }
+                  },
+                  "elements": []
+                }
+              ],
+              "isInner": true
+            },
+            {
+              "id": "24ed360",
+              "elType": "container",
+              "settings": {
+                "flex_direction": "row",
+                "flex_gap": {
+                  "unit": "px",
+                  "size": 20,
+                  "sizes": [],
+                  "column": 20,
+                  "row": 20,
+                  "isLinked": true
+                },
+                "flex_wrap": "wrap"
+              },
+              "elements": [
+                {
+                  "id": "6f70e40",
+                  "elType": "container",
+                  "settings": {
+                    "width": {
+                      "unit": "%",
+                      "size": 23,
+                      "sizes": []
+                    },
+                    "flex_direction": "column",
+                    "flex_gap": {
+                      "unit": "px",
+                      "size": 14,
+                      "sizes": [],
+                      "column": 14,
+                      "row": 14,
+                      "isLinked": true
+                    },
+                    "padding": {
+                      "unit": "px",
+                      "top": "28",
+                      "right": "24",
+                      "bottom": "28",
+                      "left": "24",
+                      "isLinked": false
+                    },
+                    "background_background": "classic",
+                    "background_color": "#F6F6F6",
+                    "border_border": "solid",
+                    "border_width": {
+                      "unit": "px",
+                      "top": "1",
+                      "right": "1",
+                      "bottom": "1",
+                      "left": "1",
+                      "isLinked": true
+                    },
+                    "border_color": "#E8E8E8",
+                    "css_classes": "ppp-card"
+                  },
+                  "elements": [
+                    {
+                      "id": "61c08e4",
+                      "elType": "widget",
+                      "widgetType": "heading",
+                      "settings": {
+                        "title": "★★★★★",
+                        "header_size": "h6",
+                        "title_color": "#FFD700",
+                        "typography_typography": "custom",
+                        "typography_font_family": "Lexend",
+                        "typography_font_size": {
+                          "unit": "px",
+                          "size": 14,
+                          "sizes": []
+                        },
+                        "typography_letter_spacing": {
+                          "unit": "px",
+                          "size": 2,
+                          "sizes": []
+                        }
+                      },
+                      "elements": []
+                    },
+                    {
+                      "id": "fd44100",
+                      "elType": "widget",
+                      "widgetType": "text-editor",
+                      "settings": {
+                        "editor": "<p style=\"color:#444;font-size:14px;line-height:1.7;margin:0;\">\"Incredible chameleon pigment. The colour shift on my car build is absolutely jaw-dropping. Will not go anywhere else.\"</p>"
+                      },
+                      "elements": []
+                    },
+                    {
+                      "id": "2f2ddd4",
+                      "elType": "widget",
+                      "widgetType": "text-editor",
+                      "settings": {
+                        "editor": "<p style=\"margin:0;font-size:13px;\"><strong style=\"color:#0A0A0A;font-weight:700;\">James T.</strong><span style=\"color:#888;\"> · London</span></p>"
+                      },
+                      "elements": []
+                    }
+                  ],
+                  "isInner": true
+                },
+                {
+                  "id": "7038ff0",
+                  "elType": "container",
+                  "settings": {
+                    "width": {
+                      "unit": "%",
+                      "size": 23,
+                      "sizes": []
+                    },
+                    "flex_direction": "column",
+                    "flex_gap": {
+                      "unit": "px",
+                      "size": 14,
+                      "sizes": [],
+                      "column": 14,
+                      "row": 14,
+                      "isLinked": true
+                    },
+                    "padding": {
+                      "unit": "px",
+                      "top": "28",
+                      "right": "24",
+                      "bottom": "28",
+                      "left": "24",
+                      "isLinked": false
+                    },
+                    "background_background": "classic",
+                    "background_color": "#F6F6F6",
+                    "border_border": "solid",
+                    "border_width": {
+                      "unit": "px",
+                      "top": "1",
+                      "right": "1",
+                      "bottom": "1",
+                      "left": "1",
+                      "isLinked": true
+                    },
+                    "border_color": "#E8E8E8",
+                    "css_classes": "ppp-card"
+                  },
+                  "elements": [
+                    {
+                      "id": "3089440",
+                      "elType": "widget",
+                      "widgetType": "heading",
+                      "settings": {
+                        "title": "★★★★★",
+                        "header_size": "h6",
+                        "title_color": "#FFD700",
+                        "typography_typography": "custom",
+                        "typography_font_family": "Lexend",
+                        "typography_font_size": {
+                          "unit": "px",
+                          "size": 14,
+                          "sizes": []
+                        },
+                        "typography_letter_spacing": {
+                          "unit": "px",
+                          "size": 2,
+                          "sizes": []
+                        }
+                      },
+                      "elements": []
+                    },
+                    {
+                      "id": "152a240",
+                      "elType": "widget",
+                      "widgetType": "text-editor",
+                      "settings": {
+                        "editor": "<p style=\"color:#444;font-size:14px;line-height:1.7;margin:0;\">\"The candy concentrates are unreal — so vivid. Tried other suppliers and PPP is in a completely different league.\"</p>"
+                      },
+                      "elements": []
+                    },
+                    {
+                      "id": "31e9844",
+                      "elType": "widget",
+                      "widgetType": "text-editor",
+                      "settings": {
+                        "editor": "<p style=\"margin:0;font-size:13px;\"><strong style=\"color:#0A0A0A;font-weight:700;\">Sarah M.</strong><span style=\"color:#888;\"> · Manchester</span></p>"
+                      },
+                      "elements": []
+                    }
+                  ],
+                  "isInner": true
+                },
+                {
+                  "id": "73542f0",
+                  "elType": "container",
+                  "settings": {
+                    "width": {
+                      "unit": "%",
+                      "size": 23,
+                      "sizes": []
+                    },
+                    "flex_direction": "column",
+                    "flex_gap": {
+                      "unit": "px",
+                      "size": 14,
+                      "sizes": [],
+                      "column": 14,
+                      "row": 14,
+                      "isLinked": true
+                    },
+                    "padding": {
+                      "unit": "px",
+                      "top": "28",
+                      "right": "24",
+                      "bottom": "28",
+                      "left": "24",
+                      "isLinked": false
+                    },
+                    "background_background": "classic",
+                    "background_color": "#F6F6F6",
+                    "border_border": "solid",
+                    "border_width": {
+                      "unit": "px",
+                      "top": "1",
+                      "right": "1",
+                      "bottom": "1",
+                      "left": "1",
+                      "isLinked": true
+                    },
+                    "border_color": "#E8E8E8",
+                    "css_classes": "ppp-card"
+                  },
+                  "elements": [
+                    {
+                      "id": "5ff6c30",
+                      "elType": "widget",
+                      "widgetType": "heading",
+                      "settings": {
+                        "title": "★★★★★",
+                        "header_size": "h6",
+                        "title_color": "#FFD700",
+                        "typography_typography": "custom",
+                        "typography_font_family": "Lexend",
+                        "typography_font_size": {
+                          "unit": "px",
+                          "size": 14,
+                          "sizes": []
+                        },
+                        "typography_letter_spacing": {
+                          "unit": "px",
+                          "size": 2,
+                          "sizes": []
+                        }
+                      },
+                      "elements": []
+                    },
+                    {
+                      "id": "5d7b370",
+                      "elType": "widget",
+                      "widgetType": "text-editor",
+                      "settings": {
+                        "editor": "<p style=\"color:#444;font-size:14px;line-height:1.7;margin:0;\">\"Three years ordering from PPP. Consistent quality, excellent service, lightning fast delivery every single time.\"</p>"
+                      },
+                      "elements": []
+                    },
+                    {
+                      "id": "62389b0",
+                      "elType": "widget",
+                      "widgetType": "text-editor",
+                      "settings": {
+                        "editor": "<p style=\"margin:0;font-size:13px;\"><strong style=\"color:#0A0A0A;font-weight:700;\">Mike R.</strong><span style=\"color:#888;\"> · Birmingham</span></p>"
+                      },
+                      "elements": []
+                    }
+                  ],
+                  "isInner": true
+                },
+                {
+                  "id": "7c055e0",
+                  "elType": "container",
+                  "settings": {
+                    "width": {
+                      "unit": "%",
+                      "size": 23,
+                      "sizes": []
+                    },
+                    "flex_direction": "column",
+                    "flex_gap": {
+                      "unit": "px",
+                      "size": 14,
+                      "sizes": [],
+                      "column": 14,
+                      "row": 14,
+                      "isLinked": true
+                    },
+                    "padding": {
+                      "unit": "px",
+                      "top": "28",
+                      "right": "24",
+                      "bottom": "28",
+                      "left": "24",
+                      "isLinked": false
+                    },
+                    "background_background": "classic",
+                    "background_color": "#F6F6F6",
+                    "border_border": "solid",
+                    "border_width": {
+                      "unit": "px",
+                      "top": "1",
+                      "right": "1",
+                      "bottom": "1",
+                      "left": "1",
+                      "isLinked": true
+                    },
+                    "border_color": "#E8E8E8",
+                    "css_classes": "ppp-card"
+                  },
+                  "elements": [
+                    {
+                      "id": "1b2a330",
+                      "elType": "widget",
+                      "widgetType": "heading",
+                      "settings": {
+                        "title": "★★★★★",
+                        "header_size": "h6",
+                        "title_color": "#FFD700",
+                        "typography_typography": "custom",
+                        "typography_font_family": "Lexend",
+                        "typography_font_size": {
+                          "unit": "px",
+                          "size": 14,
+                          "sizes": []
+                        },
+                        "typography_letter_spacing": {
+                          "unit": "px",
+                          "size": 2,
+                          "sizes": []
+                        }
+                      },
+                      "elements": []
+                    },
+                    {
+                      "id": "5e81e74",
+                      "elType": "widget",
+                      "widgetType": "text-editor",
+                      "settings": {
+                        "editor": "<p style=\"color:#444;font-size:14px;line-height:1.7;margin:0;\">\"Used the glow pigment in resin art — it gets compliments constantly. Outstanding quality for the price.\"</p>"
+                      },
+                      "elements": []
+                    },
+                    {
+                      "id": "6d45260",
+                      "elType": "widget",
+                      "widgetType": "text-editor",
+                      "settings": {
+                        "editor": "<p style=\"margin:0;font-size:13px;\"><strong style=\"color:#0A0A0A;font-weight:700;\">Emma K.</strong><span style=\"color:#888;\"> · Bristol</span></p>"
+                      },
+                      "elements": []
+                    }
+                  ],
+                  "isInner": true
+                }
+              ],
+              "isInner": true
+            }
+          ],
+          "isInner": true
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "7167600",
+      "elType": "container",
+      "settings": {
+        "content_width": "full",
+        "padding": {
+          "unit": "px",
+          "top": "100",
+          "right": "40",
+          "bottom": "100",
+          "left": "40",
+          "isLinked": false
+        },
+        "background_background": "classic",
+        "background_color": "#0A0A0A"
+      },
+      "elements": [
+        {
+          "id": "540b9e0",
+          "elType": "container",
+          "settings": {
+            "content_width": "boxed",
+            "boxed_width": {
+              "unit": "px",
+              "size": 720,
+              "sizes": []
+            },
+            "flex_direction": "column",
+            "flex_align_items": "center",
+            "flex_gap": {
+              "unit": "px",
+              "size": 24,
+              "sizes": [],
+              "column": 24,
+              "row": 24,
+              "isLinked": true
+            }
+          },
+          "elements": [
+            {
+              "id": "59077e0",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "JOIN THE LIST",
+                "header_size": "h6",
+                "title_color": "#F69311",
+                "align": "center",
+                "typography_typography": "custom",
+                "typography_font_family": "Lexend",
+                "typography_font_weight": "700",
+                "typography_font_size": {
+                  "unit": "rem",
+                  "size": 0.72,
+                  "sizes": []
+                },
+                "typography_letter_spacing": {
+                  "unit": "em",
+                  "size": 0.22,
+                  "sizes": []
+                },
+                "typography_text_transform": "uppercase"
+              },
+              "elements": []
+            },
+            {
+              "id": "2494d60",
+              "elType": "widget",
+              "widgetType": "heading",
+              "settings": {
+                "title": "New drops. Tutorials. Trade pricing.",
+                "header_size": "h2",
+                "title_color": "#FFFFFF",
+                "align": "center",
+                "typography_typography": "custom",
+                "typography_font_family": "Staatliches",
+                "typography_font_weight": "400",
+                "typography_font_size": {
+                  "unit": "px",
+                  "size": 48,
+                  "sizes": []
+                },
+                "typography_font_size_mobile": {
+                  "unit": "px",
+                  "size": 32,
+                  "sizes": []
+                },
+                "typography_line_height": {
+                  "unit": "em",
+                  "size": 1.05,
+                  "sizes": []
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "70934e0",
+              "elType": "widget",
+              "widgetType": "text-editor",
+              "settings": {
+                "editor": "<p style=\"color:#888;font-size:15px;line-height:1.7;text-align:center;max-width:520px;margin:0 auto;\">Get early access to new chameleons, limited-batch drops, and pro tips delivered to your inbox.</p>",
+                "align": "center"
+              },
+              "elements": []
+            },
+            {
+              "id": "247c660",
+              "elType": "widget",
+              "widgetType": "html",
+              "settings": {
+                "html": "<form style=\"display:flex;gap:0;max-width:480px;margin:0 auto;width:100%;\">\n<input type=\"email\" placeholder=\"your@email.com\" style=\"flex:1;padding:18px 20px;background:#111;border:1px solid #2A2A2A;border-right:none;color:#fff;font-family:Lexend,sans-serif;font-size:14px;outline:none;\" />\n<button type=\"submit\" style=\"background:#F69311;color:#000;border:none;padding:0 32px;font-family:Lexend,sans-serif;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;\">Subscribe</button>\n</form>"
+              },
+              "elements": []
+            }
+          ],
+          "isInner": true
+        }
+      ],
+      "isInner": false
+    }
+  ]
+}

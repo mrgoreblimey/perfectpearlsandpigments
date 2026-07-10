@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chameleon Pigments — Perfect Pearls &amp; Pigments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="ppp-data.js"></script>
+<style>
+:root {
+  --acc: #F69311;
+  --r: 12px;
+  --ink: #17150F;
+  --line: #ECEAE4;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Lexend', sans-serif; background: #FAF9F7; color: var(--ink); overflow-x: hidden; }
+h1, h2, h3 { font-family: 'Archivo', sans-serif; font-weight: 700; }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #F0EEE9; }
+::-webkit-scrollbar-thumb { background: #C9C6BE; border-radius: 3px; }
+
+.v2-wrap { max-width: 1360px; margin: 0 auto; padding: 0 32px; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes v2FadeDown { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes catShimmer { from { background-position: -420px 0; } to { background-position: 420px 0; } }
+
+/* ─── Buttons (shared) ─── */
+.v2-btn-primary { display: inline-flex; align-items: center; gap: 9px; background: var(--acc); color: #17150F; border: none; cursor: pointer; border-radius: 10px; padding: 15px 30px; font-family: 'Lexend', sans-serif; font-size: 0.88rem; font-weight: 600; transition: filter 0.2s, transform 0.2s; }
+.v2-btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.v2-btn-ghost { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.28); cursor: pointer; border-radius: 10px; padding: 14px 26px; font-family: 'Lexend', sans-serif; font-size: 0.88rem; font-weight: 500; transition: border-color 0.2s, background 0.2s; }
+.v2-btn-ghost:hover { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.06); }
+.v2-link-btn { background: none; border: none; cursor: pointer; font-family: 'Lexend', sans-serif; font-size: 0.82rem; font-weight: 500; color: #6E6B64; transition: color 0.15s; padding: 6px 0; }
+.v2-link-btn:hover { color: var(--ink); }
+
+/* ─── Header (dark) ─── */
+.v2-nav-btn { background: none; border: none; cursor: pointer; font-family: 'Lexend', sans-serif; font-size: 0.85rem; font-weight: 500; padding: 8px 13px; border-radius: 8px; display: flex; align-items: center; transition: color 0.15s, background 0.15s; }
+.v2-icon-btn { background: none; border: none; cursor: pointer; color: #B5B2AB; width: 38px; height: 38px; border-radius: 50%; line-height: 0; display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s; }
+.v2-icon-btn:hover { background: rgba(255,255,255,0.09); color: #fff; }
+.v2-mega-item { display: flex; align-items: flex-start; gap: 13px; padding: 11px 12px; border-radius: 10px; cursor: pointer; transition: background 0.14s; }
+.v2-mega-item:hover { background: rgba(255,255,255,0.05); }
+
+/* ─── Cards ─── */
+.v2-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; cursor: pointer; transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s; }
+.v2-card:hover { transform: translateY(-4px); box-shadow: 0 18px 44px rgba(30,24,8,0.09); border-color: #DEDBD3; }
+
+/* ─── Footer ─── */
+.v2-footer-link { color: #8D8A83; font-size: 0.83rem; text-decoration: none; font-weight: 300; transition: color 0.15s; }
+.v2-footer-link:hover { color: #fff; }
+.v2-social-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid #2A2A2A; display: flex; align-items: center; justify-content: center; color: #77746D; font-size: 0.68rem; font-weight: 700; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
+.v2-social-btn:hover { border-color: var(--acc); color: var(--acc); }
+
+/* ─── Category: filter controls ─── */
+.cat-check-row { width: 100%; display: flex; align-items: center; gap: 10px; background: none; border: none; cursor: pointer; padding: 6px 0; font-family: 'Lexend', sans-serif; text-align: left; }
+.cat-check-box { width: 17px; height: 17px; border: 1.5px solid #CDC9C0; border-radius: 5px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: border-color 0.15s, background 0.15s; }
+.cat-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12); }
+.cat-check-label { font-size: 0.84rem; flex: 1; transition: color 0.15s; }
+.cat-check-count { color: #B0ADA4; font-size: 0.74rem; }
+.cat-check-row:hover .cat-check-label { color: var(--ink); }
+
+.cat-range-input { position: absolute; top: 0; left: 0; width: 100%; height: 20px; -webkit-appearance: none; appearance: none; background: none; pointer-events: none; margin: 0; }
+.cat-range-input::-webkit-slider-thumb { -webkit-appearance: none; pointer-events: auto; width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 2px solid var(--acc); cursor: pointer; box-shadow: 0 1px 5px rgba(0,0,0,0.22); margin-top: 1px; }
+.cat-range-input::-moz-range-thumb { pointer-events: auto; width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 2px solid var(--acc); cursor: pointer; box-shadow: 0 1px 5px rgba(0,0,0,0.22); }
+.cat-range-input::-webkit-slider-runnable-track { background: none; }
+.cat-price-pill { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 7px 14px; font-size: 0.82rem; font-weight: 600; font-family: 'Archivo', sans-serif; }
+
+.cat-active-chip { display: inline-flex; align-items: center; gap: 8px; background: var(--ink); color: #fff; border: none; border-radius: 100px; padding: 8px 15px; font-family: 'Lexend', sans-serif; font-size: 0.76rem; font-weight: 500; cursor: pointer; transition: opacity 0.15s; }
+.cat-active-chip:hover { opacity: 0.82; }
+
+.cat-quick-add { position: absolute; left: 12px; right: 12px; bottom: 12px; border: none; border-radius: 9px; padding: 11px; font-family: 'Lexend', sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,0.18); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1), opacity 0.28s, background 0.2s; }
+
+.cat-sort-select { padding: 10px 34px 10px 14px; border: 1px solid #DEDBD3; background: #fff; border-radius: 9px; font-family: 'Lexend', sans-serif; font-size: 0.8rem; font-weight: 500; color: #45433E; cursor: pointer; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2377746D' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+
+.cat-density-btn { width: 34px; height: 34px; border: 1px solid #DEDBD3; background: #fff; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #9A968D; transition: all 0.15s; }
+.cat-density-btn.active { border-color: var(--ink); color: var(--ink); background: #F4F2ED; }
+
+.cat-loadmore { display: inline-flex; align-items: center; gap: 10px; background: #fff; color: var(--ink); border: 1px solid #DEDBD3; cursor: pointer; border-radius: 10px; padding: 14px 32px; font-family: 'Lexend', sans-serif; font-size: 0.85rem; font-weight: 600; transition: border-color 0.18s, background 0.18s; }
+.cat-loadmore:hover { border-color: var(--ink); background: #fff; }
+
+.cat-shimmer { background: linear-gradient(100deg, #F0EEE9 30%, #F7F5F1 50%, #F0EEE9 70%); background-size: 840px 100%; animation: catShimmer 1.3s infinite linear; }
+
+.cat-filter-trigger { display: none; }
+.cat-layout { display: grid; grid-template-columns: 250px 1fr; gap: 40px; align-items: start; }
+.cat-sidebar-desktop { position: sticky; top: 116px; }
+@media (max-width: 900px) {
+  .cat-layout { grid-template-columns: 1fr; }
+  .cat-sidebar-desktop { display: none; }
+  .cat-filter-trigger { display: inline-flex; }
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="ppp-components-v2.jsx"></script>
+<script type="text/babel" src="ppp-sections-v2.jsx"></script>
+<script type="text/babel" src="ppp-category-v2.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect, useMemo, useRef } = React;
+
+const emptyFilters = () => ({ effect: [], colour: [], grade: [], stock: [] });
+
+/* URL <-> state */
+function readURL() {
+  try {
+    const p = new URLSearchParams(location.search);
+    const f = emptyFilters();
+    FACET_KEYS.forEach(k => { const v = p.get(k); if (v) f[k] = v.split(",").filter(Boolean); });
+    const lo = parseInt(p.get("min")); const hi = parseInt(p.get("max"));
+    const price = [Number.isFinite(lo) ? lo : PRICE_MIN, Number.isFinite(hi) ? hi : PRICE_MAX];
+    return { f, price, sort: p.get("sort") || "featured" };
+  } catch (e) { return { f: emptyFilters(), price: [PRICE_MIN, PRICE_MAX], sort: "featured" }; }
+}
+function writeURL(filters, price, sort) {
+  try {
+    const p = new URLSearchParams();
+    FACET_KEYS.forEach(k => { if (filters[k].length) p.set(k, filters[k].join(",")); });
+    if (price[0] !== PRICE_MIN) p.set("min", price[0]);
+    if (price[1] !== PRICE_MAX) p.set("max", price[1]);
+    if (sort !== "featured") p.set("sort", sort);
+    const qs = p.toString();
+    history.replaceState(null, "", qs ? "?" + qs : location.pathname);
+  } catch (e) {}
+}
+
+const PAGE_SIZE = 9;
+
+const App = () => {
+  const [t, setTweak] = useTweaks(/*EDITMODE-BEGIN*/{
+    "accent": "#F69311",
+    "radius": 12,
+    "cols": 3,
+    "showSeo": true
+  }/*EDITMODE-END*/);
+
+  const init = useRef(readURL()).current;
+  const [filters, setFilters] = useState(init.f);
+  const [price, setPrice]     = useState(init.price);
+  const [sort, setSort]       = useState(init.sort);
+  const [visible, setVisible] = useState(PAGE_SIZE);
+  const [loading, setLoading] = useState(false);
+  const [drawer, setDrawer]   = useState(false);
+
+  const [cart, setCart]       = useState([]);
+  const [cartOpen, setCartOpen] = useState(false);
+  const addToCart = (p) => { setCart(prev => [...prev, { ...p, price: "From £" + p.price.toFixed(2), img: "" }]); };
+  const removeFromCart = (i) => setCart(prev => prev.filter((_, j) => j !== i));
+
+  useEffect(() => {
+    document.documentElement.style.setProperty('--acc', t.accent);
+    document.documentElement.style.setProperty('--r', t.radius + 'px');
+  }, [t.accent, t.radius]);
+
+  /* simulate headless fetch on filter/sort change */
+  useEffect(() => {
+    writeURL(filters, price, sort);
+    setLoading(true);
+    setVisible(PAGE_SIZE);
+    const id = setTimeout(() => setLoading(false), 380);
+    return () => clearTimeout(id);
+  }, [filters, price, sort]);
+
+  const toggleFacet = (key, val) =>
+    setFilters(prev => ({ ...prev, [key]: prev[key].includes(val) ? prev[key].filter(x => x !== val) : [...prev[key], val] }));
+  const clearAll = () => { setFilters(emptyFilters()); setPrice([PRICE_MIN, PRICE_MAX]); };
+  const activeCount = FACET_KEYS.reduce((n, k) => n + filters[k].length, 0) + (price[0] !== PRICE_MIN || price[1] !== PRICE_MAX ? 1 : 0);
+
+  const filtered = useMemo(() => CAT_DATA.filter(p => {
+    for (const k of FACET_KEYS) { if (filters[k].length && !filters[k].includes(p[k])) return false; }
+    if (p.price < price[0] || p.price > price[1]) return false;
+    return true;
+  }), [filters, price]);
+
+  const sorted = useMemo(() => {
+    const a = [...filtered];
+    if (sort === "price-asc")  a.sort((x, y) => x.price - y.price);
+    if (sort === "price-desc") a.sort((x, y) => y.price - x.price);
+    if (sort === "rating")     a.sort((x, y) => y.rating - x.rating);
+    if (sort === "new")        a.sort((x, y) => y.id - x.id);
+    return a;
+  }, [filtered, sort]);
+
+  const shown = sorted.slice(0, visible);
+
+  return (
+    <div>
+      <V2Header cart={cart} onCartOpen={() => setCartOpen(true)} accent={t.accent} />
+      <CatHeader accent={t.accent} total={CAT_DATA.length} />
+
+      <section style={{ padding: "36px 0 72px" }}>
+        <div className="v2-wrap">
+          <div className="cat-layout">
+            {/* Sidebar (desktop) */}
+            <aside className="cat-sidebar-desktop">
+              <FilterSidebar filters={filters} price={price} accent={t.accent}
+                onToggle={toggleFacet} onPrice={setPrice} onClear={clearAll} activeCount={activeCount} />
+            </aside>
+
+            {/* Results column */}
+            <div>
+              {/* Controls */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, marginBottom: 22, flexWrap: "wrap" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <button className="cat-loadmore cat-filter-trigger" style={{ padding: "10px 18px" }} onClick={() => setDrawer(true)}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="7" y1="12" x2="17" y2="12"></line><line x1="10" y1="18" x2="14" y2="18"></line></svg>
+                    Filters{activeCount > 0 ? ` (${activeCount})` : ""}
+                  </button>
+                  <span style={{ color: "#77746D", fontSize: "0.85rem" }}>
+                    <strong style={{ color: "#17150F", fontFamily: "'Archivo', sans-serif" }}>{filtered.length}</strong> {filtered.length === 1 ? "product" : "products"}
+                  </span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ display: "flex", gap: 6 }} className="cat-density-toggle">
+                    {[3, 4].map(c => (
+                      <button key={c} className={`cat-density-btn ${t.cols === c ? "active" : ""}`} onClick={() => setTweak('cols', c)} aria-label={`${c} columns`}>
+                        <div style={{ display: "grid", gridTemplateColumns: `repeat(${c},1fr)`, gap: 2, width: 16 }}>
+                          {Array.from({ length: c }).map((_, i) => (<span key={i} style={{ height: 12, background: "currentColor", borderRadius: 1 }}></span>))}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                  <select className="cat-sort-select" value={sort} onChange={e => setSort(e.target.value)}>
+                    <option value="featured">Featured</option>
+                    <option value="new">Newest</option>
+                    <option value="price-asc">Price: Low → High</option>
+                    <option value="price-desc">Price: High → Low</option>
+                    <option value="rating">Top rated</option>
+                  </select>
+                </div>
+              </div>
+
+              <ActiveChips filters={filters} price={price} accent={t.accent}
+                onToggle={toggleFacet} onPrice={setPrice} onClear={clearAll} />
+
+              {/* Grid */}
+              {loading ? (
+                <div style={{ display: "grid", gridTemplateColumns: `repeat(${t.cols}, minmax(0,1fr))`, gap: 18 }}>
+                  {Array.from({ length: t.cols === 3 ? 6 : 8 }).map((_, i) => <SkeletonCard key={i} />)}
+                </div>
+              ) : shown.length === 0 ? (
+                <div style={{ textAlign: "center", padding: "90px 0", color: "#8A877F" }}>
+                  <div style={{ fontSize: "2.2rem", marginBottom: 14, color: "#D8D5CE" }}>◎</div>
+                  <p style={{ fontSize: "0.95rem", marginBottom: 18 }}>No pigments match your filters.</p>
+                  <button className="v2-link-btn" style={{ color: t.accent, fontWeight: 600 }} onClick={clearAll}>Clear all filters</button>
+                </div>
+              ) : (
+                <div style={{ display: "grid", gridTemplateColumns: `repeat(${t.cols}, minmax(0,1fr))`, gap: 18 }}>
+                  {shown.map(p => <CatCard key={p.id} product={p} accent={t.accent} onAdd={addToCart} />)}
+                </div>
+              )}
+
+              {/* Load more */}
+              {!loading && visible < sorted.length && (
+                <div style={{ textAlign: "center", marginTop: 40 }}>
+                  <button className="cat-loadmore" onClick={() => setVisible(v => v + PAGE_SIZE)}>
+                    Load more <span style={{ color: "#9A968D", fontWeight: 400 }}>({sorted.length - visible} left)</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* SEO / category description */}
+          {t.showSeo && (
+            <div style={{ borderTop: "1px solid var(--line)", marginTop: 64, paddingTop: 44, display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 56 }}>
+              <div>
+                <h2 style={{ fontSize: "1.5rem", letterSpacing: "-0.02em", marginBottom: 16 }}>About chameleon pigments</h2>
+                <p style={{ color: "#6E6B64", fontSize: "0.92rem", lineHeight: 1.85, marginBottom: 16 }}>
+                  Chameleon pigments — also known as colour-shift or flip-flop pigments — are precision-coated mica and borosilicate flakes that reflect different wavelengths of light depending on viewing angle. The result is a dramatic colour travel across a single surface.
+                </p>
+                <p style={{ color: "#6E6B64", fontSize: "0.92rem", lineHeight: 1.85 }}>
+                  Our range spans subtle two-tone Standard grades through to full-spectrum UltraShift Alchemy. All pigments are supplied dry for maximum flexibility — mix into basecoats, clearcoats, epoxy resin, nail gel or cosmetic bases.
+                </p>
+              </div>
+              <div>
+                <h3 style={{ fontSize: "1rem", marginBottom: 16 }}>Popular applications</h3>
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  {[["Automotive", "Custom paint & wraps"], ["Nail art", "Gel & acrylic systems"], ["Resin & art", "Epoxy, tumblers, crafts"], ["Cosmetics", "Cosmetic-grade mixing"]].map(([a, b], i) => (
+                    <div key={i} style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid var(--line)", paddingBottom: 12 }}>
+                      <span style={{ fontWeight: 600, fontSize: "0.88rem" }}>{a}</span>
+                      <span style={{ color: "#9A968D", fontSize: "0.82rem" }}>{b}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <V2Footer accent={t.accent} />
+      <V2CartDrawer cart={cart} open={cartOpen} onClose={() => setCartOpen(false)} onRemove={removeFromCart} accent={t.accent} />
+
+      {/* Mobile filter drawer */}
+      <div onClick={() => setDrawer(false)} style={{ position: "fixed", inset: 0, background: "rgba(15,12,5,0.4)", backdropFilter: "blur(2px)", zIndex: 450, opacity: drawer ? 1 : 0, pointerEvents: drawer ? "all" : "none", transition: "opacity 0.3s" }}></div>
+      <div style={{ position: "fixed", top: 0, left: 0, bottom: 0, width: 320, maxWidth: "86vw", background: "#FAF9F7", zIndex: 500, boxShadow: "0 0 60px rgba(20,15,5,0.25)", transform: drawer ? "translateX(0)" : "translateX(-100%)", transition: "transform 0.32s cubic-bezier(0.4,0,0.2,1)", display: "flex", flexDirection: "column" }}>
+        <div style={{ padding: "20px 24px", borderBottom: "1px solid var(--line)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span style={{ fontFamily: "'Archivo', sans-serif", fontWeight: 700 }}>Filters</span>
+          <button onClick={() => setDrawer(false)} aria-label="Close filters" style={{ background: "#F4F2ED", border: "none", width: 32, height: 32, borderRadius: "50%", cursor: "pointer", color: "#55534E" }}>✕</button>
+        </div>
+        <div style={{ flex: 1, overflowY: "auto", padding: "8px 24px 24px" }}>
+          <FilterSidebar filters={filters} price={price} accent={t.accent} onToggle={toggleFacet} onPrice={setPrice} onClear={clearAll} activeCount={activeCount} />
+        </div>
+        <div style={{ padding: "16px 24px", borderTop: "1px solid var(--line)" }}>
+          <button className="v2-btn-primary" style={{ width: "100%", justifyContent: "center" }} onClick={() => setDrawer(false)}>Show {filtered.length} results</button>
+        </div>
+      </div>
+
+      <TweaksPanel>
+        <TweakSection label="Style" />
+        <TweakColor label="Accent" value={t.accent} options={['#F69311', '#00C2E0', '#E8452C', '#8B5CF6']} onChange={(v) => setTweak('accent', v)} />
+        <TweakSlider label="Corner radius" value={t.radius} min={6} max={20} unit="px" onChange={(v) => setTweak('radius', v)} />
+        <TweakSection label="Grid" />
+        <TweakRadio label="Columns" value={t.cols} options={[3, 4]} onChange={(v) => setTweak('cols', v)} />
+        <TweakToggle label="Category description" value={t.showSeo} onChange={(v) => setTweak('showSeo', v)} />
+      </TweaksPanel>
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Persia Chameleon Pigment — Perfect Pearls &amp; Pigments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="ppp-data.js"></script>
+<style>
+:root { --acc: #F69311; --r: 12px; --ink: #17150F; --line: #ECEAE4; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Lexend', sans-serif; background: #FAF9F7; color: var(--ink); overflow-x: hidden; }
+h1, h2, h3 { font-family: 'Archivo', sans-serif; font-weight: 700; }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #F0EEE9; }
+::-webkit-scrollbar-thumb { background: #C9C6BE; border-radius: 3px; }
+
+.v2-wrap { max-width: 1360px; margin: 0 auto; padding: 0 32px; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes v2FadeDown { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Buttons */
+.v2-btn-primary { display: inline-flex; align-items: center; gap: 9px; background: var(--acc); color: #17150F; border: none; cursor: pointer; border-radius: 10px; padding: 15px 30px; font-family: 'Lexend', sans-serif; font-size: 0.88rem; font-weight: 600; transition: filter 0.2s, transform 0.2s; }
+.v2-btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.v2-btn-ghost { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.28); cursor: pointer; border-radius: 10px; padding: 14px 26px; font-family: 'Lexend', sans-serif; font-size: 0.88rem; font-weight: 500; transition: border-color 0.2s, background 0.2s; }
+.v2-btn-ghost:hover { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.06); }
+.v2-link-btn { background: none; border: none; cursor: pointer; font-family: 'Lexend', sans-serif; font-size: 0.82rem; font-weight: 500; color: #6E6B64; transition: color 0.15s; padding: 6px 0; }
+.v2-link-btn:hover { color: var(--ink); }
+
+/* Header (dark) */
+.v2-nav-btn { background: none; border: none; cursor: pointer; font-family: 'Lexend', sans-serif; font-size: 0.85rem; font-weight: 500; padding: 8px 13px; border-radius: 8px; display: flex; align-items: center; transition: color 0.15s, background 0.15s; }
+.v2-icon-btn { background: none; border: none; cursor: pointer; color: #B5B2AB; width: 38px; height: 38px; border-radius: 50%; line-height: 0; display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s; }
+.v2-icon-btn:hover { background: rgba(255,255,255,0.09); color: #fff; }
+.v2-mega-item { display: flex; align-items: flex-start; gap: 13px; padding: 11px 12px; border-radius: 10px; cursor: pointer; transition: background 0.14s; }
+.v2-mega-item:hover { background: rgba(255,255,255,0.05); }
+
+/* Cards */
+.v2-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; cursor: pointer; transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s; }
+.v2-card:hover { transform: translateY(-4px); box-shadow: 0 18px 44px rgba(30,24,8,0.09); border-color: #DEDBD3; }
+
+/* Footer */
+.v2-footer-link { color: #8D8A83; font-size: 0.83rem; text-decoration: none; font-weight: 300; transition: color 0.15s; }
+.v2-footer-link:hover { color: #fff; }
+.v2-social-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid #2A2A2A; display: flex; align-items: center; justify-content: center; color: #77746D; font-size: 0.68rem; font-weight: 700; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
+.v2-social-btn:hover { border-color: var(--acc); color: var(--acc); }
+
+/* Product page */
+.prod-thumb { aspect-ratio: 1/1; width: 100%; border: 1.5px solid var(--line); border-radius: 10px; overflow: hidden; cursor: pointer; padding: 0; transition: border-color 0.15s; }
+.prod-thumb.active { border-color: var(--ink); }
+.prod-size-btn { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 11px 4px; border: 1.5px solid #DEDBD3; background: #fff; border-radius: 10px; font-family: 'Lexend', sans-serif; cursor: pointer; transition: all 0.15s; }
+.prod-size-btn:hover { border-color: var(--ink); }
+.prod-size-btn.active { background: var(--ink); border-color: var(--ink); color: #fff; }
+.prod-qty-btn { width: 42px; height: 100%; background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #55534E; transition: color 0.15s; }
+.prod-qty-btn:hover { color: var(--ink); }
+.prod-wishlist { width: 52px; height: 52px; flex-shrink: 0; border: 1px solid #DEDBD3; background: #fff; border-radius: 10px; cursor: pointer; color: #55534E; display: flex; align-items: center; justify-content: center; transition: border-color 0.15s, color 0.15s; }
+.prod-wishlist:hover { border-color: var(--acc); color: var(--acc); }
+
+.prod-layout { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: start; }
+@media (max-width: 860px) { .prod-layout { grid-template-columns: 1fr; gap: 32px; } }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="ppp-components-v2.jsx"></script>
+<script type="text/babel" src="ppp-sections-v2.jsx"></script>
+<script type="text/babel" src="ppp-product-v2.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+const App = () => {
+  const [t, setTweak] = useTweaks(/*EDITMODE-BEGIN*/{
+    "accent": "#F69311",
+    "radius": 12,
+    "thumbPos": "Below",
+    "stickyBar": true
+  }/*EDITMODE-END*/);
+
+  const [cart, setCart] = useState([]);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [sizeIdx, setSizeIdx] = useState(2);
+  const [qty, setQty] = useState(1);
+  const [showSticky, setShowSticky] = useState(false);
+  const atcRef = useRef(null);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty('--acc', t.accent);
+    document.documentElement.style.setProperty('--r', t.radius + 'px');
+  }, [t.accent, t.radius]);
+
+  useEffect(() => {
+    if (!atcRef.current) return;
+    const obs = new IntersectionObserver(([e]) => setShowSticky(!e.isIntersecting), { threshold: 0 });
+    obs.observe(atcRef.current);
+    return () => obs.disconnect();
+  }, []);
+
+  const addToCart = () => {
+    setCart(prev => [...prev, { name: PROD.name, price: "£" + (PROD.sizes[sizeIdx].price * qty).toFixed(2), img: PERSIA_IMG }]);
+    setCartOpen(true);
+  };
+
+  return (
+    <div style={{ paddingBottom: showSticky && t.stickyBar ? 74 : 0 }}>
+      <V2Header cart={cart} onCartOpen={() => setCartOpen(true)} accent={t.accent} />
+
+      <section style={{ padding: "40px 0 64px" }}>
+        <div className="v2-wrap">
+          <div className="prod-layout">
+            <V2Gallery thumbPos={t.thumbPos} />
+            <V2ProductInfo accent={t.accent} sizeIdx={sizeIdx} setSizeIdx={setSizeIdx} qty={qty} setQty={setQty} onAdd={addToCart} atcRef={atcRef} />
+          </div>
+        </div>
+      </section>
+
+      <V2RelatedRow accent={t.accent} />
+      <V2Footer accent={t.accent} />
+
+      {t.stickyBar && <V2StickyATC show={showSticky} sizeIdx={sizeIdx} qty={qty} onAdd={addToCart} accent={t.accent} />}
+      <V2CartDrawer cart={cart} open={cartOpen} onClose={() => setCartOpen(false)} onRemove={(i) => setCart(prev => prev.filter((_, j) => j !== i))} accent={t.accent} />
+
+      <TweaksPanel>
+        <TweakSection label="Style" />
+        <TweakColor label="Accent" value={t.accent} options={['#F69311', '#00C2E0', '#E8452C', '#8B5CF6']} onChange={(v) => setTweak('accent', v)} />
+        <TweakSlider label="Corner radius" value={t.radius} min={6} max={20} unit="px" onChange={(v) => setTweak('radius', v)} />
+        <TweakSection label="Layout" />
+        <TweakRadio label="Thumbnails" value={t.thumbPos} options={["Below", "Left"]} onChange={(v) => setTweak('thumbPos', v)} />
+        <TweakToggle label="Sticky add-to-cart" value={t.stickyBar} onChange={(v) => setTweak('stickyBar', v)} />
+      </TweaksPanel>
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

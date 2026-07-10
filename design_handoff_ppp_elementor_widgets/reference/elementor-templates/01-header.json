@@ -1,0 +1,284 @@
+{
+  "version": "0.4",
+  "title": "PPP — Header",
+  "type": "header",
+  "page_settings": {
+    "hide_title": "yes"
+  },
+  "metadata": [],
+  "content": [
+    {
+      "id": "167eb10",
+      "elType": "container",
+      "settings": {
+        "content_width": "full",
+        "flex_direction": "row",
+        "flex_justify_content": "center",
+        "flex_align_items": "center",
+        "padding": {
+          "unit": "px",
+          "top": "9",
+          "right": "24",
+          "bottom": "9",
+          "left": "24",
+          "isLinked": false
+        },
+        "background_background": "classic",
+        "background_color": "#060606",
+        "border_border": "solid",
+        "border_width": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "1",
+          "left": "0",
+          "isLinked": false
+        },
+        "border_color": "#1a1a1a"
+      },
+      "elements": [
+        {
+          "id": "41c67ea",
+          "elType": "widget",
+          "widgetType": "text-editor",
+          "settings": {
+            "editor": "<p style=\"color:#666;font-size:12px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;text-align:center;margin:0;\">Free UK Delivery On Orders Over £50 &nbsp;·&nbsp; Fast Worldwide Shipping</p>",
+            "align": "center"
+          },
+          "elements": []
+        }
+      ],
+      "isInner": false
+    },
+    {
+      "id": "23ce478",
+      "elType": "container",
+      "settings": {
+        "content_width": "full",
+        "flex_direction": "row",
+        "flex_justify_content": "space-between",
+        "flex_align_items": "center",
+        "padding": {
+          "unit": "px",
+          "top": "0",
+          "right": "64",
+          "bottom": "0",
+          "left": "64",
+          "isLinked": false
+        },
+        "min_height": {
+          "unit": "px",
+          "size": 68,
+          "sizes": []
+        },
+        "background_background": "classic",
+        "background_color": "#0A0A0A",
+        "border_border": "solid",
+        "border_width": {
+          "unit": "px",
+          "top": "0",
+          "right": "0",
+          "bottom": "1",
+          "left": "0",
+          "isLinked": false
+        },
+        "border_color": "#1c1c1c",
+        "_element_id": "ppp-header-main",
+        "css_classes": "ppp-sticky-header"
+      },
+      "elements": [
+        {
+          "id": "12b8d48",
+          "elType": "container",
+          "settings": {
+            "content_width": "boxed",
+            "width": {
+              "unit": "%",
+              "size": 20,
+              "sizes": []
+            },
+            "flex_align_items": "center"
+          },
+          "elements": [
+            {
+              "id": "13df8d4",
+              "elType": "widget",
+              "widgetType": "image",
+              "settings": {
+                "image": {
+                  "url": "https://perfectpearlsandpigments.co.uk/wp-content/uploads/2021/03/PPP-Logo.png",
+                  "id": ""
+                },
+                "image_size": "medium",
+                "width": {
+                  "unit": "px",
+                  "size": 140,
+                  "sizes": []
+                },
+                "link_to": "custom",
+                "link": {
+                  "url": "/",
+                  "is_external": "",
+                  "nofollow": ""
+                }
+              },
+              "elements": []
+            }
+          ],
+          "isInner": true
+        },
+        {
+          "id": "76ec640",
+          "elType": "container",
+          "settings": {
+            "width": {
+              "unit": "%",
+              "size": 60,
+              "sizes": []
+            },
+            "flex_direction": "row",
+            "flex_justify_content": "center",
+            "flex_align_items": "center",
+            "flex_gap": {
+              "unit": "px",
+              "size": 36,
+              "sizes": [],
+              "column": 36,
+              "row": 36,
+              "isLinked": true
+            }
+          },
+          "elements": [
+            {
+              "id": "2471aac",
+              "elType": "widget",
+              "widgetType": "nav-menu",
+              "settings": {
+                "menu": "primary",
+                "layout": "horizontal",
+                "submenu_format": "expanded",
+                "align": "center",
+                "pointer": "underline",
+                "color_menu_item": "#bbbbbb",
+                "color_menu_item_active": "#F69311",
+                "color_menu_item_hover": "#F69311",
+                "color_link_active_pointer": "#F69311",
+                "color_link_hover_pointer": "#F69311",
+                "menu_item_typography_typography": "custom",
+                "menu_item_typography_font_family": "Lexend",
+                "menu_item_typography_font_weight": "600",
+                "menu_item_typography_font_size": {
+                  "unit": "rem",
+                  "size": 0.78,
+                  "sizes": []
+                },
+                "menu_item_typography_letter_spacing": {
+                  "unit": "em",
+                  "size": 0.09,
+                  "sizes": []
+                },
+                "menu_item_typography_text_transform": "uppercase"
+              },
+              "elements": []
+            }
+          ],
+          "isInner": true
+        },
+        {
+          "id": "1ce6ec4",
+          "elType": "container",
+          "settings": {
+            "width": {
+              "unit": "%",
+              "size": 20,
+              "sizes": []
+            },
+            "flex_direction": "row",
+            "flex_justify_content": "flex-end",
+            "flex_align_items": "center",
+            "flex_gap": {
+              "unit": "px",
+              "size": 22,
+              "sizes": [],
+              "column": 22,
+              "row": 22,
+              "isLinked": true
+            }
+          },
+          "elements": [
+            {
+              "id": "11ec400",
+              "elType": "widget",
+              "widgetType": "icon",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-search",
+                  "library": "fa-solid"
+                },
+                "primary_color": "#777777",
+                "hover_primary_color": "#F69311",
+                "link": {
+                  "url": "/?s=",
+                  "is_external": "",
+                  "nofollow": ""
+                },
+                "size": {
+                  "unit": "px",
+                  "size": 17,
+                  "sizes": []
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "71d1a43",
+              "elType": "widget",
+              "widgetType": "icon",
+              "settings": {
+                "selected_icon": {
+                  "value": "fas fa-user",
+                  "library": "fa-solid"
+                },
+                "primary_color": "#777777",
+                "hover_primary_color": "#F69311",
+                "link": {
+                  "url": "/my-account/",
+                  "is_external": "",
+                  "nofollow": ""
+                },
+                "size": {
+                  "unit": "px",
+                  "size": 17,
+                  "sizes": []
+                }
+              },
+              "elements": []
+            },
+            {
+              "id": "119c2c0",
+              "elType": "widget",
+              "widgetType": "woocommerce-menu-cart",
+              "settings": {
+                "icon": "cart-medium",
+                "cart_button_text_visibility": "hide",
+                "icon_color": "#777777",
+                "icon_hover_color": "#F69311",
+                "subtotal_color": "#F69311",
+                "counter_background_color": "#F69311",
+                "counter_color": "#000000",
+                "icon_size": {
+                  "unit": "px",
+                  "size": 17,
+                  "sizes": []
+                }
+              },
+              "elements": []
+            }
+          ],
+          "isInner": true
+        }
+      ],
+      "isInner": false
+    }
+  ]
+}

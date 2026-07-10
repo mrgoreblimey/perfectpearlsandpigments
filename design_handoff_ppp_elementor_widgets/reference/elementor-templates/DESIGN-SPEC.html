@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PPP V2 — Design Spec</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Staatliches&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dark:#0A0A0A; --dark2:#111; --dark3:#1C1C1C;
+    --white:#fff; --off:#F6F6F6; --g1:#E8E8E8; --g2:#888; --g3:#444;
+    --acc:#F69311; --success:#00CC66; --star:#FFD700;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Lexend',sans-serif;background:#FAFAFA;color:#0A0A0A;line-height:1.6;}
+  h1,h2,h3,h4{font-family:'Staatliches',sans-serif;font-weight:400;letter-spacing:0.01em;}
+  .wrap{max-width:1280px;margin:0 auto;padding:64px 40px;}
+  header.hero{
+    background:var(--dark);color:#fff;padding:96px 40px 80px;
+    border-bottom:6px solid var(--acc);
+  }
+  header.hero .inner{max-width:1280px;margin:0 auto;}
+  header.hero .eyebrow{color:var(--acc);font-size:12px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;margin-bottom:24px;}
+  header.hero h1{font-size:88px;line-height:0.95;letter-spacing:-0.02em;text-transform:uppercase;margin-bottom:18px;}
+  header.hero p{color:#888;font-size:18px;max-width:640px;}
+
+  section{padding:80px 40px;border-bottom:1px solid #EBEBEB;background:#fff;}
+  section + section{background:#FAFAFA;}
+  section + section + section{background:#fff;}
+  section:nth-of-type(even){background:#FAFAFA;}
+
+  .section-head{max-width:1280px;margin:0 auto 48px;}
+  .section-head .num{font-family:var(--mono);color:var(--acc);font-size:13px;font-weight:600;letter-spacing:0.08em;margin-bottom:12px;}
+  .section-head h2{font-size:48px;text-transform:uppercase;letter-spacing:0;line-height:1;margin-bottom:8px;}
+  .section-head p{color:#666;font-size:15px;max-width:640px;}
+
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1280px;margin:0 auto;}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1280px;margin:0 auto;}
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:1280px;margin:0 auto;}
+
+  /* Color swatches */
+  .swatch{background:#fff;border:1px solid #EBEBEB;overflow:hidden;}
+  .swatch .chip{height:120px;display:flex;align-items:flex-end;padding:14px;}
+  .swatch .chip .pill{background:rgba(255,255,255,0.92);color:#0A0A0A;font-family:var(--mono);font-size:11px;font-weight:600;padding:3px 8px;letter-spacing:0.05em;}
+  .swatch .meta{padding:14px 16px 16px;}
+  .swatch .meta .name{font-weight:700;font-size:13px;margin-bottom:2px;}
+  .swatch .meta .role{color:#888;font-size:12px;}
+  .swatch.dark .chip .pill{background:rgba(255,255,255,0.15);color:#fff;}
+
+  /* Type specimens */
+  .specimen{background:#fff;border:1px solid #EBEBEB;padding:32px;}
+  .specimen .label{font-family:var(--mono);font-size:11px;color:var(--acc);font-weight:600;letter-spacing:0.1em;margin-bottom:14px;text-transform:uppercase;}
+  .specimen .sample-h1{font-family:'Staatliches',sans-serif;font-size:88px;line-height:0.95;letter-spacing:-0.02em;text-transform:uppercase;margin-bottom:18px;}
+  .specimen .sample-h2{font-family:'Staatliches',sans-serif;font-size:48px;line-height:1;margin-bottom:14px;}
+  .specimen .sample-h3{font-family:'Staatliches',sans-serif;font-size:1.35rem;line-height:1.1;margin-bottom:10px;}
+  .specimen .sample-eye{font-family:'Lexend',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--acc);margin-bottom:10px;}
+  .specimen .sample-body{font-family:'Lexend',sans-serif;font-size:15px;line-height:1.75;color:#444;}
+  .specimen .sample-btn{font-family:'Lexend',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;}
+  .specimen .specs{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px;padding-top:18px;border-top:1px solid #f0f0f0;}
+  .specimen .specs span{font-family:var(--mono);font-size:11px;color:#888;}
+
+  /* Buttons demo */
+  .btns{display:flex;gap:16px;flex-wrap:wrap;align-items:center;}
+  .btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--acc);color:#000;border:none;padding:16px 32px;font-family:'Lexend';font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;}
+  .btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:#0A0A0A;border:1.5px solid #0A0A0A;padding:15px 30px;font-family:'Lexend';font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;}
+  .btn-dark{display:inline-flex;align-items:center;gap:8px;background:#0A0A0A;color:#fff;border:none;padding:16px 32px;font-family:'Lexend';font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;}
+
+  /* Spacing scale */
+  .spacing-row{display:flex;align-items:center;gap:24px;padding:14px 0;border-bottom:1px solid #f0f0f0;}
+  .spacing-row .bar{background:var(--acc);height:24px;}
+  .spacing-row .key{font-family:var(--mono);font-size:13px;font-weight:600;width:64px;}
+  .spacing-row .use{color:#666;font-size:13px;}
+
+  /* Footer note */
+  footer{background:#0A0A0A;color:#888;padding:48px 40px;text-align:center;font-size:13px;}
+  footer code{font-family:var(--mono);color:var(--acc);}
+
+  /* Print */
+  @media print {
+    body{background:#fff;}
+    section{break-inside:avoid;page-break-inside:avoid;}
+    header.hero{padding:64px 40px 48px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="inner">
+    <div class="eyebrow">— Design System · v1.0 · June 2026</div>
+    <h1>Perfect Pearls<br>&amp; Pigments</h1>
+    <p>The visual reference for the PPP V2 brand kit. Use this alongside the Elementor Kit import to verify global styles came through cleanly, or as a manual rebuild guide.</p>
+  </div>
+</header>
+
+<!-- ─── Colours ─── -->
+<section>
+  <div class="section-head">
+    <div class="num">01 / Colour</div>
+    <h2>Brand Palette</h2>
+    <p>11 colours total — 4 system slots (Primary, Secondary, Text, Accent) plus 7 custom roles installed as Elementor Global Colours.</p>
+  </div>
+
+  <h3 style="max-width:1280px;margin:0 auto 16px;font-size:18px;font-family:Lexend;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#0A0A0A;">System</h3>
+  <div class="grid-4" style="margin-bottom:48px;">
+    <div class="swatch dark"><div class="chip" style="background:#0A0A0A;"><span class="pill">#0A0A0A</span></div><div class="meta"><div class="name">Brand Black</div><div class="role">Primary · backgrounds, type</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#F69311;"><span class="pill">#F69311</span></div><div class="meta"><div class="name">Brand Orange</div><div class="role">Secondary · CTAs, accents</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#444444;"><span class="pill" style="background:rgba(255,255,255,0.92);">#444444</span></div><div class="meta"><div class="name">Body Text</div><div class="role">Text · paragraphs</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#888888;"><span class="pill" style="background:rgba(255,255,255,0.92);">#888888</span></div><div class="meta"><div class="name">Muted Gray</div><div class="role">Accent · captions, meta</div></div></div>
+  </div>
+
+  <h3 style="max-width:1280px;margin:0 auto 16px;font-size:18px;font-family:Lexend;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#0A0A0A;">Custom roles</h3>
+  <div class="grid-4">
+    <div class="swatch dark"><div class="chip" style="background:#0A0A0A;"><span class="pill">#0A0A0A</span></div><div class="meta"><div class="name">PPP / Dark 1</div><div class="role">Header, hero</div></div></div>
+    <div class="swatch dark"><div class="chip" style="background:#111111;"><span class="pill">#111111</span></div><div class="meta"><div class="name">PPP / Dark 2</div><div class="role">Lifted surface</div></div></div>
+    <div class="swatch dark"><div class="chip" style="background:#1C1C1C;"><span class="pill">#1C1C1C</span></div><div class="meta"><div class="name">PPP / Dark 3</div><div class="role">Card on dark</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#F6F6F6;border-bottom:1px solid #E8E8E8;"><span class="pill">#F6F6F6</span></div><div class="meta"><div class="name">PPP / Off-white</div><div class="role">Alt section bg</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#E8E8E8;"><span class="pill">#E8E8E8</span></div><div class="meta"><div class="name">PPP / Gray 100</div><div class="role">Borders on white</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#F69311;"><span class="pill">#F69311</span></div><div class="meta"><div class="name">PPP / Accent</div><div class="role">CTAs, highlights, links</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#00CC66;"><span class="pill">#00CC66</span></div><div class="meta"><div class="name">PPP / Success</div><div class="role">In stock, ✓ confirmations</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#FFD700;"><span class="pill">#FFD700</span></div><div class="meta"><div class="name">PPP / Star Gold</div><div class="role">Review stars only</div></div></div>
+  </div>
+</section>
+
+<!-- ─── Type ─── -->
+<section>
+  <div class="section-head">
+    <div class="num">02 / Typography</div>
+    <h2>Type System</h2>
+    <p>Two families. <strong>Staatliches</strong> for every display heading. <strong>Lexend</strong> for body, eyebrows, buttons, and UI labels.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="specimen">
+      <div class="label">PPP / H1 Hero</div>
+      <div class="sample-h1">COLOUR<br>WITHOUT<br>LIMITS</div>
+      <div class="specs">
+        <span>Staatliches</span><span>·</span><span>104px desktop</span><span>·</span><span>56px mobile</span><span>·</span><span>line 0.93</span><span>·</span><span>tracking −2.5%</span><span>·</span><span>UPPERCASE</span>
+      </div>
+    </div>
+    <div class="specimen">
+      <div class="label">PPP / H2 Section</div>
+      <div class="sample-h2">Featured Pigments</div>
+      <div class="sample-h2" style="font-size:36px;color:#888;">Mobile size</div>
+      <div class="specs">
+        <span>Staatliches</span><span>·</span><span>56px / 36px</span><span>·</span><span>line 1.0</span><span>·</span><span>tracking +1%</span>
+      </div>
+    </div>
+    <div class="specimen">
+      <div class="label">PPP / H3 Card</div>
+      <div class="sample-h3">Persia Chameleon</div>
+      <div class="sample-h3">Honey Gold Pearl</div>
+      <div class="sample-h3">Aqua Glow Pigment</div>
+      <div class="specs">
+        <span>Staatliches</span><span>·</span><span>1.35rem</span><span>·</span><span>line 1.1</span>
+      </div>
+    </div>
+    <div class="specimen">
+      <div class="label">PPP / Eyebrow</div>
+      <div class="sample-eye">— Best Selling Pigments</div>
+      <div class="sample-eye">— Colour Specialists Since 2010</div>
+      <div class="sample-eye">— What Customers Say</div>
+      <div class="specs">
+        <span>Lexend Bold</span><span>·</span><span>0.72rem</span><span>·</span><span>tracking 22%</span><span>·</span><span>UPPERCASE</span>
+      </div>
+    </div>
+    <div class="specimen">
+      <div class="label">Body Text · Lexend 400</div>
+      <p class="sample-body">Persia is one of our most sought-after chameleon pigments, producing a stunning shift from deep purple through violet to gold depending on viewing angle and light conditions. Each batch is hand-inspected for consistency and intensity.</p>
+      <div class="specs">
+        <span>Lexend Regular</span><span>·</span><span>15–17px</span><span>·</span><span>line 1.75</span><span>·</span><span>color #444</span>
+      </div>
+    </div>
+    <div class="specimen">
+      <div class="label">PPP / Button + PPP / Price</div>
+      <div class="sample-btn" style="margin-bottom:14px;">ADD TO BASKET · £13.00</div>
+      <div style="font-family:'Lexend';font-weight:700;font-size:2rem;letter-spacing:-0.03em;">£13.00</div>
+      <div class="specs">
+        <span>Button: Lexend 700 / 0.82rem / 12% / UPPER</span><span>·</span><span>Price: Lexend 700 / 2rem / −3%</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Buttons ─── -->
+<section>
+  <div class="section-head">
+    <div class="num">03 / Buttons</div>
+    <h2>Action Patterns</h2>
+    <p>Three patterns cover every CTA in the system. No rounded corners — squared, confident, all-caps.</p>
+  </div>
+
+  <div class="grid-3">
+    <div class="specimen">
+      <div class="label">Primary · Orange on dark or light</div>
+      <div class="btns" style="margin-top:8px;">
+        <button class="btn-primary">Shop the Collection →</button>
+      </div>
+      <div class="specs">
+        <span>BG #F69311</span><span>·</span><span>Text #000</span><span>·</span><span>Pad 16/32px</span><span>·</span><span>Radius 0</span>
+      </div>
+    </div>
+    <div class="specimen">
+      <div class="label">Ghost · on dark backgrounds</div>
+      <div class="btns" style="margin-top:8px;background:#0A0A0A;padding:18px;display:flex;justify-content:center;">
+        <button class="btn-ghost" style="color:#fff;border-color:rgba(255,255,255,0.25);">Browse Categories</button>
+      </div>
+      <div class="specs">
+        <span>Transparent</span><span>·</span><span>1px border rgba(255,255,255,0.25)</span><span>·</span><span>Hover → orange border + text</span>
+      </div>
+    </div>
+    <div class="specimen">
+      <div class="label">Outlined Dark · secondary CTAs on light</div>
+      <div class="btns" style="margin-top:8px;">
+        <button class="btn-ghost">View All Products</button>
+      </div>
+      <div class="specs">
+        <span>Transparent</span><span>·</span><span>1.5px #0A0A0A border</span><span>·</span><span>Hover → fills black</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Spacing ─── -->
+<section>
+  <div class="section-head">
+    <div class="num">04 / Spacing &amp; Layout</div>
+    <h2>Layout Scale</h2>
+    <p>Container caps at 1280px. Section padding varies by density. All scale stops below are installed as defaults in Elementor's Global Layout settings.</p>
+  </div>
+
+  <div style="max-width:1280px;margin:0 auto;background:#fff;border:1px solid #EBEBEB;padding:32px;">
+    <div class="spacing-row">
+      <span class="key">8 px</span>
+      <span class="bar" style="width:8px;"></span>
+      <span class="use">Inline icon gap, swatch border offset</span>
+    </div>
+    <div class="spacing-row">
+      <span class="key">14 px</span>
+      <span class="bar" style="width:14px;"></span>
+      <span class="use">Card internal stack, label gap</span>
+    </div>
+    <div class="spacing-row">
+      <span class="key">20 px</span>
+      <span class="bar" style="width:20px;"></span>
+      <span class="use">Default widget vertical spacing</span>
+    </div>
+    <div class="spacing-row">
+      <span class="key">32 px</span>
+      <span class="bar" style="width:32px;"></span>
+      <span class="use">Eyebrow → headline gap</span>
+    </div>
+    <div class="spacing-row">
+      <span class="key">40 px</span>
+      <span class="bar" style="width:40px;"></span>
+      <span class="use">Section horizontal padding</span>
+    </div>
+    <div class="spacing-row">
+      <span class="key">64 px</span>
+      <span class="bar" style="width:64px;"></span>
+      <span class="use">Section vertical padding (default)</span>
+    </div>
+    <div class="spacing-row">
+      <span class="key">80 px</span>
+      <span class="bar" style="width:80px;"></span>
+      <span class="use">Section vertical padding (spacious)</span>
+    </div>
+    <div class="spacing-row" style="border-bottom:none;">
+      <span class="key">120 px</span>
+      <span class="bar" style="width:120px;"></span>
+      <span class="use">Hero / showcase section padding</span>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:32px;">
+    <div class="specimen">
+      <div class="label">Container</div>
+      <p class="sample-body" style="font-size:14px;">Max width <strong>1280px</strong> centered. Horizontal padding <strong>40px</strong> at all breakpoints.</p>
+    </div>
+    <div class="specimen">
+      <div class="label">Breakpoints</div>
+      <p class="sample-body" style="font-size:14px;">Mobile &lt; <strong>768px</strong> · Tablet 768–1024px · Desktop ≥ <strong>1025px</strong> (Elementor defaults — no overrides needed).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Iconography & misc ─── -->
+<section>
+  <div class="section-head">
+    <div class="num">05 / Notes</div>
+    <h2>What's Different in Elementor</h2>
+    <p>Things the React design does that Elementor handles via different mechanisms.</p>
+  </div>
+  <div class="grid-2">
+    <div class="specimen">
+      <div class="label">Sticky header</div>
+      <p class="sample-body" style="font-size:14px;">Use the header Container's <strong>Motion Effects → Sticky → Top</strong> and set <strong>Effects Offset</strong> to 0. The kit's header already has a CSS class hook (<code>ppp-sticky-header</code>) if you want to add a background-change-on-scroll effect.</p>
+    </div>
+    <div class="specimen">
+      <div class="label">Card hover lift</div>
+      <p class="sample-body" style="font-size:14px;">The custom CSS class <code>ppp-card</code> ships globally — adds <code>translateY(-5px)</code> + soft shadow on hover. Apply it to any Container.</p>
+    </div>
+    <div class="specimen">
+      <div class="label">Cart drawer</div>
+      <p class="sample-body" style="font-size:14px;">Elementor Pro's <strong>Off-Canvas</strong> widget triggered from the header cart icon → embed the WooCommerce Cart widget inside it. Or use a plugin like CartFlows/Cart Lift for the slide-in.</p>
+    </div>
+    <div class="specimen">
+      <div class="label">Hero entrance animation</div>
+      <p class="sample-body" style="font-size:14px;">Each child widget supports <strong>Advanced → Motion Effects → Entrance Animation</strong>. Set the eyebrow/title/text/buttons to <em>Fade in Up</em> with staggered delays (0.1s / 0.25s / 0.4s / 0.55s) to recreate the cascade.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Perfect Pearls &amp; Pigments — Design Kit v1.0 · Built for Elementor Pro 3.23+ · <code>ppp-elementor-kit.zip</code>
+</footer>
+
+</body>
+</html>
