@@ -1,5 +1,13 @@
 import type { HomeData, Product } from "./types";
 import { fallbackHomeData, nav, cats, reviews } from "./fallback-data";
+import {
+  CHAMELEON_CATALOG,
+  categoryMetaFor,
+  buildProductDetail,
+  type CatalogProduct,
+  type CategoryMeta,
+  type ProductDetail,
+} from "./catalog-data";
 
 /**
  * Headless WordPress data layer.
@@ -135,4 +143,37 @@ export async function getHomeData(): Promise<HomeData> {
     bestSellers,
     newIn,
   };
+}
+
+/* ─── Category + product pages ───────────────────────────────────────────
+ * Seed-backed for now. When WooGraphQL is live, replace the bodies below
+ * with product-category / product queries. The return shapes already match
+ * what the category and product pages render, so only these functions change.
+ * -------------------------------------------------------------------------- */
+
+export async function getCategory(slug: string): Promise<CategoryMeta> {
+  // TODO(woographql): query productCategory(id: $slug, idType: SLUG) for
+  // name/description; fall back to categoryMetaFor for copy we author locally.
+  return categoryMetaFor(slug);
+}
+
+export async function getCategoryProducts(slug: string): Promise<CatalogProduct[]> {
+  // TODO(woographql): query products(where: { category: $slug }) and map to
+  // CatalogProduct (facets from product attributes). Until then, every
+  // category renders the chameleon catalog so the page is fully browsable.
+  void slug;
+  return CHAMELEON_CATALOG;
+}
+
+export async function getProduct(slug: string): Promise<ProductDetail | null> {
+  // TODO(woographql): query product(id: $slug, idType: SLUG) → ProductDetail
+  // (sizes from variations, specs from attributes, gallery from galleryImages).
+  const row = CHAMELEON_CATALOG.find((p) => p.slug === slug);
+  if (!row) return null;
+  return buildProductDetail(row);
+}
+
+export async function getRelatedProducts(slug: string, count = 4): Promise<CatalogProduct[]> {
+  // TODO(woographql): use the product's `related` connection.
+  return CHAMELEON_CATALOG.filter((p) => p.slug !== slug).slice(0, count);
 }

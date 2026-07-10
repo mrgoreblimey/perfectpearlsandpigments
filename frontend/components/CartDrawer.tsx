@@ -54,8 +54,15 @@ export default function CartDrawer() {
             <div style={{ display: "flex", flexDirection: "column" }}>
               {cart.map((item, i) => (
                 <div key={`${item.id}-${i}`} style={{ display: "flex", gap: 14, padding: "16px 0", borderBottom: "1px solid #F0EEE9" }}>
-                  <div style={{ width: 58, height: 58, background: "#F1EFEA", borderRadius: 10, flexShrink: 0, overflow: "hidden", position: "relative" }}>
-                    <Image src={item.img} alt="" fill sizes="58px" style={{ objectFit: "cover" }} />
+                  <div
+                    style={{
+                      width: 58, height: 58, borderRadius: 10, flexShrink: 0, overflow: "hidden", position: "relative",
+                      background: item.img
+                        ? "#F1EFEA"
+                        : `linear-gradient(135deg, ${(item.swatches[0] ?? "#7B2FFF")}, ${(item.swatches[1] ?? item.swatches[0] ?? "#00C2FF")})`,
+                    }}
+                  >
+                    {item.img && <Image src={item.img} alt="" fill sizes="58px" style={{ objectFit: "cover" }} />}
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: "0.85rem", fontWeight: 600, marginBottom: 4 }}>{item.name}</div>
