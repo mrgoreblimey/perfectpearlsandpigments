@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
-import type { Product } from "@/lib/types";
 import {
   FACETS,
   FACET_KEYS,
@@ -27,17 +26,6 @@ const SORTS = [
 
 const PAGE_SIZE = 12;
 
-function toCartProduct(p: CatalogProduct): Product {
-  return {
-    id: p.id,
-    name: `${p.name} Chameleon`,
-    slug: p.slug,
-    cat: p.effect.toUpperCase(),
-    price: `From £${p.price.toFixed(2)}`,
-    img: "",
-    swatches: p.sw,
-  };
-}
 
 /* ── Checkbox row ── */
 function CheckRow({
@@ -219,7 +207,7 @@ function CatCard({ product, onAdd }: { product: CatalogProduct; onAdd: (p: Catal
 }
 
 export default function CategoryBrowser({ products }: { products: CatalogProduct[] }) {
-  const { addToCart } = useCart();
+  const { addItem } = useCart();
   const [filters, setFilters] = useState<FilterState>(emptyFilters);
   const [price, setPrice] = useState<[number, number]>([PRICE_MIN, PRICE_MAX]);
   const [sort, setSort] = useState<string>("featured");
@@ -280,7 +268,15 @@ export default function CategoryBrowser({ products }: { products: CatalogProduct
   const activeCount = FACET_KEYS.reduce((n, k) => n + filters[k].length, 0) + (price[0] !== PRICE_MIN || price[1] !== PRICE_MAX ? 1 : 0);
   const shown = filtered.slice(0, visible);
 
-  const quickAdd = (p: CatalogProduct) => addToCart(toCartProduct(p));
+  const quickAdd = (p: CatalogProduct) =>
+    addItem({
+      id: p.slug,
+      productSlug: p.slug,
+      name: `${p.name} Chameleon`,
+      unitPrice: p.price,
+      img: "",
+      swatches: p.sw,
+    });
 
   const chips: { k: string; v: string }[] = [];
   FACET_KEYS.forEach((k) => filters[k].forEach((v) => chips.push({ k, v })));

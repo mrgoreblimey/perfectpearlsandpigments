@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
-import type { Product } from "@/lib/types";
 import type { ProductDetail } from "@/lib/catalog-data";
 
 const gradBg = (c: string[]) =>
@@ -88,7 +87,7 @@ function Accordion({ title, children, defaultOpen }: { title: string; children: 
 }
 
 export default function ProductView({ product }: { product: ProductDetail }) {
-  const { addToCart } = useCart();
+  const { addItem } = useCart();
   const [sizeIdx, setSizeIdx] = useState(2);
   const [qty, setQty] = useState(1);
   const [showSticky, setShowSticky] = useState(false);
@@ -106,16 +105,16 @@ export default function ProductView({ product }: { product: ProductDetail }) {
   const heroImg = product.gallery.find((g) => g.type === "img")?.src ?? "";
 
   const add = () => {
-    const line: Product = {
+    addItem({
       id: `${product.slug}-${size.label}`,
-      name: `${product.name} · ${size.label}`,
-      slug: product.slug,
-      cat: product.category.toUpperCase(),
-      price: `£${size.price.toFixed(2)}`,
+      productSlug: product.slug,
+      name: product.name,
+      size: size.label,
+      unitPrice: size.price,
+      qty,
       img: heroImg,
       swatches: product.shift.map(([c]) => c),
-    };
-    for (let i = 0; i < qty; i++) addToCart(line);
+    });
   };
 
   return (

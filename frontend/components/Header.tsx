@@ -22,7 +22,7 @@ function Announce() {
 }
 
 export default function Header({ nav }: { nav: NavItem[] }) {
-  const { cart, openCart } = useCart();
+  const { count, openCart } = useCart();
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSub, setMobileSub] = useState<number | null>(null);
@@ -102,7 +102,7 @@ export default function Header({ nav }: { nav: NavItem[] }) {
                 <line x1="3" y1="6" x2="21" y2="6" />
                 <path d="M16 10a4 4 0 0 1-8 0" />
               </svg>
-              {cart.length > 0 && (
+              {count > 0 && (
                 <span
                   style={{
                     position: "absolute", top: 2, right: 2, background: "var(--acc)", color: "#111",
@@ -110,7 +110,7 @@ export default function Header({ nav }: { nav: NavItem[] }) {
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}
                 >
-                  {cart.length}
+                  {count}
                 </span>
               )}
             </button>

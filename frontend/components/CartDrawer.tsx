@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import { money } from "@/lib/checkout";
 
 export default function CartDrawer() {
-  const { cart, cartOpen, closeCart, removeFromCart } = useCart();
-  const subtotal = cart.reduce((acc, p) => acc + (parseFloat(p.price.replace(/[^0-9.]/g, "")) || 0), 0);
+  const { cart, cartOpen, closeCart, removeItem, count, subtotal } = useCart();
 
   return (
     <>
@@ -33,7 +34,7 @@ export default function CartDrawer() {
           <div>
             <div style={{ fontSize: "1rem", fontWeight: 700, fontFamily: "var(--font-archivo), sans-serif", letterSpacing: "-0.01em" }}>Your basket</div>
             <div style={{ color: "#A5A29A", fontSize: "0.75rem", marginTop: 2 }}>
-              {cart.length} item{cart.length !== 1 ? "s" : ""}
+              {count} item{count !== 1 ? "s" : ""}
             </div>
           </div>
           <button
@@ -52,24 +53,26 @@ export default function CartDrawer() {
             </div>
           ) : (
             <div style={{ display: "flex", flexDirection: "column" }}>
-              {cart.map((item, i) => (
-                <div key={`${item.id}-${i}`} style={{ display: "flex", gap: 14, padding: "16px 0", borderBottom: "1px solid #F0EEE9" }}>
+              {cart.map((item) => (
+                <div key={item.id} style={{ display: "flex", gap: 14, padding: "16px 0", borderBottom: "1px solid #F0EEE9" }}>
                   <div
                     style={{
                       width: 58, height: 58, borderRadius: 10, flexShrink: 0, overflow: "hidden", position: "relative",
                       background: item.img
                         ? "#F1EFEA"
-                        : `linear-gradient(135deg, ${(item.swatches[0] ?? "#7B2FFF")}, ${(item.swatches[1] ?? item.swatches[0] ?? "#00C2FF")})`,
+                        : `linear-gradient(135deg, ${item.swatches[0] ?? "#7B2FFF"}, ${item.swatches[1] ?? item.swatches[0] ?? "#00C2FF"})`,
                     }}
                   >
                     {item.img && <Image src={item.img} alt="" fill sizes="58px" style={{ objectFit: "cover" }} />}
                   </div>
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: "0.85rem", fontWeight: 600, marginBottom: 4 }}>{item.name}</div>
-                    <div style={{ color: "#6E6B64", fontSize: "0.78rem" }}>{item.price}</div>
+                    <div style={{ color: "#6E6B64", fontSize: "0.78rem" }}>
+                      {item.size ? `${item.size} · ` : ""}Qty {item.qty} · {money(item.unitPrice * item.qty)}
+                    </div>
                   </div>
                   <button
-                    onClick={() => removeFromCart(i)}
+                    onClick={() => removeItem(item.id)}
                     aria-label="Remove item"
                     style={{ background: "none", border: "none", color: "#C0BDB5", cursor: "pointer", fontSize: "0.85rem", alignSelf: "flex-start" }}
                   >
@@ -84,11 +87,14 @@ export default function CartDrawer() {
           <div style={{ padding: "20px 26px", borderTop: "1px solid #F0EEE9" }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 14 }}>
               <span style={{ color: "#8A877F", fontSize: "0.84rem" }}>Subtotal</span>
-              <span style={{ fontWeight: 700, fontFamily: "var(--font-archivo), sans-serif" }}>£{subtotal.toFixed(2)}</span>
+              <span style={{ fontWeight: 700, fontFamily: "var(--font-archivo), sans-serif" }}>{money(subtotal)}</span>
             </div>
-            <button className="v2-btn-primary" style={{ width: "100%", justifyContent: "center" }}>
+            <Link href="/cart" className="v2-btn-primary" style={{ width: "100%", justifyContent: "center", marginBottom: 8 }} onClick={closeCart}>
+              View basket
+            </Link>
+            <Link href="/checkout" className="v2-select-btn" style={{ width: "100%" }} onClick={closeCart}>
               Checkout →
-            </button>
+            </Link>
           </div>
         )}
       </div>

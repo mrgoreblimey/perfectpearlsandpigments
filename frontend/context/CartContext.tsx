@@ -1,23 +1,27 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import type { Product } from "@/lib/types";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import type { CartLine } from "@/lib/types";
 
 interface CartContextValue {
-  cart: Product[];
+  cart: CartLine[];
   cartOpen: boolean;
-  addToCart: (product: Product) => void;
-  removeFromCart: (index: number) => void;
+  count: number;
+  subtotal: number;
+  addItem: (line: Omit<CartLine, "qty"> & { qty?: number }) => void;
+  setQty: (id: string, qty: number) => void;
+  removeItem: (id: string) => void;
+  clearCart: () => void;
   openCart: () => void;
   closeCart: () => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-const STORAGE_KEY = "ppp-cart";
+const STORAGE_KEY = "ppp-cart-v2";
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cart, setCart] = useState<Product[]>([]);
+  const [cart, setCart] = useState<CartLine[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
 
   useEffect(() => {
@@ -25,7 +29,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const saved = window.localStorage.getItem(STORAGE_KEY);
       if (saved) setCart(JSON.parse(saved));
     } catch {
-      // Corrupt or unavailable storage — start with an empty basket.
+      // Corrupt or unavailable storage — start empty.
     }
   }, []);
 
@@ -33,24 +37,43 @@ export function CartProvider({ children }: { children: ReactNode }) {
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
     } catch {
-      // Storage unavailable (private mode etc.) — cart stays in-memory.
+      // Storage unavailable — cart stays in memory.
     }
   }, [cart]);
 
-  const addToCart = (product: Product) => {
-    setCart((prev) => [...prev, product]);
+  const addItem: CartContextValue["addItem"] = (line) => {
+    const qty = line.qty ?? 1;
+    setCart((prev) => {
+      const existing = prev.find((l) => l.id === line.id);
+      if (existing) {
+        return prev.map((l) => (l.id === line.id ? { ...l, qty: l.qty + qty } : l));
+      }
+      return [...prev, { ...line, qty }];
+    });
     setCartOpen(true);
   };
-  const removeFromCart = (index: number) =>
-    setCart((prev) => prev.filter((_, i) => i !== index));
+
+  const setQty = (id: string, qty: number) =>
+    setCart((prev) => prev.map((l) => (l.id === id ? { ...l, qty: Math.max(1, qty) } : l)));
+
+  const removeItem = (id: string) => setCart((prev) => prev.filter((l) => l.id !== id));
+
+  const clearCart = () => setCart([]);
+
+  const count = useMemo(() => cart.reduce((n, l) => n + l.qty, 0), [cart]);
+  const subtotal = useMemo(() => cart.reduce((s, l) => s + l.unitPrice * l.qty, 0), [cart]);
 
   return (
     <CartContext.Provider
       value={{
         cart,
         cartOpen,
-        addToCart,
-        removeFromCart,
+        count,
+        subtotal,
+        addItem,
+        setQty,
+        removeItem,
+        clearCart,
         openCart: () => setCartOpen(true),
         closeCart: () => setCartOpen(false),
       }}

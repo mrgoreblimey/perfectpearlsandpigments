@@ -46,6 +46,20 @@ export interface Review {
   product: string;
 }
 
+export interface CartLine {
+  /** Unique per product + size, e.g. "persia-chameleon-25g". */
+  id: string;
+  productSlug: string;
+  /** Real WooCommerce product id, when the catalog is wired to live products. */
+  wooProductId?: number;
+  name: string;
+  size?: string;
+  unitPrice: number;
+  qty: number;
+  img: string;
+  swatches: string[];
+}
+
 export interface HomeData {
   nav: NavItem[];
   cats: Category[];

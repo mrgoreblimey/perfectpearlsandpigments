@@ -4,10 +4,21 @@ import { useState } from "react";
 import Image from "next/image";
 import type { Product } from "@/lib/types";
 import { useCart } from "@/context/CartContext";
+import { parseMoney } from "@/lib/checkout";
 
 export default function ProductCard({ product }: { product: Product }) {
-  const { addToCart } = useCart();
+  const { addItem } = useCart();
   const [hov, setHov] = useState(false);
+
+  const addToCart = () =>
+    addItem({
+      id: product.slug,
+      productSlug: product.slug,
+      name: product.name,
+      unitPrice: parseMoney(product.price),
+      img: product.img,
+      swatches: product.swatches,
+    });
 
   return (
     <div className="v2-card" onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
@@ -51,7 +62,7 @@ export default function ProductCard({ product }: { product: Product }) {
           ))}
           <span style={{ color: "#A5A29A", fontSize: "0.7rem", marginLeft: 2 }}>Multiple sizes</span>
         </div>
-        <button className="v2-select-btn" onClick={() => addToCart(product)}>
+        <button className="v2-select-btn" onClick={addToCart}>
           Select options
         </button>
       </div>

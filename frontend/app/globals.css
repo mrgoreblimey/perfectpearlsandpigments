@@ -651,6 +651,209 @@ h3 {
   }
 }
 
+/* ─── Checkout / cart ─── */
+@keyframes chkPop {
+  0% { opacity: 0; transform: scale(0.55); }
+  65% { transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes chkSpin {
+  to { transform: rotate(360deg); }
+}
+.chk-layout {
+  display: grid;
+  grid-template-columns: 1.55fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+.chk-sticky {
+  position: sticky;
+  top: 24px;
+}
+@media (max-width: 960px) {
+  .chk-layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .chk-sticky {
+    position: static;
+  }
+}
+.chk-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+}
+.chk-label {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: #55534e;
+  margin-bottom: 7px;
+}
+.chk-input,
+.chk-select {
+  width: 100%;
+  padding: 13px 16px;
+  background: #fff;
+  border: 1.5px solid #dedbd3;
+  border-radius: 10px;
+  font-family: var(--font-lexend), sans-serif;
+  font-size: 0.88rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.chk-input::placeholder {
+  color: #a5a29a;
+}
+.chk-input:focus,
+.chk-select:focus {
+  border-color: var(--ink);
+}
+.chk-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2355534E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  cursor: pointer;
+}
+.chk-row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 560px) {
+  .chk-row2 {
+    grid-template-columns: 1fr;
+  }
+}
+.chk-option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  background: #fff;
+  border: 1.5px solid #dedbd3;
+  border-radius: 10px;
+  padding: 15px 18px;
+  cursor: pointer;
+  font-family: var(--font-lexend), sans-serif;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.chk-option:hover {
+  border-color: #b8b4aa;
+}
+.chk-option.active {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 1px var(--ink);
+}
+.chk-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid #c9c6be;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s;
+}
+.chk-option.active .chk-dot {
+  border-color: var(--ink);
+}
+.chk-option.active .chk-dot::after {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+.chk-qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1.5px solid #dedbd3;
+  border-radius: 10px;
+  background: #fff;
+  height: 38px;
+}
+.chk-qty button {
+  width: 34px;
+  height: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.05rem;
+  color: #55534e;
+  transition: color 0.15s;
+  line-height: 0;
+}
+.chk-qty button:hover {
+  color: var(--ink);
+}
+.chk-qty span {
+  min-width: 26px;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.chk-apply {
+  background: var(--ink);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 0 18px;
+  font-family: var(--font-lexend), sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: opacity 0.15s;
+}
+.chk-apply:hover {
+  opacity: 0.85;
+}
+.chk-paychip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fff;
+  color: #55534e;
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.chk-remove {
+  background: none;
+  border: none;
+  color: #c0bdb5;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 4px;
+  transition: color 0.15s;
+}
+.chk-remove:hover {
+  color: #e8452c;
+}
+.chk-spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(23, 21, 15, 0.25);
+  border-top-color: #17150f;
+  border-radius: 50%;
+  animation: chkSpin 0.7s linear infinite;
+}
+.v2-btn-primary:disabled {
+  cursor: default;
+  filter: none;
+  transform: none;
+  opacity: 0.85;
+}
+
 /* ─── Product page ─── */
 .prod-thumb {
   aspect-ratio: 1/1;
