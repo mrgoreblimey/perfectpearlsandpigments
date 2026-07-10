@@ -76,13 +76,22 @@ interface WpProductNode {
 
 /* ── Category meta ── */
 export async function wpGetCategory(slug: string): Promise<CategoryMeta | null> {
-  const data = await q<{ productCategory: { name: string; description?: string; count?: number; parent?: { node: { name: string; slug: string } } } | null }>(
+  const data = await q<{
+    productCategory: {
+      name: string;
+      description?: string;
+      count?: number;
+      parent?: { node: { name: string; slug: string } };
+      categoryContent?: { footerContent?: string | null } | null;
+    } | null;
+  }>(
     /* GraphQL */ `query Cat($slug: ID!) {
       productCategory(id: $slug, idType: SLUG) {
         name
         description
         count
         parent { node { name slug } }
+        categoryContent { footerContent }
       }
     }`,
     { slug },
@@ -97,6 +106,7 @@ export async function wpGetCategory(slug: string): Promise<CategoryMeta | null> 
     title: c.name,
     description: stripHtml(c.description) || "Explore our specialty range — professional-grade pigments and effects.",
     breadcrumb: ["Home", ...(parentName ? [parentName] : []), c.name],
+    footerContent: c.categoryContent?.footerContent ?? undefined,
   };
 }
 

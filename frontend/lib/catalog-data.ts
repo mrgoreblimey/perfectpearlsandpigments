@@ -37,6 +37,8 @@ export interface CategoryMeta {
   title: string;
   description: string;
   breadcrumb: string[];
+  /** ACF `footer_content` (rich HTML) shown at the bottom of the category page. */
+  footerContent?: string;
 }
 
 export interface ProductSize {

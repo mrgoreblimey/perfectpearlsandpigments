@@ -1116,3 +1116,30 @@ h3 {
     grid-template-columns: 1fr;
   }
 }
+
+/* Category footer — WordPress/ACF rich HTML */
+.cat-footer-prose {
+  max-width: 860px;
+}
+.cat-footer-prose strong,
+.cat-footer-prose b {
+  font-weight: 600;
+  color: #2b2925;
+}
+.cat-footer-prose h2,
+.cat-footer-prose h3,
+.cat-footer-prose h4 {
+  font-size: 1.1rem;
+  letter-spacing: -0.015em;
+  margin: 28px 0 12px;
+}
+.cat-footer-prose a {
+  color: var(--acc);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.cat-footer-prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--r);
+}
