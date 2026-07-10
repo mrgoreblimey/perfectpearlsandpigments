@@ -135,8 +135,9 @@ export async function getNewIn(count = 4): Promise<Product[]> {
 export async function getHomeData(): Promise<HomeData> {
   const [bestSellers, newIn] = await Promise.all([getBestSellers(), getNewIn()]);
   return {
-    // Nav, category tiles and reviews are design-managed for now; swap these
-    // for WP menus / product categories / a reviews plugin when ready.
+    // Primary nav is intentionally code-managed (keeps the mega-menu colour
+    // dots + descriptions that a standard WP menu can't store). Category tiles
+    // and reviews remain seed for now and could move to WP later.
     nav,
     cats,
     reviews,
