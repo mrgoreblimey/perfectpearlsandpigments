@@ -362,7 +362,27 @@ h3 {
 }
 
 /* ─── Responsive ─── */
-@media (max-width: 1024px) {
+/* Nav shrinks to keep the full horizontal menu down to 800px, then collapses
+   to the burger — matching the design's breakpoints. */
+.v2-nav-btn {
+  white-space: nowrap;
+}
+@media (max-width: 1180px) {
+  .v2-desktop-nav {
+    gap: 2px !important;
+  }
+  .v2-desktop-nav .v2-nav-btn {
+    font-size: 0.78rem;
+    padding: 8px 9px;
+  }
+}
+@media (max-width: 1000px) {
+  .v2-desktop-nav .v2-nav-btn {
+    font-size: 0.73rem;
+    padding: 7px 7px;
+  }
+}
+@media (max-width: 800px) {
   .v2-desktop-nav {
     display: none !important;
   }
@@ -372,6 +392,9 @@ h3 {
   .v2-hide-mobile {
     display: none !important;
   }
+}
+
+@media (max-width: 1024px) {
   .v2-product-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }

@@ -7,40 +7,73 @@ const slugify = (s: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 
-const sub = (items: [string, string, string][]): NavItem["sub"] =>
-  items.map(([name, description, color]) => ({
+const sub = (items: [string, string][]): NavItem["sub"] =>
+  items.map(([name, color]) => ({
     name,
-    description,
     color,
     href: `/product-category/${slugify(name)}`,
   }));
 
+/* Real category structure — matches the live site nav (from the design). */
 export const nav: NavItem[] = [
   {
     label: "Pigments & Additives",
     href: "/product-category/pigments-additives",
+    allLabel: "Shop all pigments & additives",
+    featured: {
+      name: "UltraShift\nAlchemy",
+      tag: "Featured",
+      c1: "#3D00FF",
+      c2: "#FF00CC",
+      href: "/product-category/ultrashift-alchemy-pigments",
+    },
     sub: sub([
-      ["Chameleon Pigments", "Colour-shifting magic", "#7B2FFF"],
-      ["Candy Concentrates", "Ultra-vivid transparent tints", "#FF6600"],
-      ["Glow in the Dark", "Phosphorescent pigments", "#7FFF00"],
-      ["Fluorescent Pigments", "High-impact vivid brights", "#FF00CC"],
-      ["Iridescent Pearls", "Shimmering pearl effects", "#C8A0FF"],
-      ["Metallic Effect", "Chrome-like metallic finish", "#C0C0C0"],
-      ["UltraShift Alchemy", "Premium multi-shift colour", "#3D00FF"],
-      ["Holographic Flake", "Spectraflair sparkle", "#00E5FF"],
-      ["Thermochromic Pigments", "Temperature-reactive colour", "#FF8800"],
+      ["Candy Concentrates & Powders", "#FF6600"],
+      ["Candy Pearls", "#FF3D7F"],
+      ["Chameleon Pigments", "#7B2FFF"],
+      ["Colourshift Pearl Pigment", "#00CFA8"],
+      ["Fluorescent Pigment Powder", "#FF00CC"],
+      ["Glow In The Dark Pigments", "#7FFF00"],
+      ["Ice Pearls", "#9BE7FF"],
+      ["Iridescent Pearls", "#C8A0FF"],
+      ["Metallic Effect Pigments", "#C0C0C0"],
+      ["Photochromic Pigments", "#FFB300"],
+      ["Premium Holographic Glitter / Flake", "#00E5FF"],
+      ["Premium Metal Flakes / Glitter", "#FFD700"],
+      ["Thermochromic Pigments", "#FF8800"],
+      ["Ultra Chroma Pearls", "#38E8C6"],
+      ["UltraShift Alchemy Pigments", "#3D00FF"],
+      ["UltraShift Chameleon Flake", "#00B3FF"],
+      ["UltraShift Chameleon Pigments", "#8B00FF"],
+      ["White and Silver Pearls", "#E8E8E8"],
     ]),
   },
   {
-    label: "Mixed Paints",
-    href: "/product-category/mixed-paints",
+    label: "Mixed Paints & Aerosols",
+    href: "/product-category/mixed-paints-aerosols",
+    allLabel: "Shop all paints & aerosols",
+    featured: {
+      name: "Candy Basecoat\nPaints",
+      tag: "Ready to spray",
+      c1: "#FF3D00",
+      c2: "#FFD100",
+      href: "/product-category/candy-basecoat-paints",
+    },
     sub: sub([
-      ["Candy Basecoat Paints", "Ready-to-spray candy", "#FF4400"],
-      ["Chameleon Paints", "Multi-shift ready-to-spray", "#7B2FFF"],
-      ["Pearl Basecoats", "Shimmering paint systems", "#C8A0FF"],
-      ["Fluorescent Paints", "UV-reactive vivid paints", "#FF00CC"],
-      ["Clearcoats", "Protection and high gloss", "#555555"],
-      ["Primers", "Surface preparation", "#333333"],
+      ["Aerosol Essentials", "#B5B2AB"],
+      ["Basecoat Colours", "#4A90D9"],
+      ["Candy Basecoat Paints", "#FF4400"],
+      ["Chameleon Basecoat Paints", "#7B2FFF"],
+      ["Chrome Paint", "#D9DDE2"],
+      ["Clearcoats", "#9AA7B0"],
+      ["Colourshift Pearl Paints", "#00CFA8"],
+      ["Fluorescent Paints", "#FF00CC"],
+      ["Pearl Basecoats", "#C8A0FF"],
+      ["Primers", "#6E6B64"],
+      ["Spectraflair", "#A8C6E8"],
+      ["Thinners And Solvents", "#55534E"],
+      ["Ultrashift Alchemy Paint", "#3D00FF"],
+      ["Ultrashift Chameleon Paint", "#8B00FF"],
     ]),
   },
   { label: "Other Products", href: "/product-category/other-products" },

@@ -152,20 +152,60 @@ export default function Header({ nav }: { nav: NavItem[] }) {
               style={{
                 background: "#141414", border: "1px solid #262626", borderTop: "none",
                 borderRadius: "0 0 16px 16px", boxShadow: "0 30px 70px rgba(0,0,0,0.4)",
-                padding: "30px 36px 34px",
-                display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "4px 36px",
+                padding: "26px 32px 28px",
+                display: "flex", gap: 34, alignItems: "stretch",
                 animation: "v2FadeDown 0.18s ease",
               }}
             >
-              {nav[openIdx].sub!.map((s) => (
-                <Link key={s.name} href={s.href} className="v2-mega-item">
-                  <span style={{ width: 9, height: 9, borderRadius: "50%", background: s.color, flexShrink: 0, marginTop: 6 }} />
-                  <span>
-                    <span style={{ display: "block", color: "#ECEAE4", fontSize: "0.85rem", fontWeight: 600, marginBottom: 2 }}>{s.name}</span>
-                    <span style={{ display: "block", color: "#77746D", fontSize: "0.75rem" }}>{s.description}</span>
-                  </span>
+              {/* Featured tile */}
+              {nav[openIdx].featured && (
+                <Link
+                  href={nav[openIdx].featured!.href}
+                  style={{
+                    flex: "0 0 225px", minHeight: 215, textDecoration: "none",
+                    background: `linear-gradient(150deg, ${nav[openIdx].featured!.c1}E8, ${nav[openIdx].featured!.c2}C8)`,
+                    borderRadius: 14, padding: "18px 20px",
+                    display: "flex", flexDirection: "column", justifyContent: "space-between",
+                  }}
+                >
+                  <div>
+                    {nav[openIdx].featured!.tag && (
+                      <span style={{
+                        display: "inline-block", background: "rgba(0,0,0,0.35)", backdropFilter: "blur(4px)",
+                        color: "#fff", fontSize: "0.56rem", fontWeight: 700, borderRadius: 100,
+                        letterSpacing: "0.12em", padding: "4px 10px", textTransform: "uppercase",
+                      }}>{nav[openIdx].featured!.tag}</span>
+                    )}
+                  </div>
+                  <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 8 }}>
+                    <span style={{
+                      color: "#fff", fontSize: "1.05rem", fontWeight: 700, fontFamily: "var(--font-archivo), sans-serif",
+                      lineHeight: 1.15, whiteSpace: "pre-line", letterSpacing: "-0.015em",
+                      textShadow: "0 2px 12px rgba(0,0,0,0.35)",
+                    }}>{nav[openIdx].featured!.name}</span>
+                    <span style={{
+                      width: 30, height: 30, borderRadius: "50%", background: "rgba(255,255,255,0.2)",
+                      backdropFilter: "blur(4px)", color: "#fff", fontSize: "0.8rem", flexShrink: 0,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                    }} aria-hidden="true">→</span>
+                  </div>
                 </Link>
-              ))}
+              )}
+
+              {/* Links */}
+              <div style={{ flex: 1, display: "grid", gridTemplateColumns: "repeat(3, minmax(0,1fr))", gap: "2px 26px", alignContent: "start" }}>
+                {nav[openIdx].sub!.map((s) => (
+                  <Link key={s.name} href={s.href} className="v2-mega-item" style={{ alignItems: "center", padding: "9px 12px" }}>
+                    <span style={{ width: 8, height: 8, borderRadius: "50%", background: s.color, flexShrink: 0, boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.15)" }} />
+                    <span style={{ color: "#ECEAE4", fontSize: "0.84rem", fontWeight: 500 }}>{s.name}</span>
+                  </Link>
+                ))}
+                {nav[openIdx].allLabel && (
+                  <Link href={nav[openIdx].href} className="v2-mega-item" style={{ alignItems: "center", padding: "9px 12px" }}>
+                    <span style={{ color: "#77746D", fontSize: "0.8rem", fontWeight: 500 }}>{nav[openIdx].allLabel} →</span>
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         )}
@@ -199,6 +239,11 @@ export default function Header({ nav }: { nav: NavItem[] }) {
                           {s.name}
                         </Link>
                       ))}
+                      {item.allLabel && (
+                        <Link href={item.href} className="v2-mobile-sublink" onClick={closeMobile} style={{ color: "#C9A24A", fontWeight: 600 }}>
+                          {item.allLabel} →
+                        </Link>
+                      )}
                     </div>
                   )}
                 </>

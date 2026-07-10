@@ -1,13 +1,22 @@
 export interface NavSubItem {
   name: string;
-  description: string;
   color: string;
+  href: string;
+}
+
+export interface NavFeatured {
+  name: string;
+  tag: string;
+  c1: string;
+  c2: string;
   href: string;
 }
 
 export interface NavItem {
   label: string;
   href: string;
+  allLabel?: string;
+  featured?: NavFeatured;
   sub?: NavSubItem[];
 }
 
