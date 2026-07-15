@@ -241,8 +241,8 @@ export default function ProductView({ product }: { product: ProductDetail }) {
                 </Accordion>
                 <Accordion title="Specifications">
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 40px" }}>
-                    {product.specs.map(([k, v]) => (
-                      <div key={k} style={{ display: "flex", flexDirection: "column", padding: "12px 0", borderBottom: "1px solid var(--line)" }}>
+                    {product.specs.map(([k, v], i) => (
+                      <div key={`${k}-${i}`} style={{ display: "flex", flexDirection: "column", padding: "12px 0", borderBottom: "1px solid var(--line)" }}>
                         <span style={{ fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#A5A29A", marginBottom: 4 }}>{k}</span>
                         <span style={{ fontSize: "0.86rem", fontWeight: 600, color: "#2B2925" }}>{v}</span>
                       </div>
