@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
-import { FREE_SHIP_OVER, SHIP_STD, money } from "@/lib/checkout";
-import { Coupon, Totals, PayChips, Trust, type AppliedCoupon } from "@/components/checkout/Shared";
+import { money } from "@/lib/checkout";
+import { Totals, PayChips, Trust } from "@/components/checkout/Shared";
 import type { CartLine } from "@/lib/types";
 
 function CartRow({ item, onQty, onRemove }: { item: CartLine; onQty: (q: number) => void; onRemove: () => void }) {
@@ -42,12 +41,6 @@ function CartRow({ item, onQty, onRemove }: { item: CartLine; onQty: (q: number)
 
 export default function CartView() {
   const { cart, setQty, removeItem, subtotal, count } = useCart();
-  const [coupon, setCoupon] = useState<AppliedCoupon | null>(null);
-
-  const discount = coupon ? subtotal * coupon.pct : 0;
-  const after = subtotal - discount;
-  const shipping = cart.length === 0 ? 0 : after >= FREE_SHIP_OVER ? 0 : SHIP_STD;
-  const toFree = FREE_SHIP_OVER - after;
 
   return (
     <section style={{ padding: "44px 0 72px", minHeight: "58vh" }}>
@@ -80,27 +73,16 @@ export default function CartView() {
                 {cart.map((item) => (
                   <CartRow key={item.id} item={item} onQty={(q) => setQty(item.id, q)} onRemove={() => removeItem(item.id)} />
                 ))}
-                <div style={{ display: "flex", alignItems: "center", gap: 9, padding: "16px 24px", color: "#55534E", fontSize: "0.8rem" }}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  Free UK delivery on orders over £{FREE_SHIP_OVER}
-                </div>
               </div>
             </div>
 
             <div className="chk-sticky">
               <div className="chk-card" style={{ padding: "26px 26px 24px" }}>
                 <h2 style={{ fontSize: "1rem", letterSpacing: "-0.01em", marginBottom: 20 }}>Order summary</h2>
-                <div style={{ marginBottom: 18 }}>
-                  <Coupon applied={coupon} onApply={(code, pct) => setCoupon({ code, pct })} onClear={() => setCoupon(null)} />
+                <Totals subtotal={subtotal} shippingPending />
+                <div style={{ color: "#8A877F", fontSize: "0.75rem", marginTop: 10 }}>
+                  Delivery &amp; any discount codes are applied at checkout.
                 </div>
-                <Totals subtotal={subtotal} discount={discount} shipping={shipping} />
-                {shipping > 0 && toFree > 0 && (
-                  <div style={{ color: "var(--acc)", fontSize: "0.75rem", fontWeight: 500, marginTop: 10 }}>
-                    Add {money(toFree)} more for free UK delivery
-                  </div>
-                )}
                 <Link href="/checkout" className="v2-btn-primary" style={{ width: "100%", justifyContent: "center", marginTop: 20 }}>
                   Checkout <span aria-hidden="true">→</span>
                 </Link>

@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe-server";
-import { priceOrder } from "@/lib/order-pricing";
+import { priceOrderFromWoo } from "@/lib/order-pricing";
 import { toMinorUnits } from "@/lib/checkout";
 import { createWooOrder, type CustomerDetails } from "@/lib/woocommerce-rest";
 import type { CartLine } from "@/lib/types";
 
 interface ConfirmBody {
   items: CartLine[];
-  shippingId: string;
   couponCode?: string;
+  shippingRateId?: string;
   customer: CustomerDetails;
   paymentIntentId?: string;
   demo?: boolean;
@@ -22,12 +22,23 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "invalid_body" }, { status: 400 });
   }
 
-  const { items, shippingId, couponCode, customer, paymentIntentId, demo } = body;
+  const { items, couponCode, shippingRateId, customer, paymentIntentId, demo } = body;
   if (!items?.length || !customer?.email) {
     return NextResponse.json({ error: "invalid_order" }, { status: 400 });
   }
 
-  const priced = priceOrder({ items, shippingId, couponCode });
+  // Re-price from the live Woo cart with the same inputs the charge used, so the
+  // amount we verify and the order we create both match what the customer saw.
+  const priced = await priceOrderFromWoo({
+    items,
+    couponCode,
+    destination: { country: customer.country, state: customer.state, postcode: customer.postcode, city: customer.city },
+    shippingRateId,
+  });
+  if (!priced) {
+    return NextResponse.json({ error: "pricing_failed" }, { status: 400 });
+  }
+
   const stripe = getStripe();
 
   // Verify the payment actually succeeded for the amount we expect — never
@@ -51,7 +62,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const order = await createWooOrder(items, customer, priced, shippingId, paymentIntentId);
+    const order = await createWooOrder(items, customer, priced, paymentIntentId);
     return NextResponse.json({
       orderNumber: order.number,
       simulated: order.simulated,
@@ -60,7 +71,6 @@ export async function POST(req: Request) {
       customer,
       items,
       priced,
-      shippingId,
     });
   } catch (err) {
     console.error("order creation failed:", err);

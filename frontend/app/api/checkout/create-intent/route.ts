@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe-server";
-import { priceOrder } from "@/lib/order-pricing";
+import { priceOrderFromWoo } from "@/lib/order-pricing";
 import { CURRENCY, toMinorUnits } from "@/lib/checkout";
 import type { CartLine } from "@/lib/types";
 
@@ -10,7 +10,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "stripe_not_configured" }, { status: 200 });
   }
 
-  let body: { items?: CartLine[]; shippingId?: string; couponCode?: string };
+  let body: {
+    items?: CartLine[];
+    couponCode?: string;
+    country?: string;
+    state?: string;
+    postcode?: string;
+    city?: string;
+    shippingRateId?: string;
+  };
   try {
     body = await req.json();
   } catch {
@@ -22,7 +30,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "empty_cart" }, { status: 400 });
   }
 
-  const priced = priceOrder({ items, shippingId: body.shippingId ?? "std", couponCode: body.couponCode });
+  // Price authoritatively from the live Woo cart — never from client totals.
+  const priced = await priceOrderFromWoo({
+    items,
+    couponCode: body.couponCode,
+    destination: body.country
+      ? { country: body.country, state: body.state, postcode: body.postcode, city: body.city }
+      : undefined,
+    shippingRateId: body.shippingRateId,
+  });
+  if (!priced) {
+    return NextResponse.json({ error: "pricing_failed" }, { status: 400 });
+  }
+
   const amount = toMinorUnits(priced.total);
   if (amount < 30) {
     return NextResponse.json({ error: "amount_too_low" }, { status: 400 });

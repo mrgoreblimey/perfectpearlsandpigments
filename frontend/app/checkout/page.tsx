@@ -2,19 +2,11 @@ import type { Metadata } from "next";
 import CheckoutHeader from "@/components/checkout/CheckoutHeader";
 import CheckoutView from "@/components/checkout/CheckoutView";
 import { activeProvider, getSession } from "@/lib/auth";
+import { getAllowedCountries } from "@/lib/wordpress";
 import type { Address } from "@/lib/auth/types";
 
 export const metadata: Metadata = {
   title: "Checkout — Perfect Pearls & Pigments",
-};
-
-const COUNTRY_NAMES: Record<string, string> = {
-  GB: "United Kingdom",
-  IE: "Ireland",
-  FR: "France",
-  DE: "Germany",
-  NL: "Netherlands",
-  US: "United States",
 };
 
 function prefillFrom(address: Address | null, email: string): Record<string, string> {
@@ -25,7 +17,8 @@ function prefillFrom(address: Address | null, email: string): Record<string, str
     address: address ? [address.address1, address.address2].filter(Boolean).join(", ") : "",
     city: address?.city ?? "",
     postcode: address?.postcode ?? "",
-    country: address ? COUNTRY_NAMES[address.country] ?? "United Kingdom" : "United Kingdom",
+    country: address?.country || "GB", // ISO alpha-2
+    state: address?.state ?? "",
   };
 }
 
@@ -33,6 +26,8 @@ export default async function CheckoutPage() {
   const session = await getSession();
   const viewer = session?.user ?? null;
   let initialCustomer: Record<string, string> | undefined;
+
+  const [countries] = await Promise.all([getAllowedCountries()]);
 
   if (session) {
     const { billing, shipping } = await activeProvider().getAddresses(session);
@@ -42,7 +37,7 @@ export default async function CheckoutPage() {
   return (
     <div>
       <CheckoutHeader />
-      <CheckoutView viewer={viewer} initialCustomer={initialCustomer} />
+      <CheckoutView viewer={viewer} initialCustomer={initialCustomer} countries={countries} />
     </div>
   );
 }

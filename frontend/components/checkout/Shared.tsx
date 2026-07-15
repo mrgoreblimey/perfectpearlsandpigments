@@ -3,11 +3,11 @@
 import { useState } from "react";
 import Image from "next/image";
 import type { CartLine } from "@/lib/types";
-import { COUPONS, money } from "@/lib/checkout";
+import { money } from "@/lib/checkout";
 
 export interface AppliedCoupon {
   code: string;
-  pct: number;
+  discount: number; // real amount off (£), from Woo
 }
 
 export function PayChips() {
@@ -32,37 +32,38 @@ export function Trust({ text }: { text: string }) {
   );
 }
 
+/**
+ * Coupon entry. Validation is done by the server (real Woo coupons), so this is
+ * a controlled component: `onApply` hands the code to the parent, which re-quotes
+ * and passes back either `applied` (with the real discount) or `error`.
+ */
 export function Coupon({
-  applied, onApply, onClear,
+  applied, error, busy, onApply, onClear,
 }: {
   applied: AppliedCoupon | null;
-  onApply: (code: string, pct: number) => void;
+  error?: string | null;
+  busy?: boolean;
+  onApply: (code: string) => void;
   onClear: () => void;
 }) {
   const [code, setCode] = useState("");
-  const [err, setErr] = useState(false);
-
-  const tryApply = () => {
-    const pct = COUPONS[code.trim().toUpperCase()];
-    if (pct) {
-      onApply(code.trim().toUpperCase(), pct);
-      setCode("");
-      setErr(false);
-    } else {
-      setErr(true);
-    }
-  };
 
   if (applied) {
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", border: "1.5px dashed var(--acc)", borderRadius: 10, padding: "10px 14px" }}>
         <span style={{ fontSize: "0.8rem", fontWeight: 600 }}>
-          {applied.code} <span style={{ color: "#8A877F", fontWeight: 400 }}>· −{Math.round(applied.pct * 100)}%</span>
+          {applied.code} <span style={{ color: "#8A877F", fontWeight: 400 }}>· −{money(applied.discount)}</span>
         </span>
         <button className="chk-remove" aria-label="Remove discount code" onClick={onClear}>✕</button>
       </div>
     );
   }
+
+  const submit = () => {
+    const c = code.trim();
+    if (c && !busy) onApply(c);
+  };
+
   return (
     <div>
       <div style={{ display: "flex", gap: 8 }}>
@@ -70,26 +71,29 @@ export function Coupon({
           className="chk-input"
           placeholder="Discount code"
           value={code}
-          onChange={(e) => { setCode(e.target.value); setErr(false); }}
-          onKeyDown={(e) => e.key === "Enter" && tryApply()}
+          onChange={(e) => setCode(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && submit()}
           style={{ flex: 1, padding: "11px 14px", fontSize: "0.82rem" }}
         />
-        <button className="chk-apply" onClick={tryApply}>Apply</button>
+        <button className="chk-apply" onClick={submit} disabled={busy}>{busy ? "…" : "Apply"}</button>
       </div>
-      {err && <div style={{ color: "#E8452C", fontSize: "0.72rem", marginTop: 6 }}>That code isn&apos;t valid — try PEARL10</div>}
+      {error && <div style={{ color: "#E8452C", fontSize: "0.72rem", marginTop: 6 }}>{error}</div>}
     </div>
   );
 }
 
 export function Totals({
-  subtotal, discount, shipping, shippingLabel,
+  subtotal, discount = 0, shipping, shippingLabel, tax, total, shippingPending,
 }: {
   subtotal: number;
-  discount: number;
-  shipping: number;
+  discount?: number;
+  shipping?: number;
   shippingLabel?: string;
+  tax?: number;
+  total?: number;
+  shippingPending?: boolean;
 }) {
-  const total = subtotal - discount + shipping;
+  const grand = total ?? subtotal - discount + (shipping ?? 0);
   const row = { display: "flex", justifyContent: "space-between", marginBottom: 10 } as const;
   const lbl = { color: "#8A877F", fontSize: "0.84rem" } as const;
   const val = { fontSize: "0.86rem", fontWeight: 500 } as const;
@@ -101,13 +105,15 @@ export function Totals({
       )}
       <div style={row}>
         <span style={lbl}>{shippingLabel || "Delivery"}</span>
-        <span style={val}>{shipping === 0 ? "Free" : money(shipping)}</span>
+        <span style={val}>
+          {shippingPending ? "Calculated at checkout" : shipping === 0 ? "Free" : money(shipping ?? 0)}
+        </span>
       </div>
       <div style={{ borderTop: "1px solid #F0EEE9", marginTop: 14, paddingTop: 14, display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
         <span style={{ fontSize: "0.9rem", fontWeight: 600 }}>Total</span>
         <span style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-          <span style={{ color: "#A5A29A", fontSize: "0.68rem" }}>VAT included</span>
-          <span style={{ fontSize: "1.18rem", fontWeight: 700, fontFamily: "var(--font-archivo), sans-serif", letterSpacing: "-0.02em" }}>{money(total)}</span>
+          {tax != null && tax > 0 && <span style={{ color: "#A5A29A", fontSize: "0.68rem" }}>incl. {money(tax)} VAT</span>}
+          <span style={{ fontSize: "1.18rem", fontWeight: 700, fontFamily: "var(--font-archivo), sans-serif", letterSpacing: "-0.02em" }}>{money(grand)}</span>
         </span>
       </div>
     </div>

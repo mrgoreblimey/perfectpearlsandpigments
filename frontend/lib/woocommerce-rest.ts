@@ -8,7 +8,8 @@ export interface CustomerDetails {
   address: string;
   city: string;
   postcode: string;
-  country: string;
+  country: string; // ISO alpha-2
+  state?: string; // ISO state code (where applicable)
 }
 
 export interface CreatedOrder {
@@ -45,12 +46,16 @@ const simRef = () => "PPP-" + Date.now().toString().slice(-6);
 /**
  * Create the WooCommerce order after a successful payment. Falls back to a
  * simulated order (so the flow completes) when Woo credentials aren't set.
+ *
+ * Line items are sent as product/variation/quantity only — Woo prices them and
+ * computes VAT from store settings, so tax is recorded correctly. Real coupons
+ * go through `coupon_lines` (Woo applies the discount + adjusts tax), and the
+ * chosen shipping rate is written verbatim.
  */
 export async function createWooOrder(
   items: CartLine[],
   customer: CustomerDetails,
   priced: PricedOrder,
-  shippingId: string,
   paymentIntentId?: string,
 ): Promise<CreatedOrder> {
   const cfg = wooConfig();
@@ -62,34 +67,33 @@ export async function createWooOrder(
   const feeLines: Record<string, unknown>[] = [];
 
   for (const it of items) {
-    const lineTotal = (it.unitPrice * it.qty).toFixed(2);
     const pid = it.wooProductId ?? (await resolveProductId(cfg.url, cfg.auth, it.productSlug));
     if (pid) {
-      const li: Record<string, unknown> = { product_id: pid, quantity: it.qty, subtotal: lineTotal, total: lineTotal };
+      // No subtotal/total → Woo prices the line and computes tax itself.
+      const li: Record<string, unknown> = { product_id: pid, quantity: it.qty };
       if (it.wooVariationId) li.variation_id = it.wooVariationId;
       lineItems.push(li);
     } else {
       // Unresolved product — record as a named fee so the order still balances.
-      feeLines.push({ name: `${it.name}${it.size ? ` (${it.size})` : ""} ×${it.qty}`, total: lineTotal, tax_status: "taxable" });
+      feeLines.push({ name: `${it.name}${it.size ? ` (${it.size})` : ""} ×${it.qty}`, total: (it.unitPrice * it.qty).toFixed(2), tax_status: "taxable" });
     }
   }
 
-  if (priced.discount > 0) {
-    feeLines.push({ name: `Discount${priced.couponCode ? ` (${priced.couponCode})` : ""}`, total: (-priced.discount).toFixed(2), tax_status: "none" });
-  }
-
-  const [nameFirst, ...rest] = [customer.firstName, customer.lastName];
   const address = {
-    first_name: nameFirst,
-    last_name: rest.join(" "),
+    first_name: customer.firstName,
+    last_name: customer.lastName,
     address_1: customer.address,
     city: customer.city,
+    state: customer.state ?? "",
     postcode: customer.postcode,
-    country: customer.country,
+    country: customer.country, // ISO alpha-2
     email: customer.email,
   };
 
-  const body = {
+  // Shipping rate id like "flat_rate:4" → method_id "flat_rate".
+  const methodId = priced.shippingRateId?.split(":")[0] || "flat_rate";
+
+  const body: Record<string, unknown> = {
     payment_method: "stripe",
     payment_method_title: "Card (Stripe)",
     set_paid: true,
@@ -100,10 +104,12 @@ export async function createWooOrder(
     line_items: lineItems,
     fee_lines: feeLines,
     shipping_lines: [
-      { method_id: shippingId === "col" ? "local_pickup" : "flat_rate", method_title: priced.shippingLabel, total: priced.shipping.toFixed(2) },
+      { method_id: methodId, method_title: priced.shippingLabel, total: priced.shipping.toFixed(2) },
     ],
     meta_data: paymentIntentId ? [{ key: "_stripe_intent_id", value: paymentIntentId }] : [],
   };
+  // Real Woo coupon — let Woo apply the discount and adjust tax.
+  if (priced.couponCode) body.coupon_lines = [{ code: priced.couponCode }];
 
   const res = await fetch(`${cfg.url}/wp-json/wc/v3/orders`, {
     method: "POST",

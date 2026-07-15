@@ -207,3 +207,25 @@ export async function getRelatedProducts(slug: string, count = 4): Promise<Catal
   }
   return CHAMELEON_CATALOG.filter((p) => p.slug !== slug).slice(0, count);
 }
+
+/* ─── Checkout: countries + states (WooGraphQL) ─────────────────────────────
+ * The store's real allowed selling/shipping countries (ISO alpha-2 codes) and
+ * the states/provinces per country. Country display names come from the
+ * browser's Intl.DisplayNames on the client, so we only need the codes here. */
+
+export async function getAllowedCountries(): Promise<string[]> {
+  const data = await wpQuery<{ allowedCountries: (string | null)[] | null }>(
+    /* GraphQL */ `query AllowedCountries { allowedCountries }`,
+  );
+  const codes = (data?.allowedCountries ?? []).filter((c): c is string => !!c);
+  return codes.length ? codes : ["GB"];
+}
+
+export async function getCountryStates(code: string): Promise<{ code: string; name: string }[]> {
+  if (!/^[A-Za-z]{2}$/.test(code)) return [];
+  const data = await wpQuery<{ countryStates: { code: string; name: string }[] | null }>(
+    /* GraphQL */ `query CountryStates($c: CountriesEnum!) { countryStates(country: $c) { code name } }`,
+    { c: code.toUpperCase() },
+  );
+  return data?.countryStates ?? [];
+}

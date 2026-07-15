@@ -5,16 +5,15 @@ import { useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useCart } from "@/context/CartContext";
-import { FREE_SHIP_OVER, money, shippingMethods } from "@/lib/checkout";
+import { money } from "@/lib/checkout";
 import { Coupon, MiniItems, Totals, Trust, type AppliedCoupon } from "@/components/checkout/Shared";
 import CheckoutAccount from "@/components/checkout/CheckoutAccount";
 import type { CartLine } from "@/lib/types";
 import type { Viewer } from "@/lib/auth/types";
+import type { WooCartQuote } from "@/lib/woo-cart";
 
 const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 const stripePromise = PUBLISHABLE_KEY ? loadStripe(PUBLISHABLE_KEY) : null;
-
-const COUNTRIES = ["United Kingdom", "Ireland", "France", "Germany", "Netherlands", "United States"];
 
 interface Customer {
   email: string;
@@ -23,12 +22,23 @@ interface Customer {
   address: string;
   city: string;
   postcode: string;
-  country: string;
+  country: string; // ISO alpha-2
+  state: string; // ISO state code (or "")
 }
 
 const emptyCustomer: Customer = {
-  email: "", firstName: "", lastName: "", address: "", city: "", postcode: "", country: "United Kingdom",
+  email: "", firstName: "", lastName: "", address: "", city: "", postcode: "", country: "GB", state: "",
 };
+
+interface StateOption { code: string; name: string }
+
+function regionName(code: string): string {
+  try {
+    return new Intl.DisplayNames(["en"], { type: "region" }).of(code) || code;
+  } catch {
+    return code;
+  }
+}
 
 function Field({ label, span2, value, onChange, ...props }: {
   label: string; span2?: boolean; value: string; onChange: (v: string) => void;
@@ -53,20 +63,27 @@ function Section({ n, title, children }: { n: string; title: string; children: R
   );
 }
 
-function validate(c: Customer): string | null {
+function validate(c: Customer, statesRequired: boolean): string | null {
   if (!c.email.includes("@")) return "Please enter a valid email address.";
   if (!c.firstName.trim() || !c.lastName.trim()) return "Please enter your name.";
   if (!c.address.trim() || !c.city.trim() || !c.postcode.trim()) return "Please complete your delivery address.";
+  if (statesRequired && !c.state) return "Please select your state / province.";
   return null;
 }
 
-/** Inner payment form — runs inside <Elements>, so Stripe hooks are available. */
-function PaymentForm({
-  customer, items, shippingId, couponCode, total, onPlaced,
-}: {
-  customer: Customer; items: CartLine[]; shippingId: string; couponCode?: string; total: number;
+interface PayProps {
+  customer: Customer;
+  items: CartLine[];
+  couponCode?: string;
+  shippingRateId?: string;
+  total: number;
+  statesRequired: boolean;
+  disabled?: boolean;
   onPlaced: (order: unknown) => void;
-}) {
+}
+
+/** Inner payment form — runs inside <Elements>, so Stripe hooks are available. */
+function PaymentForm({ customer, items, couponCode, shippingRateId, total, statesRequired, disabled, onPlaced }: PayProps) {
   const stripe = useStripe();
   const elements = useElements();
   const [submitting, setSubmitting] = useState(false);
@@ -74,7 +91,7 @@ function PaymentForm({
 
   const pay = async () => {
     if (submitting) return;
-    const vErr = validate(customer);
+    const vErr = validate(customer, statesRequired);
     if (vErr) { setError(vErr); return; }
     if (!stripe || !elements) return;
     setSubmitting(true);
@@ -96,7 +113,7 @@ function PaymentForm({
       const res = await fetch("/api/checkout/confirm", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, shippingId, couponCode, customer, paymentIntentId: paymentIntent.id }),
+        body: JSON.stringify({ items, couponCode, shippingRateId, customer, paymentIntentId: paymentIntent.id }),
       });
       const data = await res.json();
       if (!res.ok) { setError("Payment succeeded but we couldn't create your order — please contact us with reference " + paymentIntent.id); setSubmitting(false); return; }
@@ -113,7 +130,7 @@ function PaymentForm({
         <PaymentElement options={{ layout: "tabs" }} />
       </div>
       {error && <div style={{ color: "#E8452C", fontSize: "0.8rem", marginBottom: 14 }}>{error}</div>}
-      <button className="v2-btn-primary" style={{ width: "100%", padding: "17px 30px", fontSize: "0.92rem" }} onClick={pay} disabled={submitting || !stripe}>
+      <button className="v2-btn-primary" style={{ width: "100%", padding: "17px 30px", fontSize: "0.92rem" }} onClick={pay} disabled={submitting || disabled || !stripe}>
         {submitting ? <span className="chk-spinner" /> : null}
         {submitting ? "Processing…" : `Pay ${money(total)}`}
         {!submitting && <span aria-hidden="true">→</span>}
@@ -126,22 +143,17 @@ function PaymentForm({
 }
 
 /** Fallback when Stripe keys aren't configured — lets the flow be tested. */
-function DemoPay({
-  customer, items, shippingId, couponCode, total, onPlaced,
-}: {
-  customer: Customer; items: CartLine[]; shippingId: string; couponCode?: string; total: number;
-  onPlaced: (order: unknown) => void;
-}) {
+function DemoPay({ customer, items, couponCode, shippingRateId, total, statesRequired, disabled, onPlaced }: PayProps) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const place = async () => {
-    const vErr = validate(customer);
+    const vErr = validate(customer, statesRequired);
     if (vErr) { setError(vErr); return; }
     setSubmitting(true);
     const res = await fetch("/api/checkout/confirm", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items, shippingId, couponCode, customer, demo: true }),
+      body: JSON.stringify({ items, couponCode, shippingRateId, customer, demo: true }),
     });
     const data = await res.json();
     if (!res.ok) { setError("Could not place the order."); setSubmitting(false); return; }
@@ -153,7 +165,7 @@ function DemoPay({
         <strong>Stripe not configured.</strong> Add <code>NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</code> and <code>STRIPE_SECRET_KEY</code> to enable card payments. You can still place a test order below to preview the flow.
       </div>
       {error && <div style={{ color: "#E8452C", fontSize: "0.8rem", marginBottom: 14 }}>{error}</div>}
-      <button className="v2-btn-primary" style={{ width: "100%", padding: "17px 30px", fontSize: "0.92rem" }} onClick={place} disabled={submitting}>
+      <button className="v2-btn-primary" style={{ width: "100%", padding: "17px 30px", fontSize: "0.92rem" }} onClick={place} disabled={submitting || disabled}>
         {submitting ? <span className="chk-spinner" /> : null}
         {submitting ? "Processing…" : `Place test order ${money(total)}`}
       </button>
@@ -164,32 +176,94 @@ function DemoPay({
 export default function CheckoutView({
   viewer = null,
   initialCustomer,
+  countries = ["GB"],
 }: {
   viewer?: Viewer | null;
   initialCustomer?: Partial<Customer>;
+  countries?: string[];
 } = {}) {
   const router = useRouter();
-  const { cart, subtotal, clearCart } = useCart();
+  const { cart, clearCart } = useCart();
   const [customer, setCustomer] = useState<Customer>({ ...emptyCustomer, ...initialCustomer });
-  const [shipId, setShipId] = useState("std");
-  const [coupon, setCoupon] = useState<AppliedCoupon | null>(null);
+  const [couponCode, setCouponCode] = useState<string | undefined>(undefined);
+  const [couponError, setCouponError] = useState<string | null>(null);
+  const [shippingRateId, setShippingRateId] = useState<string | undefined>(undefined);
+  const [quote, setQuote] = useState<WooCartQuote | null>(null);
+  const [quoting, setQuoting] = useState(false);
+  const [states, setStates] = useState<StateOption[]>([]);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [stripeUnavailable, setStripeUnavailable] = useState(false);
 
   const set = (k: keyof Customer) => (v: string) => setCustomer((c) => ({ ...c, [k]: v }));
 
-  const discount = coupon ? subtotal * coupon.pct : 0;
-  const freeStd = subtotal - discount >= FREE_SHIP_OVER;
-  const methods = shippingMethods(freeStd);
-  const method = methods.find((m) => m.id === shipId) ?? methods[0];
-  const total = Math.max(0, subtotal - discount + method.price);
-
-  const sig = useMemo(
-    () => JSON.stringify({ i: cart.map((l) => [l.id, l.qty, l.unitPrice]), s: shipId, c: coupon?.code }),
-    [cart, shipId, coupon],
+  const countryOptions = useMemo(
+    () =>
+      countries
+        .map((code) => ({ code, name: regionName(code) }))
+        .sort((a, b) => (a.code === "GB" ? -1 : b.code === "GB" ? 1 : a.name.localeCompare(b.name))),
+    [countries],
   );
 
-  // Create/refresh the PaymentIntent whenever the priced order changes.
+  // Fetch states whenever the country changes; clear a now-invalid state.
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/checkout/states?country=${customer.country}`)
+      .then((r) => r.json())
+      .then((d: { states: StateOption[] }) => {
+        if (cancelled) return;
+        const list = d.states ?? [];
+        setStates(list);
+        setCustomer((c) => (list.some((s) => s.code === c.state) ? c : { ...c, state: "" }));
+      })
+      .catch(() => { if (!cancelled) setStates([]); });
+    return () => { cancelled = true; };
+  }, [customer.country]);
+
+  const sig = useMemo(
+    () =>
+      JSON.stringify({
+        i: cart.map((l) => [l.wooVariationId ?? l.wooProductId, l.qty]),
+        c: couponCode, co: customer.country, st: customer.state, pc: customer.postcode, r: shippingRateId,
+      }),
+    [cart, couponCode, customer.country, customer.state, customer.postcode, shippingRateId],
+  );
+
+  // Re-quote from the live Woo cart whenever the order changes (debounced).
+  useEffect(() => {
+    if (cart.length === 0) { setQuote(null); return; }
+    let cancelled = false;
+    setQuoting(true);
+    const t = setTimeout(async () => {
+      try {
+        const res = await fetch("/api/checkout/quote", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            items: cart, couponCode,
+            country: customer.country, state: customer.state, postcode: customer.postcode, city: customer.city,
+            shippingRateId,
+          }),
+        });
+        const q: WooCartQuote = await res.json();
+        if (cancelled) return;
+        setQuoting(false);
+        if (!q.ok) return;
+        setQuote(q);
+        // Default / re-sync the chosen shipping rate for this destination.
+        if (!q.shippingRates.some((r) => r.rateId === shippingRateId) && q.chosenRateId) {
+          setShippingRateId(q.chosenRateId);
+        }
+        // Coupon feedback: a code that Woo rejected is surfaced and dropped.
+        if (couponCode && q.couponError) { setCouponError(q.couponError); setCouponCode(undefined); }
+        else setCouponError(null);
+      } catch {
+        if (!cancelled) setQuoting(false);
+      }
+    }, 350);
+    return () => { cancelled = true; clearTimeout(t); };
+  }, [sig, cart, couponCode, customer.country, customer.state, customer.postcode, customer.city, shippingRateId]);
+
+  // Create/refresh the PaymentIntent for the (server-priced) total.
   useEffect(() => {
     if (!stripePromise || cart.length === 0) return;
     let cancelled = false;
@@ -198,7 +272,11 @@ export default function CheckoutView({
         const res = await fetch("/api/checkout/create-intent", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ items: cart, shippingId: shipId, couponCode: coupon?.code }),
+          body: JSON.stringify({
+            items: cart, couponCode,
+            country: customer.country, state: customer.state, postcode: customer.postcode, city: customer.city,
+            shippingRateId,
+          }),
         });
         const data = await res.json();
         if (cancelled) return;
@@ -209,7 +287,7 @@ export default function CheckoutView({
       }
     })();
     return () => { cancelled = true; };
-  }, [sig, cart, shipId, coupon]);
+  }, [sig, cart, couponCode, customer.country, customer.state, customer.postcode, customer.city, shippingRateId]);
 
   const onPlaced = (order: unknown) => {
     try { window.sessionStorage.setItem("ppp-last-order", JSON.stringify(order)); } catch {}
@@ -229,6 +307,14 @@ export default function CheckoutView({
     );
   }
 
+  const appliedCoupon: AppliedCoupon | null = quote?.appliedCoupons?.[0]
+    ? { code: quote.appliedCoupons[0].code, discount: quote.appliedCoupons[0].discount }
+    : null;
+  const rates = quote?.shippingRates ?? [];
+  const total = quote?.total ?? 0;
+  const statesRequired = states.length > 0;
+  const notReady = !quote || quoting;
+
   const useStripeFlow = !!stripePromise && !stripeUnavailable;
 
   const summary = (
@@ -237,9 +323,27 @@ export default function CheckoutView({
         <h2 style={{ fontSize: "1rem", letterSpacing: "-0.01em", marginBottom: 8 }}>Order summary</h2>
         <MiniItems items={cart} showQtyBadge />
         <div style={{ margin: "16px 0 18px" }}>
-          <Coupon applied={coupon} onApply={(code, pct) => setCoupon({ code, pct })} onClear={() => setCoupon(null)} />
+          <Coupon
+            applied={appliedCoupon}
+            error={couponError}
+            busy={quoting}
+            onApply={(code) => { setCouponError(null); setCouponCode(code); }}
+            onClear={() => { setCouponCode(undefined); setCouponError(null); }}
+          />
         </div>
-        <Totals subtotal={subtotal} discount={discount} shipping={method.price} shippingLabel={method.label} />
+        {quote?.unavailableLines?.length ? (
+          <div style={{ color: "#E8452C", fontSize: "0.76rem", marginBottom: 12 }}>
+            Some items are no longer available and have been left out of the total.
+          </div>
+        ) : null}
+        <Totals
+          subtotal={quote?.subtotal ?? 0}
+          discount={quote?.discount ?? 0}
+          shipping={quote?.shipping}
+          shippingLabel={rates.find((r) => r.rateId === shippingRateId)?.name}
+          tax={quote?.tax}
+          total={total}
+        />
       </div>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 9, marginTop: 16, color: "#8A877F", fontSize: "0.78rem" }}>
         <span style={{ color: "#F2B01E", fontSize: "0.85rem", letterSpacing: 1 }}>★★★★★</span>
@@ -248,7 +352,7 @@ export default function CheckoutView({
     </div>
   );
 
-  const paymentProps = { customer, items: cart, shippingId: shipId, couponCode: coupon?.code, total, onPlaced };
+  const paymentProps: PayProps = { customer, items: cart, couponCode, shippingRateId, total, statesRequired, disabled: notReady, onPlaced };
 
   const form = (
     <div>
@@ -271,23 +375,40 @@ export default function CheckoutView({
             <Field label="City" placeholder="London" autoComplete="address-level2" value={customer.city} onChange={set("city")} />
             <Field label="Postcode" placeholder="E2 7QN" autoComplete="postal-code" value={customer.postcode} onChange={set("postcode")} />
           </div>
-          <div>
-            <label className="chk-label">Country</label>
-            <select className="chk-select" value={customer.country} onChange={(e) => set("country")(e.target.value)}>
-              {COUNTRIES.map((c) => <option key={c}>{c}</option>)}
-            </select>
+          <div className={statesRequired ? "chk-row2" : undefined}>
+            <div>
+              <label className="chk-label">Country</label>
+              <select className="chk-select" value={customer.country} onChange={(e) => set("country")(e.target.value)}>
+                {countryOptions.map((c) => <option key={c.code} value={c.code}>{c.name}</option>)}
+              </select>
+            </div>
+            {statesRequired && (
+              <div>
+                <label className="chk-label">State / Province</label>
+                <select className="chk-select" value={customer.state} onChange={(e) => set("state")(e.target.value)}>
+                  <option value="">Select…</option>
+                  {states.map((s) => <option key={s.code} value={s.code}>{s.name}</option>)}
+                </select>
+              </div>
+            )}
           </div>
+
           <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 6 }}>
-            {methods.map((m) => (
-              <button type="button" key={m.id} className={"chk-option" + (shipId === m.id ? " active" : "")} onClick={() => setShipId(m.id)}>
-                <span className="chk-dot" />
-                <span style={{ flex: 1, minWidth: 0 }}>
-                  <span style={{ display: "block", fontSize: "0.88rem", fontWeight: 600 }}>{m.label}</span>
-                  <span style={{ display: "block", color: "#8A877F", fontSize: "0.76rem", marginTop: 2 }}>{m.desc}</span>
-                </span>
-                <span style={{ fontSize: "0.85rem", fontWeight: 600 }}>{m.price === 0 ? "Free" : money(m.price)}</span>
-              </button>
-            ))}
+            {rates.length === 0 ? (
+              <div style={{ color: "#8A877F", fontSize: "0.82rem", padding: "10px 0" }}>
+                {quoting ? "Calculating delivery…" : "Enter your address to see delivery options."}
+              </div>
+            ) : (
+              rates.map((r) => (
+                <button type="button" key={r.rateId} className={"chk-option" + (shippingRateId === r.rateId ? " active" : "")} onClick={() => setShippingRateId(r.rateId)}>
+                  <span className="chk-dot" />
+                  <span style={{ flex: 1, minWidth: 0 }}>
+                    <span style={{ display: "block", fontSize: "0.88rem", fontWeight: 600 }}>{r.name}</span>
+                  </span>
+                  <span style={{ fontSize: "0.85rem", fontWeight: 600 }}>{r.price === 0 ? "Free" : money(r.price)}</span>
+                </button>
+              ))
+            )}
           </div>
         </div>
       </Section>
