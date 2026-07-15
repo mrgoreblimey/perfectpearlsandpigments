@@ -26,9 +26,9 @@ import { wpGetCategory, wpGetCategoryProducts, wpGetProduct, wpGetNav } from "./
 // production when going live).
 const WP_GRAPHQL_URL = process.env.WORDPRESS_GRAPHQL_URL || "https://staging.perfectpearlsandpigments.co.uk/graphql";
 const REVALIDATE_SECONDS = 300;
-// Staging intermittently 404s / 5xxs serverless GraphQL requests (a WAF/rate
-// limit tripping on Vercel's datacenter IPs). Retry transient failures.
-const WP_RETRYABLE_STATUS = new Set([404, 408, 425, 429, 500, 502, 503, 504]);
+// Retry genuinely transient upstream failures (timeouts, rate limits, 5xx).
+// 404 is intentionally excluded — it means a bad endpoint URL, not a blip.
+const WP_RETRYABLE_STATUS = new Set([408, 425, 429, 500, 502, 503, 504]);
 const WP_MAX_ATTEMPTS = 3;
 
 async function wpQuery<T>(query: string, variables?: Record<string, unknown>): Promise<T | null> {

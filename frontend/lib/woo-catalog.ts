@@ -18,10 +18,11 @@ import {
 const WP = process.env.WORDPRESS_GRAPHQL_URL || "https://staging.perfectpearlsandpigments.co.uk/graphql";
 const REVALIDATE = 300;
 
-// Staging intermittently 404s / 5xxs server-side (serverless) GraphQL requests
-// — a WAF/rate-limit that trips on Vercel's datacenter IPs. Retry transient
-// failures so a single blocked request doesn't drop the whole page to seed.
-const RETRYABLE_STATUS = new Set([404, 408, 425, 429, 500, 502, 503, 504]);
+// Retry genuinely transient upstream failures (timeouts, rate limits, 5xx) so a
+// single blip doesn't drop the whole page to seed. 404 is intentionally NOT
+// retryable — from a GraphQL endpoint it means a bad URL (e.g. a stray trailing
+// character in WORDPRESS_GRAPHQL_URL), which retrying can't fix.
+const RETRYABLE_STATUS = new Set([408, 425, 429, 500, 502, 503, 504]);
 const MAX_ATTEMPTS = 3;
 
 async function q<T>(query: string, variables?: Record<string, unknown>): Promise<T | null> {
