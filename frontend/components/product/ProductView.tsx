@@ -102,6 +102,8 @@ export default function ProductView({ product }: { product: ProductDetail }) {
   }, []);
 
   const size = product.sizes[sizeIdx];
+  const optLabel = product.optionLabel ?? "Size";
+  const isMeasureOption = /size|weight/i.test(optLabel);
   const heroImg = product.gallery.find((g) => g.type === "img")?.src ?? "";
 
   const add = () => {
@@ -188,12 +190,12 @@ export default function ProductView({ product }: { product: ProductDetail }) {
               {/* Size */}
               <div style={{ marginBottom: 22 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 10 }}>
-                  <span style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9A968D" }}>Size — {size.label}</span>
-                  <span style={{ fontSize: "0.78rem", color: "var(--acc)", cursor: "pointer" }}>Size guide →</span>
+                  <span style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#9A968D" }}>{optLabel} — {size.label}</span>
+                  {isMeasureOption && <span style={{ fontSize: "0.78rem", color: "var(--acc)", cursor: "pointer" }}>Size guide →</span>}
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 8 }}>
                   {product.sizes.map((s, i) => (
-                    <button key={s.label} className={`prod-size-btn ${sizeIdx === i ? "active" : ""}`} onClick={() => setSizeIdx(i)}>
+                    <button key={s.variationId ?? s.label} className={`prod-size-btn ${sizeIdx === i ? "active" : ""}`} onClick={() => setSizeIdx(i)}>
                       <span style={{ fontWeight: 700, fontSize: "0.85rem" }}>{s.label}</span>
                       <span style={{ fontSize: "0.68rem", opacity: 0.65 }}>£{s.price.toFixed(2)}</span>
                     </button>

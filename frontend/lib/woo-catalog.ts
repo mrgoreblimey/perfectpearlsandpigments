@@ -93,7 +93,25 @@ function paragraphs(html?: string | null): string[] {
 function weightValue(label: string): number {
   const n = parseFloat(label);
   if (!Number.isFinite(n)) return 0;
-  return /kg/i.test(label) ? n * 1000 : n;
+  // Normalise to a base unit so 100ml < 500ml < 1 litre and 1g < 25g < 1kg.
+  return /kg|\bl\b|litre|liter/i.test(label) ? n * 1000 : n;
+}
+
+/** Human label for a single variation attribute value ("black" → "Black"). */
+function prettifyAttrValue(value: string): string {
+  const s = value.replace(/[-_]+/g, " ").trim();
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+}
+
+/**
+ * Build a variation's display label from ALL its attributes, not just weight/
+ * size — so products that vary by colour/finish/etc. get distinct, meaningful
+ * options (e.g. "Black", "500ml / Gloss") instead of every variation collapsing
+ * to "Option".
+ */
+function variationLabel(v: WpVariation, index: number): string {
+  const parts = (v.attributes?.nodes ?? []).map((a) => prettifyAttrValue(a.value)).filter(Boolean);
+  return parts.length ? parts.join(" / ") : `Option ${index + 1}`;
 }
 
 interface WpImage { sourceUrl?: string | null }
@@ -250,7 +268,7 @@ export async function wpGetCategoryProducts(slug: string): Promise<CatalogProduc
 interface WpVariation {
   databaseId: number;
   price?: string | null;
-  attributes?: { nodes: { name: string; value: string }[] };
+  attributes?: { nodes: { name: string; value: string; label?: string | null }[] };
 }
 interface WpProductDetailNode extends WpProductNode {
   __typename: string;
@@ -277,7 +295,7 @@ export async function wpGetProduct(slug: string): Promise<ProductDetail | null> 
           price
           galleryImages { nodes { sourceUrl } }
           attributes { nodes { label options } }
-          variations(first: 50) { nodes { databaseId price attributes { nodes { name value } } } }
+          variations(first: 50) { nodes { databaseId price attributes { nodes { name value label } } } }
           productCategories { nodes { name slug } }
         }
         ... on SimpleProduct {
@@ -299,14 +317,20 @@ export async function wpGetProduct(slug: string): Promise<ProductDetail | null> 
 
   const variations = p.variations?.nodes ?? [];
   let sizes: ProductSize[];
+  let optionLabel: string | undefined;
   if (variations.length > 0) {
     sizes = variations
-      .map((v) => ({
-        label: v.attributes?.nodes.find((a) => /weight|size/i.test(a.name))?.value ?? "Option",
+      .map((v, i) => ({
+        label: variationLabel(v, i),
         price: priceMin(v.price),
         variationId: v.databaseId,
       }))
       .sort((a, b) => weightValue(a.label) - weightValue(b.label));
+    // Heading for the selector: the varying attribute's label when there's one
+    // dimension (Weight / Size / Colour…), else a neutral "Option".
+    const attrLabels = new Set<string>();
+    variations.forEach((v) => (v.attributes?.nodes ?? []).forEach((a) => a.label && attrLabels.add(a.label)));
+    optionLabel = attrLabels.size === 1 ? [...attrLabels][0] : attrLabels.size > 1 ? "Option" : "Size";
   } else {
     sizes = [{ label: "One size", price: priceMin(p.price) }];
   }
@@ -338,6 +362,7 @@ export async function wpGetProduct(slug: string): Promise<ProductDetail | null> 
     blurb,
     shift: [],
     sizes,
+    optionLabel,
     specs,
     howto: [
       ["Measure", "Mix 1–5% pigment by weight into your chosen medium. Start low and build for more intensity."],
