@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
@@ -193,6 +193,10 @@ export default function CheckoutView({
   const [states, setStates] = useState<StateOption[]>([]);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [stripeUnavailable, setStripeUnavailable] = useState(false);
+  // Kept in refs (not state) so they don't retrigger the quote: the live Woo cart
+  // to reuse, and the PaymentIntent to update in place.
+  const cartRef = useRef<{ token?: string; itemsSig?: string }>({});
+  const intentRef = useRef<string | undefined>(undefined);
 
   const set = (k: keyof Customer) => (v: string) => setCustomer((c) => ({ ...c, [k]: v }));
 
@@ -228,12 +232,17 @@ export default function CheckoutView({
     [cart, couponCode, customer.country, customer.state, customer.postcode, shippingRateId],
   );
 
-  // Re-quote from the live Woo cart whenever the order changes (debounced).
+  // Re-quote from the live Woo cart whenever the order changes (debounced). The
+  // quote also creates/updates the Stripe intent, so this is the only round-trip.
+  // The Woo cart is reused across changes (only rebuilt when the line-up changes),
+  // which is what makes changing delivery/coupon fast instead of rebuilding.
   useEffect(() => {
     if (cart.length === 0) { setQuote(null); return; }
     let cancelled = false;
     setQuoting(true);
     const t = setTimeout(async () => {
+      const itemsSig = JSON.stringify(cart.map((l) => [l.wooVariationId ?? l.wooProductId, l.qty]));
+      const reuseToken = cartRef.current.itemsSig === itemsSig ? cartRef.current.token : undefined;
       try {
         const res = await fetch("/api/checkout/quote", {
           method: "POST",
@@ -242,13 +251,21 @@ export default function CheckoutView({
             items: cart, couponCode,
             country: customer.country, state: customer.state, postcode: customer.postcode, city: customer.city,
             shippingRateId,
+            cartToken: reuseToken,
+            paymentIntentId: intentRef.current,
           }),
         });
-        const q: WooCartQuote = await res.json();
+        const q: WooCartQuote & { clientSecret?: string | null; paymentIntentId?: string } = await res.json();
         if (cancelled) return;
         setQuoting(false);
         if (!q.ok) return;
         setQuote(q);
+        cartRef.current = { token: q.cartToken, itemsSig };
+        if (q.paymentIntentId) intentRef.current = q.paymentIntentId;
+        // Stripe: updating an intent keeps the same client_secret, so Elements
+        // mounts once. No secret came back → Stripe isn't configured server-side.
+        if (q.clientSecret) setClientSecret(q.clientSecret);
+        else if (stripePromise) setStripeUnavailable(true);
         // Default / re-sync the chosen shipping rate for this destination.
         if (!q.shippingRates.some((r) => r.rateId === shippingRateId) && q.chosenRateId) {
           setShippingRateId(q.chosenRateId);
@@ -261,32 +278,6 @@ export default function CheckoutView({
       }
     }, 350);
     return () => { cancelled = true; clearTimeout(t); };
-  }, [sig, cart, couponCode, customer.country, customer.state, customer.postcode, customer.city, shippingRateId]);
-
-  // Create/refresh the PaymentIntent for the (server-priced) total.
-  useEffect(() => {
-    if (!stripePromise || cart.length === 0) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        const res = await fetch("/api/checkout/create-intent", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            items: cart, couponCode,
-            country: customer.country, state: customer.state, postcode: customer.postcode, city: customer.city,
-            shippingRateId,
-          }),
-        });
-        const data = await res.json();
-        if (cancelled) return;
-        if (data.clientSecret) setClientSecret(data.clientSecret);
-        else setStripeUnavailable(true);
-      } catch {
-        if (!cancelled) setStripeUnavailable(true);
-      }
-    })();
-    return () => { cancelled = true; };
   }, [sig, cart, couponCode, customer.country, customer.state, customer.postcode, customer.city, shippingRateId]);
 
   const onPlaced = (order: unknown) => {

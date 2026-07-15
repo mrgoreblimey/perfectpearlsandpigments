@@ -169,71 +169,113 @@ const EMPTY: WooCartQuote = {
 };
 
 /**
- * Build a fresh Woo cart from the given lines and return authoritative pricing.
- * A new Cart-Token each call = a clean, isolated cart (no cross-request leakage).
+ * Return authoritative Woo pricing for the given lines. Pass `cartToken` from a
+ * previous quote to REUSE that cart — we then skip re-adding every line and only
+ * apply what changed (coupon/destination/rate), which makes changing delivery or
+ * a coupon fast instead of rebuilding the whole cart each time. Omit the token
+ * (or when the line-up changes) to mint a fresh cart and add the items.
  */
 export async function quoteCart(opts: {
   lines: QuoteLine[];
   couponCode?: string;
   destination?: Destination;
   shippingRateId?: string;
+  cartToken?: string;
 }): Promise<WooCartQuote> {
-  if (!opts.lines.length) return { ...EMPTY, error: "empty_cart" };
+  if (!opts.lines.length && !opts.cartToken) return { ...EMPTY, error: "empty_cart" };
   try {
-    // 1. Mint a fresh cart (Cart-Token + Nonce).
-    let s = await storeFetch("/cart");
-    let { token, nonce } = s;
-    if (!token) return { ...EMPTY, error: "cart_init_failed" };
-
-    // 2. Add each line; collect any that fail (out of stock / not purchasable).
+    let token: string | undefined = opts.cartToken;
+    let nonce: string | undefined;
+    let cart: Record<string, unknown> | null = null;
     const unavailable: number[] = [];
-    let cart = s.json;
-    for (const line of opts.lines) {
-      s = await storeFetch("/cart/add-item", {
-        token,
-        nonce,
-        method: "POST",
-        body: { id: line.id, quantity: line.quantity },
-      });
-      token = s.token;
-      nonce = s.nonce;
-      if (s.ok) cart = s.json;
-      else unavailable.push(line.id);
+
+    // Reuse the existing cart when a token is supplied and still valid.
+    if (token) {
+      const existing = await storeFetch("/cart", { token });
+      if (existing.ok && existing.json) {
+        token = existing.token;
+        nonce = existing.nonce;
+        cart = existing.json;
+      } else {
+        token = undefined; // expired/invalid → fall through to a fresh build
+      }
     }
 
-    // 3. Coupon (optional) — capture Woo's message on failure.
+    // Fresh cart: mint a token and add each line.
+    if (!token) {
+      const init = await storeFetch("/cart");
+      token = init.token;
+      nonce = init.nonce;
+      cart = init.json;
+      if (!token) return { ...EMPTY, error: "cart_init_failed" };
+      for (const line of opts.lines) {
+        const r = await storeFetch("/cart/add-item", {
+          token,
+          nonce,
+          method: "POST",
+          body: { id: line.id, quantity: line.quantity },
+        });
+        token = r.token;
+        nonce = r.nonce;
+        if (r.ok) cart = r.json;
+        else unavailable.push(line.id);
+      }
+    }
+
+    // Coupon reconcile: drop any applied coupon that isn't wanted, apply the
+    // wanted one if it isn't already on the cart. (No-op for the common no-coupon
+    // case, and avoids "coupon already applied" errors on cart reuse.)
     let couponError: string | undefined;
-    if (opts.couponCode?.trim()) {
-      const c = await storeFetch("/cart/apply-coupon", {
-        token,
-        nonce,
-        method: "POST",
-        body: { code: opts.couponCode.trim() },
-      });
+    const wanted = opts.couponCode?.trim();
+    const wantedLc = wanted?.toLowerCase();
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    const applied: string[] = ((cart as any)?.coupons ?? []).map((c: any) => String(c.code).toLowerCase());
+    /* eslint-enable @typescript-eslint/no-explicit-any */
+    for (const code of applied) {
+      if (code !== wantedLc) {
+        const rm = await storeFetch("/cart/remove-coupon", { token, nonce, method: "POST", body: { code } });
+        token = rm.token;
+        nonce = rm.nonce;
+        if (rm.ok) cart = rm.json;
+      }
+    }
+    if (wanted && !applied.includes(wantedLc!)) {
+      const c = await storeFetch("/cart/apply-coupon", { token, nonce, method: "POST", body: { code: wanted } });
       token = c.token;
       nonce = c.nonce;
       if (c.ok) cart = c.json;
       else couponError = decodeEntities((c.json?.message as string) || "That coupon can’t be applied.");
     }
 
-    // 4. Destination → shipping rates (optional).
+    // 4. Destination → shipping rates. Skip when the reused cart already has this
+    // exact destination (recomputing rates is a full ~1s round-trip), so a plain
+    // delivery-option change doesn't pay for it.
     if (opts.destination?.country) {
-      const d = await storeFetch("/cart/update-customer", {
-        token,
-        nonce,
-        method: "POST",
-        body: {
-          shipping_address: {
-            country: opts.destination.country,
-            state: opts.destination.state ?? "",
-            postcode: opts.destination.postcode ?? "",
-            city: opts.destination.city ?? "",
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const addr = ((cart as any)?.shipping_address ?? {}) as Record<string, string>;
+      const sameDest =
+        (addr.country ?? "") === opts.destination.country &&
+        (addr.postcode ?? "") === (opts.destination.postcode ?? "") &&
+        (addr.state ?? "") === (opts.destination.state ?? "") &&
+        (addr.city ?? "") === (opts.destination.city ?? "");
+      if (!sameDest) {
+        const d = await storeFetch("/cart/update-customer", {
+          token,
+          nonce,
+          method: "POST",
+          body: {
+            shipping_address: {
+              country: opts.destination.country,
+              state: opts.destination.state ?? "",
+              postcode: opts.destination.postcode ?? "",
+              city: opts.destination.city ?? "",
+            },
           },
-        },
-      });
-      token = d.token;
-      nonce = d.nonce;
-      if (d.ok) cart = d.json;
+        });
+        token = d.token;
+        nonce = d.nonce;
+        if (d.ok) cart = d.json;
+      }
     }
 
     // 5. Choose a specific shipping rate (optional).
