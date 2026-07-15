@@ -18,26 +18,50 @@ import {
 const WP = process.env.WORDPRESS_GRAPHQL_URL || "https://staging.perfectpearlsandpigments.co.uk/graphql";
 const REVALIDATE = 300;
 
+// Staging intermittently 404s / 5xxs server-side (serverless) GraphQL requests
+// — a WAF/rate-limit that trips on Vercel's datacenter IPs. Retry transient
+// failures so a single blocked request doesn't drop the whole page to seed.
+const RETRYABLE_STATUS = new Set([404, 408, 425, 429, 500, 502, 503, 504]);
+const MAX_ATTEMPTS = 3;
+
 async function q<T>(query: string, variables?: Record<string, unknown>): Promise<T | null> {
   if (!WP) return null;
-  try {
-    const res = await fetch(WP, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query, variables }),
-      next: { revalidate: REVALIDATE },
-    });
-    if (!res.ok) return null;
-    const json = await res.json();
-    if (json.errors) {
-      console.error("WooGraphQL errors:", JSON.stringify(json.errors).slice(0, 300));
+  const body = JSON.stringify({ query, variables });
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      const res = await fetch(WP, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body,
+        // First attempt uses the ISR cache; retries bypass it (no-store) so they
+        // actually re-hit staging instead of being deduped, and a transient
+        // block is never what gets cached for the whole revalidate window.
+        ...(attempt === 1 ? { next: { revalidate: REVALIDATE } } : { cache: "no-store" as const }),
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.errors) {
+          console.error("WooGraphQL errors:", JSON.stringify(json.errors).slice(0, 300));
+          return null;
+        }
+        return json.data as T;
+      }
+      if (attempt < MAX_ATTEMPTS && RETRYABLE_STATUS.has(res.status)) {
+        await new Promise((r) => setTimeout(r, 200 * attempt));
+        continue;
+      }
+      console.error(`WooGraphQL responded ${res.status}`);
+      return null;
+    } catch (err) {
+      if (attempt < MAX_ATTEMPTS) {
+        await new Promise((r) => setTimeout(r, 200 * attempt));
+        continue;
+      }
+      console.error("WooGraphQL request failed:", err);
       return null;
     }
-    return json.data as T;
-  } catch (err) {
-    console.error("WooGraphQL request failed:", err);
-    return null;
   }
+  return null;
 }
 
 function priceMin(s?: string | null): number {

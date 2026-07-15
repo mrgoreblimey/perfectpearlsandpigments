@@ -26,30 +26,48 @@ import { wpGetCategory, wpGetCategoryProducts, wpGetProduct, wpGetNav } from "./
 // production when going live).
 const WP_GRAPHQL_URL = process.env.WORDPRESS_GRAPHQL_URL || "https://staging.perfectpearlsandpigments.co.uk/graphql";
 const REVALIDATE_SECONDS = 300;
+// Staging intermittently 404s / 5xxs serverless GraphQL requests (a WAF/rate
+// limit tripping on Vercel's datacenter IPs). Retry transient failures.
+const WP_RETRYABLE_STATUS = new Set([404, 408, 425, 429, 500, 502, 503, 504]);
+const WP_MAX_ATTEMPTS = 3;
 
 async function wpQuery<T>(query: string, variables?: Record<string, unknown>): Promise<T | null> {
   if (!WP_GRAPHQL_URL) return null;
-  try {
-    const res = await fetch(WP_GRAPHQL_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query, variables }),
-      next: { revalidate: REVALIDATE_SECONDS },
-    });
-    if (!res.ok) {
+  const body = JSON.stringify({ query, variables });
+  for (let attempt = 1; attempt <= WP_MAX_ATTEMPTS; attempt++) {
+    try {
+      const res = await fetch(WP_GRAPHQL_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body,
+        // First attempt uses the ISR cache; retries bypass it so they re-hit
+        // staging and a transient block isn't cached for the whole window.
+        ...(attempt === 1 ? { next: { revalidate: REVALIDATE_SECONDS } } : { cache: "no-store" as const }),
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.errors) {
+          console.error("WordPress GraphQL errors:", json.errors);
+          return null;
+        }
+        return json.data as T;
+      }
+      if (attempt < WP_MAX_ATTEMPTS && WP_RETRYABLE_STATUS.has(res.status)) {
+        await new Promise((r) => setTimeout(r, 200 * attempt));
+        continue;
+      }
       console.error(`WordPress GraphQL responded ${res.status}`);
       return null;
-    }
-    const json = await res.json();
-    if (json.errors) {
-      console.error("WordPress GraphQL errors:", json.errors);
+    } catch (err) {
+      if (attempt < WP_MAX_ATTEMPTS) {
+        await new Promise((r) => setTimeout(r, 200 * attempt));
+        continue;
+      }
+      console.error("WordPress GraphQL request failed:", err);
       return null;
     }
-    return json.data as T;
-  } catch (err) {
-    console.error("WordPress GraphQL request failed:", err);
-    return null;
   }
+  return null;
 }
 
 interface WpProductNode {
