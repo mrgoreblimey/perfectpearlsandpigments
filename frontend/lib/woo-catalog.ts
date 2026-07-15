@@ -143,8 +143,11 @@ export async function wpGetNav(): Promise<NavItem[] | null> {
     const cat = bySlug.get(cfg.slug);
     if (!cat) continue; // configured category no longer exists on WooCommerce
 
+    // Show the full sub-category structure, including categories with no
+    // published products yet (WooCommerce reports count=null for those, e.g.
+    // photochromic/thermochromic paints). The menu mirrors the taxonomy, not
+    // just what's currently stocked, so nothing silently disappears.
     const sub = (cat.children?.nodes ?? [])
-      .filter((c) => (c.count ?? 0) > 0)
       .sort((a, b) => a.name.localeCompare(b.name))
       .map((c) => ({
         name: c.name,
