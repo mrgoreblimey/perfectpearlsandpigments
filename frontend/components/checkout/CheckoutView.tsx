@@ -336,14 +336,21 @@ export default function CheckoutView({
             Some items are no longer available and have been left out of the total.
           </div>
         ) : null}
-        <Totals
-          subtotal={quote?.subtotal ?? 0}
-          discount={quote?.discount ?? 0}
-          shipping={quote?.shipping}
-          shippingLabel={rates.find((r) => r.rateId === shippingRateId)?.name}
-          tax={quote?.tax}
-          total={total}
-        />
+        <div style={{ position: "relative", opacity: quoting ? 0.45 : 1, transition: "opacity 0.15s" }}>
+          <Totals
+            subtotal={quote?.subtotal ?? 0}
+            discount={quote?.discount ?? 0}
+            shipping={quote?.shipping}
+            shippingLabel={rates.find((r) => r.rateId === shippingRateId)?.name}
+            tax={quote?.tax}
+            total={total}
+          />
+          {quoting && (
+            <div style={{ position: "absolute", top: 0, right: 0, display: "flex", alignItems: "center", gap: 6, color: "#8A877F", fontSize: "0.72rem" }}>
+              <span className="chk-spinner" /> Updating…
+            </div>
+          )}
+        </div>
       </div>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 9, marginTop: 16, color: "#8A877F", fontSize: "0.78rem" }}>
         <span style={{ color: "#F2B01E", fontSize: "0.85rem", letterSpacing: 1 }}>★★★★★</span>
