@@ -90,12 +90,12 @@ export default function Header({ nav }: { nav: NavItem[] }) {
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
             </button>
-            <button className="v2-icon-btn v2-hide-mobile" aria-label="Account">
+            <Link href="/account" className="v2-icon-btn v2-hide-mobile" aria-label="Account">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
               </svg>
-            </button>
+            </Link>
             <button className="v2-icon-btn" aria-label="Basket" onClick={openCart} style={{ position: "relative" }}>
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />

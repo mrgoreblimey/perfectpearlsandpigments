@@ -1,20 +1,49 @@
 "use client";
 
-import { useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { Category } from "@/lib/types";
 import SectionHead from "./SectionHead";
 
 export default function Categories({ cats }: { cats: Category[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
+  const [canLeft, setCanLeft] = useState(false);
+  const [canRight, setCanRight] = useState(false);
+
+  const updateArrows = useCallback(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const max = el.scrollWidth - el.clientWidth;
+    setCanLeft(el.scrollLeft > 1);
+    setCanRight(el.scrollLeft < max - 1);
+  }, []);
+
+  useEffect(() => {
+    updateArrows();
+    const el = trackRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", updateArrows, { passive: true });
+    window.addEventListener("resize", updateArrows);
+    return () => {
+      el.removeEventListener("scroll", updateArrows);
+      window.removeEventListener("resize", updateArrows);
+    };
+  }, [updateArrows, cats.length]);
+
   const scroll = (dir: number) => trackRef.current?.scrollBy({ left: dir * 240, behavior: "smooth" });
 
   return (
     <section id="categories" style={{ padding: "52px 0 8px" }}>
       <div className="v2-wrap">
-        <SectionHead overline="Explore" title="Shop by category" action="View all →" actionHref="/product-category/pigments-additives">
+        <SectionHead overline="Explore" title="Shop by category" action="View all →" actionHref="/product-category/pigments-and-additives">
           {[-1, 1].map((dir) => (
-            <button key={dir} className="v2-arrow-btn" onClick={() => scroll(dir)} aria-label={dir === -1 ? "Scroll left" : "Scroll right"}>
+            <button
+              key={dir}
+              className="v2-arrow-btn"
+              onClick={() => scroll(dir)}
+              disabled={dir === -1 ? !canLeft : !canRight}
+              aria-label={dir === -1 ? "Scroll left" : "Scroll right"}
+            >
               {dir === -1 ? "←" : "→"}
             </button>
           ))}

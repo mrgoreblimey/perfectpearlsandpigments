@@ -7,7 +7,9 @@ import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-
 import { useCart } from "@/context/CartContext";
 import { FREE_SHIP_OVER, money, shippingMethods } from "@/lib/checkout";
 import { Coupon, MiniItems, Totals, Trust, type AppliedCoupon } from "@/components/checkout/Shared";
+import CheckoutAccount from "@/components/checkout/CheckoutAccount";
 import type { CartLine } from "@/lib/types";
+import type { Viewer } from "@/lib/auth/types";
 
 const PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 const stripePromise = PUBLISHABLE_KEY ? loadStripe(PUBLISHABLE_KEY) : null;
@@ -159,10 +161,16 @@ function DemoPay({
   );
 }
 
-export default function CheckoutView() {
+export default function CheckoutView({
+  viewer = null,
+  initialCustomer,
+}: {
+  viewer?: Viewer | null;
+  initialCustomer?: Partial<Customer>;
+} = {}) {
   const router = useRouter();
   const { cart, subtotal, clearCart } = useCart();
-  const [customer, setCustomer] = useState<Customer>(emptyCustomer);
+  const [customer, setCustomer] = useState<Customer>({ ...emptyCustomer, ...initialCustomer });
   const [shipId, setShipId] = useState("std");
   const [coupon, setCoupon] = useState<AppliedCoupon | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -244,6 +252,8 @@ export default function CheckoutView() {
 
   const form = (
     <div>
+      <CheckoutAccount viewer={viewer} />
+
       <Section n="1" title="Contact">
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <Field label="Email address" type="email" placeholder="you@example.com" autoComplete="email" value={customer.email} onChange={set("email")} />

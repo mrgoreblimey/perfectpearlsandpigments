@@ -8,7 +8,7 @@ import {
   type CategoryMeta,
   type ProductDetail,
 } from "./catalog-data";
-import { wpGetCategory, wpGetCategoryProducts, wpGetProduct } from "./woo-catalog";
+import { wpGetCategory, wpGetCategoryProducts, wpGetProduct, wpGetNav } from "./woo-catalog";
 
 /**
  * Headless WordPress data layer.
@@ -137,12 +137,13 @@ export async function getNewIn(count = 4): Promise<Product[]> {
 }
 
 export async function getHomeData(): Promise<HomeData> {
-  const [bestSellers, newIn] = await Promise.all([getBestSellers(), getNewIn()]);
+  const [bestSellers, newIn, liveNav] = await Promise.all([getBestSellers(), getNewIn(), wpGetNav()]);
   return {
-    // Primary nav is intentionally code-managed (keeps the mega-menu colour
-    // dots + descriptions that a standard WP menu can't store). Category tiles
-    // and reviews remain seed for now and could move to WP later.
-    nav,
+    // Primary nav is built from the live WooCommerce category tree (structure)
+    // plus nav-config (labels, featured tiles, colour dots). Falls back to the
+    // hardcoded nav when the endpoint is unavailable. Category tiles and reviews
+    // remain seed for now and could move to WP later.
+    nav: liveNav ?? nav,
     cats,
     reviews,
     bestSellers,

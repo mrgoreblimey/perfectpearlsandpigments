@@ -1,4 +1,11 @@
 import type { CatalogProduct, CategoryMeta, ProductDetail, ProductSize, GalleryItem } from "./catalog-data";
+import type { NavItem } from "./types";
+import {
+  NAV_TOP_LEVEL,
+  NAV_STATIC_ITEMS,
+  SUB_CATEGORY_COLORS,
+  SUB_CATEGORY_COLOR_FALLBACK,
+} from "./nav-config";
 
 /**
  * Live WooCommerce catalog via WPGraphQL/WooGraphQL. Every function returns
@@ -72,6 +79,67 @@ interface WpProductNode {
   stockStatus?: string | null;
   price?: string | null;
   image?: WpImage | null;
+}
+
+/* ── Main navigation (live category tree) ── */
+interface WpNavCategory {
+  name: string;
+  slug: string;
+  count?: number | null;
+  children?: { nodes: { name: string; slug: string; count?: number | null }[] } | null;
+}
+
+/**
+ * Builds the header menu from the live WooCommerce category tree. The
+ * structure (top-level categories + their sub-categories) is live; the design
+ * details (labels, featured tiles, colours, About/Contact) come from
+ * nav-config. Returns null when the endpoint is unset or the query fails so the
+ * caller can fall back to the hardcoded nav.
+ */
+export async function wpGetNav(): Promise<NavItem[] | null> {
+  const data = await q<{ productCategories: { nodes: WpNavCategory[] } }>(
+    /* GraphQL */ `query Nav {
+      productCategories(first: 100, where: { parent: 0, hideEmpty: true }) {
+        nodes {
+          name
+          slug
+          count
+          children(first: 100) { nodes { name slug count } }
+        }
+      }
+    }`,
+  );
+  if (!data?.productCategories) return null;
+
+  const bySlug = new Map(data.productCategories.nodes.map((n) => [n.slug, n]));
+  let fallbackColor = 0;
+
+  const items: NavItem[] = [];
+  for (const cfg of NAV_TOP_LEVEL) {
+    const cat = bySlug.get(cfg.slug);
+    if (!cat) continue; // configured category no longer exists on WooCommerce
+
+    const sub = (cat.children?.nodes ?? [])
+      .filter((c) => (c.count ?? 0) > 0)
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((c) => ({
+        name: c.name,
+        color:
+          SUB_CATEGORY_COLORS[c.slug] ??
+          SUB_CATEGORY_COLOR_FALLBACK[fallbackColor++ % SUB_CATEGORY_COLOR_FALLBACK.length],
+        href: `/product-category/${c.slug}`,
+      }));
+
+    items.push({
+      label: cfg.label ?? cat.name,
+      href: `/product-category/${cat.slug}`,
+      ...(sub.length ? { sub, allLabel: cfg.allLabel } : {}),
+      ...(cfg.featured ? { featured: cfg.featured } : {}),
+    });
+  }
+
+  if (!items.length) return null; // none of the configured categories matched
+  return [...items, ...NAV_STATIC_ITEMS];
 }
 
 /* ── Category meta ── */
