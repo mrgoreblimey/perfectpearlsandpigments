@@ -6,6 +6,7 @@ import { getHomeData } from "@/lib/wordpress";
 
 export const metadata: Metadata = {
   title: "Contact Us — Perfect Pearls & Pigments",
+  alternates: { canonical: "/contact" },
   description: "Get in touch with Perfect Pearls & Pigments — phone, email, or the contact form. Based in Colchester, North Essex.",
 };
 

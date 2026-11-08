@@ -79,6 +79,8 @@ export interface ProductDetail {
   sizes: ProductSize[];
   /** Heading for the variation selector ("Size", "Weight", "Colour"…). */
   optionLabel?: string;
+  sku?: string;
+  inStock?: boolean;
   specs: [string, string][];
   howto: [string, string][];
   gallery: GalleryItem[];

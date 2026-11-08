@@ -6,6 +6,7 @@ import { getHomeData } from "@/lib/wordpress";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions — Perfect Pearls & Pigments",
+  alternates: { canonical: "/terms" },
 };
 
 const SECTIONS: LegalSection[] = [

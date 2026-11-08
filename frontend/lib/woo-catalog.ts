@@ -188,6 +188,37 @@ export async function wpGetNav(): Promise<NavItem[] | null> {
   return [...items, ...NAV_STATIC_ITEMS];
 }
 
+/* ── Sitemap: all product + category slugs ── */
+export async function wpGetAllCategorySlugs(): Promise<string[]> {
+  const data = await q<{ productCategories: { nodes: { slug: string; count?: number | null }[] } }>(
+    /* GraphQL */ `{ productCategories(first: 100, where: { hideEmpty: true }) { nodes { slug count } } }`,
+  );
+  return (data?.productCategories?.nodes ?? []).filter((n) => (n.count ?? 0) > 0).map((n) => n.slug);
+}
+
+export async function wpGetAllProductSlugs(): Promise<{ slug: string; modified?: string }[]> {
+  const out: { slug: string; modified?: string }[] = [];
+  let after: string | null = null;
+  for (let page = 0; page < 12; page++) {
+    const data: {
+      products: { pageInfo: { hasNextPage: boolean; endCursor: string }; nodes: { slug: string; modified?: string | null }[] };
+    } | null = await q(
+      /* GraphQL */ `query Slugs($after: String) {
+        products(first: 100, after: $after, where: { status: "publish" }) {
+          pageInfo { hasNextPage endCursor }
+          nodes { slug modified }
+        }
+      }`,
+      { after },
+    );
+    if (!data?.products) break;
+    for (const n of data.products.nodes) out.push({ slug: n.slug, modified: n.modified ?? undefined });
+    if (!data.products.pageInfo.hasNextPage) break;
+    after = data.products.pageInfo.endCursor;
+  }
+  return out;
+}
+
 /* ── Category meta ── */
 export async function wpGetCategory(slug: string): Promise<CategoryMeta | null> {
   const data = await q<{
@@ -272,6 +303,7 @@ interface WpVariation {
 }
 interface WpProductDetailNode extends WpProductNode {
   __typename: string;
+  sku?: string | null;
   description?: string | null;
   shortDescription?: string | null;
   galleryImages?: { nodes: WpImage[] };
@@ -290,6 +322,8 @@ export async function wpGetProduct(slug: string): Promise<ProductDetail | null> 
         slug
         image { sourceUrl }
         ... on VariableProduct {
+          sku
+          stockStatus
           description
           shortDescription
           price
@@ -299,6 +333,8 @@ export async function wpGetProduct(slug: string): Promise<ProductDetail | null> 
           productCategories { nodes { name slug } }
         }
         ... on SimpleProduct {
+          sku
+          stockStatus
           description
           shortDescription
           price
@@ -313,7 +349,11 @@ export async function wpGetProduct(slug: string): Promise<ProductDetail | null> 
   const p = data?.product;
   if (!p) return null;
 
-  const cat = p.productCategories?.nodes[0];
+  // Primary category for breadcrumbs / related products: skip promo &
+  // uncategorised buckets (a product's first category is often "10% OFF").
+  const EXCLUDED_CATS = new Set(["promo-own-brand", "uncategorised", "uncategorized"]);
+  const catNodes = p.productCategories?.nodes ?? [];
+  const cat = catNodes.find((c) => !EXCLUDED_CATS.has(c.slug)) ?? catNodes[0];
 
   const variations = p.variations?.nodes ?? [];
   let sizes: ProductSize[];
@@ -363,6 +403,8 @@ export async function wpGetProduct(slug: string): Promise<ProductDetail | null> 
     shift: [],
     sizes,
     optionLabel,
+    sku: p.sku ?? undefined,
+    inStock: p.stockStatus ? p.stockStatus === "IN_STOCK" : undefined,
     specs,
     howto: [
       ["Measure", "Mix 1–5% pigment by weight into your chosen medium. Start low and build for more intensity."],

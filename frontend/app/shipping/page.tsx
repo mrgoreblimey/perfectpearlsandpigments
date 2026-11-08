@@ -7,6 +7,7 @@ import { getHomeData } from "@/lib/wordpress";
 
 export const metadata: Metadata = {
   title: "Delivery & Shipping — Perfect Pearls & Pigments",
+  alternates: { canonical: "/shipping" },
   description: "Fast, reliable shipping across the UK, the EU and the rest of the world. Free UK delivery on orders over £50.",
 };
 

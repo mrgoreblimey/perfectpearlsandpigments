@@ -10,6 +10,7 @@ import { getHomeData } from "@/lib/wordpress";
 
 export const metadata: Metadata = {
   title: "About Us — Perfect Pearls & Pigments",
+  alternates: { canonical: "/about" },
   description:
     "Perfect Pearls & Pigments — an independent, family-run colour house established in 2008, supplying specialty pigments worldwide from North Essex.",
 };

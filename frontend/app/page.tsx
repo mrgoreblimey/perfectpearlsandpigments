@@ -9,7 +9,10 @@ import Reviews from "@/components/Reviews";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
+import type { Metadata } from "next";
 import { getHomeData } from "@/lib/wordpress";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 export default async function Home() {
   const { nav, cats, bestSellers, newIn, reviews } = await getHomeData();

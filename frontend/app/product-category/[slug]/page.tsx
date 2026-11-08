@@ -6,14 +6,20 @@ import CartDrawer from "@/components/CartDrawer";
 import CategoryBrowser from "@/components/category/CategoryBrowser";
 import TopCategoryHub from "@/components/category/TopCategoryHub";
 import HeroPopular from "@/components/category/HeroPopular";
+import JsonLd from "@/components/JsonLd";
 import { getHomeData, getCategory, getCategoryProducts } from "@/lib/wordpress";
+import { SITE_URL, absoluteUrl } from "@/lib/site";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const category = await getCategory(slug);
+  const title = `${category.title} — Perfect Pearls & Pigments`;
+  const url = `/product-category/${slug}`;
   return {
-    title: `${category.title} — Perfect Pearls & Pigments`,
+    title,
     description: category.description,
+    alternates: { canonical: url },
+    openGraph: { type: "website", title, description: category.description, url },
   };
 }
 
@@ -40,8 +46,18 @@ export default async function CategoryPage({
   const showHub = isTopLevel && view !== "all";
   const headerCount = category.productCount ?? products.length;
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: category.title, item: absoluteUrl(`/product-category/${slug}`) },
+    ],
+  };
+
   return (
     <div>
+      <JsonLd data={breadcrumbJsonLd} />
       <Header nav={nav} />
 
       {/* Breadcrumb + category header */}
