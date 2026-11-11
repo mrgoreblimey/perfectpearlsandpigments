@@ -46,7 +46,7 @@ export default function Header({ nav }: { nav: NavItem[] }) {
   return (
     <header style={{ position: "sticky", top: 0, zIndex: 300 }}>
       <Announce />
-      <div style={{ background: "rgba(16,16,16,0.94)", backdropFilter: "blur(12px)", borderBottom: "1px solid #232323" }}>
+      <div style={{ background: "rgba(255,255,255,0.96)", backdropFilter: "blur(12px)", borderBottom: "1px solid var(--line)", boxShadow: "var(--shadow-sm)" }}>
         <div className="v2-wrap" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 66 }}>
           <Link href="/" style={{ flexShrink: 0, lineHeight: 0 }}>
             <Image
@@ -71,8 +71,9 @@ export default function Header({ nav }: { nav: NavItem[] }) {
                   href={item.href}
                   className="v2-nav-btn"
                   style={{
-                    color: openIdx === i ? "#fff" : "#B5B2AB",
-                    background: openIdx === i ? "rgba(255,255,255,0.09)" : "transparent",
+                    color: openIdx === i ? "var(--mag-ink)" : "var(--muted)",
+                    background: openIdx === i ? "var(--mag-soft)" : "transparent",
+                    fontWeight: 600,
                   }}
                 >
                   {item.label}
@@ -105,7 +106,7 @@ export default function Header({ nav }: { nav: NavItem[] }) {
               {count > 0 && (
                 <span
                   style={{
-                    position: "absolute", top: 2, right: 2, background: "var(--acc)", color: "#111",
+                    position: "absolute", top: 2, right: 2, background: "var(--mag)", color: "#fff",
                     fontSize: "0.58rem", fontWeight: 800, width: 15, height: 15, borderRadius: "50%",
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}
@@ -150,8 +151,8 @@ export default function Header({ nav }: { nav: NavItem[] }) {
             <div
               className="v2-wrap v2-mega-panel"
               style={{
-                background: "#141414", border: "1px solid #262626", borderTop: "none",
-                borderRadius: "0 0 16px 16px", boxShadow: "0 30px 70px rgba(0,0,0,0.4)",
+                background: "var(--surface)", border: "1px solid var(--line)", borderTop: "none",
+                borderRadius: "0 0 16px 16px", boxShadow: "var(--shadow-lg)",
                 padding: "26px 32px 28px",
                 display: "flex", gap: 34, alignItems: "stretch",
                 animation: "v2FadeDown 0.18s ease",
@@ -197,12 +198,12 @@ export default function Header({ nav }: { nav: NavItem[] }) {
                 {nav[openIdx].sub!.map((s) => (
                   <Link key={s.name} href={s.href} className="v2-mega-item" style={{ alignItems: "center", padding: "9px 12px" }}>
                     <span style={{ width: 8, height: 8, borderRadius: "50%", background: s.color, flexShrink: 0, boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.15)" }} />
-                    <span style={{ color: "#ECEAE4", fontSize: "0.84rem", fontWeight: 500 }}>{s.name}</span>
+                    <span style={{ color: "var(--ink)", fontSize: "0.84rem", fontWeight: 500 }}>{s.name}</span>
                   </Link>
                 ))}
                 {nav[openIdx].allLabel && (
                   <Link href={nav[openIdx].href} className="v2-mega-item" style={{ alignItems: "center", padding: "9px 12px" }}>
-                    <span style={{ color: "#77746D", fontSize: "0.8rem", fontWeight: 500 }}>{nav[openIdx].allLabel} →</span>
+                    <span style={{ color: "var(--mag-ink)", fontSize: "0.8rem", fontWeight: 600 }}>{nav[openIdx].allLabel} →</span>
                   </Link>
                 )}
               </div>
@@ -220,7 +221,7 @@ export default function Header({ nav }: { nav: NavItem[] }) {
       <aside className="v2-mobile-drawer" style={{ transform: mobileOpen ? "translateX(0)" : "translateX(100%)" }} aria-hidden={!mobileOpen}>
         <nav style={{ display: "flex", flexDirection: "column", padding: "8px 0" }}>
           {nav.map((item, i) => (
-            <div key={item.label} style={{ borderBottom: "1px solid #1E1E1E" }}>
+            <div key={item.label} style={{ borderBottom: "1px solid var(--line)" }}>
               {item.sub ? (
                 <>
                   <button
@@ -229,7 +230,7 @@ export default function Header({ nav }: { nav: NavItem[] }) {
                     aria-expanded={mobileSub === i}
                   >
                     {item.label}
-                    <span style={{ color: "#77746D", fontSize: "0.8rem", transform: mobileSub === i ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>▾</span>
+                    <span style={{ color: "var(--muted)", fontSize: "0.8rem", transform: mobileSub === i ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>▾</span>
                   </button>
                   {mobileSub === i && (
                     <div style={{ padding: "2px 0 12px" }}>
@@ -240,7 +241,7 @@ export default function Header({ nav }: { nav: NavItem[] }) {
                         </Link>
                       ))}
                       {item.allLabel && (
-                        <Link href={item.href} className="v2-mobile-sublink" onClick={closeMobile} style={{ color: "#C9A24A", fontWeight: 600 }}>
+                        <Link href={item.href} className="v2-mobile-sublink" onClick={closeMobile} style={{ color: "var(--mag-ink)", fontWeight: 600 }}>
                           {item.allLabel} →
                         </Link>
                       )}
@@ -256,10 +257,10 @@ export default function Header({ nav }: { nav: NavItem[] }) {
           ))}
         </nav>
         <div style={{ display: "flex", gap: 10, padding: "18px 22px" }}>
-          <Link href="/search" className="v2-btn-ghost" style={{ flex: 1, justifyContent: "center" }} onClick={closeMobile}>
+          <Link href="/search" className="v2-select-btn" style={{ flex: 1 }} onClick={closeMobile}>
             Search
           </Link>
-          <Link href="/account" className="v2-btn-ghost" style={{ flex: 1, justifyContent: "center" }} onClick={closeMobile}>
+          <Link href="/account" className="v2-select-btn" style={{ flex: 1 }} onClick={closeMobile}>
             Account
           </Link>
         </div>
