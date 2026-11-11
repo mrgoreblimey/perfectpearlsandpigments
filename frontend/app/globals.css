@@ -163,9 +163,9 @@ h3 {
   transition: background 0.18s, color 0.18s, border-color 0.18s;
 }
 .v2-select-btn:hover {
-  background: var(--ink);
+  background: var(--mag);
   color: #fff;
-  border-color: var(--ink);
+  border-color: var(--mag);
 }
 
 .v2-link-btn {
