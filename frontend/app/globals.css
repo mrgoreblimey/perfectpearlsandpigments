@@ -990,11 +990,11 @@ h3 {
   transition: all 0.15s;
 }
 .prod-size-btn:hover {
-  border-color: var(--ink);
+  border-color: var(--mag);
 }
 .prod-size-btn.active {
-  background: var(--ink);
-  border-color: var(--ink);
+  background: var(--mag);
+  border-color: var(--mag);
   color: #fff;
 }
 .prod-qty-btn {
