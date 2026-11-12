@@ -274,19 +274,19 @@ export default function ProductView({ product }: { product: ProductDetail }) {
       </section>
 
       {/* Sticky ATC */}
-      <div style={{ position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 400, background: "rgba(13,13,13,0.97)", backdropFilter: "blur(10px)", borderTop: "1px solid #232323", transform: showSticky ? "translateY(0)" : "translateY(100%)", transition: "transform 0.32s cubic-bezier(0.4,0,0.2,1)" }}>
+      <div style={{ position: "fixed", left: 0, right: 0, bottom: 0, zIndex: 400, background: "rgba(255,255,255,0.97)", backdropFilter: "blur(10px)", borderTop: "1px solid var(--line)", boxShadow: "0 -10px 30px -16px rgba(18,20,34,0.22)", transform: showSticky ? "translateY(0)" : "translateY(100%)", transition: "transform 0.32s cubic-bezier(0.4,0,0.2,1)" }}>
         <div className="v2-wrap" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24, padding: "12px 32px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
             <div style={{ width: 44, height: 44, borderRadius: 8, background: heroImg ? "#1a1a1a" : `linear-gradient(135deg, ${product.shift.map(([c]) => c).join(", ")})`, position: "relative", overflow: "hidden", flexShrink: 0 }}>
               {heroImg && <Image src={heroImg} alt="" fill sizes="44px" style={{ objectFit: "cover" }} />}
             </div>
             <div>
-              <div style={{ color: "#fff", fontWeight: 600, fontSize: "0.9rem", fontFamily: "var(--font-archivo), sans-serif" }}>{product.name}</div>
-              <div style={{ color: "#77746D", fontSize: "0.76rem" }}>{size.label} · Qty {qty}</div>
+              <div style={{ color: "var(--ink)", fontWeight: 600, fontSize: "0.9rem", fontFamily: "var(--font-archivo), sans-serif" }}>{product.name}</div>
+              <div style={{ color: "var(--muted)", fontSize: "0.76rem" }}>{size.label} · Qty {qty}</div>
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-            <div style={{ color: "#fff", fontSize: "1.1rem", fontWeight: 700, fontFamily: "var(--font-archivo), sans-serif" }}>£{(size.price * qty).toFixed(2)}</div>
+            <div style={{ color: "var(--ink)", fontSize: "1.1rem", fontWeight: 700, fontFamily: "var(--font-archivo), sans-serif" }}>£{(size.price * qty).toFixed(2)}</div>
             <button className="v2-btn-primary" onClick={add} style={{ padding: "13px 30px" }}>Add to basket →</button>
           </div>
         </div>
