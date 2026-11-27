@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import LoginForm from "@/components/account/LoginForm";
+import LoginForm from "@/components/my-account/LoginForm";
 import { getHomeData } from "@/lib/wordpress";
 
 export const metadata: Metadata = {

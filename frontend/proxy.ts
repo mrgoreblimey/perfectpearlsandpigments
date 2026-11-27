@@ -2,11 +2,11 @@
  * Proxy (Next.js 16's renamed Middleware). Optimistic route protection only —
  * the real auth check happens in each account page via `requireSession()`.
  *
- * - /account/*  → redirect to /login (with return path) when no valid session
- * - /login,/register → redirect to /account when already signed in
+ * - /my-account/*  → redirect to /login (with return path) when no valid session
+ * - /login,/register → redirect to /my-account when already signed in
  *
  * We validate by decrypting the cookie (cheap, no network) so an invalid/stale
- * cookie can't cause a redirect loop between /login and /account.
+ * cookie can't cause a redirect loop between /login and /my-account.
  */
 
 import { NextResponse } from "next/server";
@@ -25,7 +25,7 @@ export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const authed = hasValidSession(req);
 
-  if (pathname.startsWith("/account")) {
+  if (pathname.startsWith("/my-account")) {
     if (!authed) {
       const url = new URL("/login", req.nextUrl);
       url.searchParams.set("redirectTo", pathname);
@@ -35,7 +35,7 @@ export function proxy(req: NextRequest) {
   }
 
   if (pathname === "/login" || pathname === "/register") {
-    if (authed) return NextResponse.redirect(new URL("/account", req.nextUrl));
+    if (authed) return NextResponse.redirect(new URL("/my-account", req.nextUrl));
     return NextResponse.next();
   }
 
@@ -43,5 +43,5 @@ export function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/account/:path*", "/login", "/register"],
+  matcher: ["/my-account/:path*", "/login", "/register"],
 };

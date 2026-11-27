@@ -35,7 +35,7 @@ export default function CatCard({ product }: { product: CatalogProduct }) {
 
   return (
     <Link
-      href={`/product/${product.slug}`}
+      href={`/products/${product.slug}`}
       className="v2-card"
       style={{ textDecoration: "none", color: "inherit", display: "block" }}
       onMouseEnter={() => setHov(true)}

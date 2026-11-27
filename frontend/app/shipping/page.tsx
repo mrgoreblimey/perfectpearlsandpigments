@@ -97,7 +97,7 @@ export default async function ShippingPage() {
 
           <div style={{ marginTop: 36, display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
             <p style={{ color: "#8A877F", fontSize: "0.86rem" }}>Questions about your delivery?</p>
-            <Link href="/contact" className="v2-btn-primary" style={{ padding: "12px 24px" }}>Contact us <span aria-hidden="true">→</span></Link>
+            <Link href="/contact-us" className="v2-btn-primary" style={{ padding: "12px 24px" }}>Contact us <span aria-hidden="true">→</span></Link>
           </div>
         </div>
       </section>

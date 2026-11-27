@@ -39,7 +39,7 @@ export default function HeroPopular({ products }: { products: CatalogProduct[] }
         {picks.map((p) => (
           <Link
             key={p.slug}
-            href={`/product/${p.slug}`}
+            href={`/products/${p.slug}`}
             className="hero-thumb"
             title={p.name}
             aria-label={p.name}

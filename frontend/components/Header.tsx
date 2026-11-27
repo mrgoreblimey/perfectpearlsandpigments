@@ -91,7 +91,7 @@ export default function Header({ nav }: { nav: NavItem[] }) {
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
             </button>
-            <Link href="/account" className="v2-icon-btn v2-hide-mobile" aria-label="Account">
+            <Link href="/my-account" className="v2-icon-btn v2-hide-mobile" aria-label="Account">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
@@ -260,7 +260,7 @@ export default function Header({ nav }: { nav: NavItem[] }) {
           <Link href="/search" className="v2-select-btn" style={{ flex: 1 }} onClick={closeMobile}>
             Search
           </Link>
-          <Link href="/account" className="v2-select-btn" style={{ flex: 1 }} onClick={closeMobile}>
+          <Link href="/my-account" className="v2-select-btn" style={{ flex: 1 }} onClick={closeMobile}>
             Account
           </Link>
         </div>

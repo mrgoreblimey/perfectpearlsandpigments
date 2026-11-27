@@ -46,8 +46,8 @@ export default async function BlogPage() {
               We&rsquo;re writing up our first guides — how colour-travel pigments work, mixing candy over black, and picking flake grades. Subscribe below and we&rsquo;ll let you know the moment they land.
             </p>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
-              <Link href="/shop" className="v2-btn-primary">Browse the range <span aria-hidden="true">→</span></Link>
-              <Link href="/contact" className="v2-btn-ghost" style={{ color: "var(--ink)", borderColor: "var(--line)" }}>Ask us anything</Link>
+              <Link href="/store" className="v2-btn-primary">Browse the range <span aria-hidden="true">→</span></Link>
+              <Link href="/contact-us" className="v2-btn-ghost" style={{ color: "var(--ink)", borderColor: "var(--line)" }}>Ask us anything</Link>
             </div>
           </div>
         </div>
