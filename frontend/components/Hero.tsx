@@ -35,7 +35,7 @@ function HeroCopy() {
         Chameleon pigments, candy concentrates, glow &amp; metallic effects — the UK&apos;s most complete specialty pigment range.
       </p>
       <div className="ppp-fade-4" style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-        <Link href="/product-category/pigments-additives" className="v2-btn-primary">
+        <Link href="/product-category/pigments-and-additives" className="v2-btn-primary">
           Shop the collection <span aria-hidden="true">→</span>
         </Link>
         <Link href="#categories" className="v2-btn-ghost">

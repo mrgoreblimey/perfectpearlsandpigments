@@ -65,7 +65,7 @@ export default function CatCard({ product }: { product: CatalogProduct }) {
       </div>
       <div style={{ padding: "12px 16px 16px" }}>
         <div className="pcard-head" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, marginBottom: 5 }}>
-          <h3 style={{ fontSize: "1rem", letterSpacing: "-0.015em" }}>{product.name}</h3>
+          <h3 className="pcard-title">{product.name}</h3>
           <div className="pcard-price" style={{ color: "#6E6B64", fontSize: "0.82rem", fontWeight: 500, whiteSpace: "nowrap" }}>From £{product.price.toFixed(2)}</div>
         </div>
         {product.shift && <div style={{ color: "#8A877F", fontSize: "0.78rem", marginBottom: 12 }}>{product.shift}</div>}

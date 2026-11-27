@@ -21,7 +21,7 @@ export default function ProductCard({ product }: { product: Product }) {
     });
 
   return (
-    <div className="v2-card" onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
+    <div className="v2-card v2-card--buy" onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
       <div style={{ position: "relative", overflow: "hidden", aspectRatio: "5/4", background: "#F1EFEA", borderRadius: "calc(var(--r) - 4px)", margin: 8 }}>
         <Image
           src={product.img}
@@ -45,9 +45,9 @@ export default function ProductCard({ product }: { product: Product }) {
           {product.cat}
         </div>
       </div>
-      <div style={{ padding: "12px 16px 16px" }}>
+      <div className="pcard-body" style={{ padding: "12px 16px 16px" }}>
         <div className="pcard-head" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10, marginBottom: 10 }}>
-          <h3 style={{ fontSize: "1rem", lineHeight: 1.25, letterSpacing: "-0.015em" }}>{product.name}</h3>
+          <h3 className="pcard-title">{product.name}</h3>
           <div className="pcard-price" style={{ color: "#6E6B64", fontSize: "0.82rem", fontWeight: 500, whiteSpace: "nowrap" }}>{product.price}</div>
         </div>
         <div style={{ display: "flex", gap: 6, marginBottom: 14, alignItems: "center" }}>

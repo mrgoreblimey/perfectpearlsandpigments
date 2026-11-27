@@ -7,10 +7,10 @@ const COLUMNS = [
   {
     title: "Shop",
     links: [
-      ["Pigments & Additives", "/product-category/pigments-additives"],
-      ["Mixed Paints", "/product-category/mixed-paints"],
+      ["Pigments & Additives", "/product-category/pigments-and-additives"],
+      ["Mixed Paints & Aerosols", "/product-category/mixed-paints-and-aerosols"],
       ["Other Products", "/product-category/other-products"],
-      ["New Arrivals", "/shop?orderby=date"],
+      ["New Arrivals", "/shop"],
     ],
   },
   {
