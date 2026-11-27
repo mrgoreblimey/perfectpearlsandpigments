@@ -9,7 +9,7 @@ interface ProductSectionProps {
   viewAllHref?: string;
 }
 
-export default function ProductSection({ overline, title, products, viewAllHref = "/shop" }: ProductSectionProps) {
+export default function ProductSection({ overline, title, products, viewAllHref = "/store" }: ProductSectionProps) {
   return (
     <section style={{ padding: "56px 0" }}>
       <div className="v2-wrap">

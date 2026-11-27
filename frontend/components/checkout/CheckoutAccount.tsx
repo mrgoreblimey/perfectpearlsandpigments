@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { logoutAction } from "@/lib/auth/actions";
-import LoginForm from "@/components/account/LoginForm";
+import LoginForm from "@/components/my-account/LoginForm";
 import type { Viewer } from "@/lib/auth/types";
 
 /**

@@ -25,8 +25,8 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 function safeRedirectPath(input: FormDataEntryValue | null): string {
   const v = typeof input === "string" ? input : "";
   // Allowlist local post-login destinations to avoid open-redirects.
-  if (v.startsWith("/account") || v === "/checkout") return v;
-  return "/account";
+  if (v.startsWith("/my-account") || v === "/checkout") return v;
+  return "/my-account";
 }
 
 export async function loginAction(_prev: FormState, formData: FormData): Promise<FormState> {
@@ -67,7 +67,7 @@ export async function registerAction(_prev: FormState, formData: FormData): Prom
   }
   await writeSession(result.session);
   await mergeDeviceCartIntoAccount(result.session, String(formData.get("deviceCart") ?? ""));
-  redirect("/account");
+  redirect("/my-account");
 }
 
 export async function logoutAction(): Promise<void> {
@@ -95,7 +95,7 @@ export async function updateAccountAction(_prev: FormState, formData: FormData):
   if (result.user) {
     await writeSession({ ...session, user: result.user });
   }
-  revalidatePath("/account");
+  revalidatePath("/my-account");
   return { success: "Your details have been saved." };
 }
 
@@ -149,6 +149,6 @@ export async function updateAddressAction(_prev: FormState, formData: FormData):
 
   const result = await activeProvider().updateAddress(session, kind, address);
   if (!result.ok) return { error: result.error ?? "Could not save your address." };
-  revalidatePath("/account/addresses");
+  revalidatePath("/my-account/addresses");
   return { success: `Your ${kind} address has been saved.` };
 }

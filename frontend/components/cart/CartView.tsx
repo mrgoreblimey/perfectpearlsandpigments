@@ -19,7 +19,7 @@ function CartRow({ item, onQty, onRemove }: { item: CartLine; onQty: (q: number)
         {item.img && <Image src={item.img} alt={item.name} fill sizes="86px" style={{ objectFit: "cover" }} />}
       </div>
       <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
-        <Link href={`/product/${item.productSlug}`} style={{ fontSize: "0.95rem", fontWeight: 700, fontFamily: "var(--font-archivo), sans-serif", letterSpacing: "-0.01em", marginBottom: 3, textDecoration: "none", color: "inherit" }}>
+        <Link href={`/products/${item.productSlug}`} style={{ fontSize: "0.95rem", fontWeight: 700, fontFamily: "var(--font-archivo), sans-serif", letterSpacing: "-0.01em", marginBottom: 3, textDecoration: "none", color: "inherit" }}>
           {item.name}
         </Link>
         <div style={{ color: "#8A877F", fontSize: "0.76rem", marginBottom: "auto" }}>

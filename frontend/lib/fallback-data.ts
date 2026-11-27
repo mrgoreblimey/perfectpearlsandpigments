@@ -71,8 +71,8 @@ export const nav: NavItem[] = [
     ]),
   },
   { label: "Other Products", href: "/product-category/other-products" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "About", href: "/about-us" },
+  { label: "Contact", href: "/contact-us" },
 ];
 
 export const cats: Category[] = [

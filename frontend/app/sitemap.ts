@@ -10,7 +10,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     wpGetAllProductSlugs().catch(() => []),
   ]);
 
-  const staticPages: MetadataRoute.Sitemap = ["", "/about", "/contact", "/shipping", "/terms", "/privacy"].map((p) => ({
+  const staticPages: MetadataRoute.Sitemap = [
+    "", "/store", "/about-us", "/contact-us", "/shipping", "/returns", "/help-advice",
+    "/wholesale", "/affiliates", "/blog", "/terms-and-conditions", "/privacy-policy", "/cookie-policy-uk",
+  ].map((p) => ({
     url: `${SITE_URL}${p}`,
     changeFrequency: "weekly",
     priority: p === "" ? 1 : 0.5,
@@ -23,7 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const productPages: MetadataRoute.Sitemap = products.map(({ slug, modified }) => ({
-    url: `${SITE_URL}/product/${slug}`,
+    url: `${SITE_URL}/products/${slug}`,
     lastModified: modified ? new Date(modified) : undefined,
     changeFrequency: "weekly",
     priority: 0.7,

@@ -7,10 +7,10 @@ const COLUMNS = [
   {
     title: "Shop",
     links: [
-      ["Pigments & Additives", "/product-category/pigments-additives"],
-      ["Mixed Paints", "/product-category/mixed-paints"],
+      ["Pigments & Additives", "/product-category/pigments-and-additives"],
+      ["Mixed Paints & Aerosols", "/product-category/mixed-paints-and-aerosols"],
       ["Other Products", "/product-category/other-products"],
-      ["New Arrivals", "/shop?orderby=date"],
+      ["New Arrivals", "/store"],
     ],
   },
   {
@@ -18,14 +18,14 @@ const COLUMNS = [
     links: [
       ["Delivery Info", "/shipping"],
       ["Returns", "/returns"],
-      ["FAQs", "/faqs"],
-      ["Contact Us", "/contact"],
+      ["FAQs", "/help-advice"],
+      ["Contact Us", "/contact-us"],
     ],
   },
   {
     title: "Company",
     links: [
-      ["About Us", "/about"],
+      ["About Us", "/about-us"],
       ["Wholesale", "/wholesale"],
       ["Affiliates", "/affiliates"],
       ["Blog", "/blog"],
@@ -85,9 +85,9 @@ export default function Footer() {
           <p style={{ color: "#4A4844", fontSize: "0.75rem" }}>© {new Date().getFullYear()} Perfect Pearls &amp; Pigments. All rights reserved.</p>
           <div style={{ display: "flex", gap: 24 }}>
             {[
-              ["Terms", "/terms"],
-              ["Privacy", "/privacy"],
-              ["Cookies", "/cookies"],
+              ["Terms", "/terms-and-conditions"],
+              ["Privacy", "/privacy-policy"],
+              ["Cookies", "/cookie-policy-uk"],
             ].map(([label, href]) => (
               <Link key={label} href={href} style={{ color: "#4A4844", fontSize: "0.75rem", textDecoration: "none" }}>
                 {label}

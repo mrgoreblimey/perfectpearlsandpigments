@@ -57,8 +57,8 @@ export const NAV_TOP_LEVEL: TopLevelNavConfig[] = [
 
 /** Non-category links appended after the category-driven items. */
 export const NAV_STATIC_ITEMS: NavItem[] = [
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "About", href: "/about-us" },
+  { label: "Contact", href: "/contact-us" },
 ];
 
 /** Colour dot per sub-category slug (carried over from the original design). */
